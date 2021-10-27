@@ -1,0 +1,41 @@
+{
+  "name": "@vijayt/counter",
+  "version": "1.0.2",
+  "main": "lib/index.js",
+  "repository": "git@github.com:vijayst/react-package-boilerplate.git",
+  "author": "Vijay T <vijayst@gmail.com>",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.9",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
+    "@storybook/addon-essentials": "^6.3.6",
+    "@storybook/addon-knobs": "^6.3.1",
+    "@storybook/react": "^6.3.6",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@types/fabric": "^4.5.3",
+    "@types/jest": "^26.0.24",
+    "@types/react": "^17.0.15",
+    "@types/uuid": "^8.3.1",
+    "babel-loader": "^8.2.2",
+    "fabric": "^4.6.0",
+    "jest": "^27.0.6",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rollup": "^2.55.1",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.3.5",
+    "uuid": "^8.3.2"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest --verbose --watch",
+    "storybook": "start-storybook",
+    "build-storybook": "build-storybook"
+  }
+}
