@@ -1,5 +1,5 @@
 import React from 'react';
-import {fabric} from 'fabric';
+import { fabric } from 'fabric';
 import FabricCanvas from '../AnnotateCanvas/FabricCanvas';
 
 interface StopWatchProps {
@@ -49,15 +49,14 @@ const StopWatch: React.FC<StopWatchProps> = ({
 
   const fabricCanvasRef = React.useRef<fabric.Canvas>(new fabric.Canvas(''));
 
-
   return (
     <>
-          <FabricCanvas
-      fabricCanvasRef={fabricCanvasRef}
-      width={1000}
-      height={500}
-      backgroundColor={'green'}
-    />
+      <FabricCanvas
+        fabricCanvasRef={fabricCanvasRef}
+        width={1000}
+        height={500}
+        backgroundColor={'green'}
+      />
       <div style={{ color: color }}>{text}</div>
       <input ref={displayTimeInputRef} type="text" defaultValue={displayTime} />
       <button onClick={(e) => toggleClock()}>
