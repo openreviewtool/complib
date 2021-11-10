@@ -1,9 +1,9 @@
 {
-  "name": "@vijayt/counter",
-  "version": "1.0.2",
+  "name": "@openreviewtool/complibrary",
+  "version": "0.1.8",
   "main": "lib/index.js",
-  "repository": "git@github.com:vijayst/react-package-boilerplate.git",
-  "author": "Vijay T <vijayst@gmail.com>",
+  "repository": "git@github.com:openreviewtool/complib2.git",
+  "author": "Tommy Zhu <tzhu2001@gmail.com>",
   "license": "MIT",
   "files": [
     "lib"
@@ -41,8 +41,14 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "test": "jest --verbose --watch",
-    "storybook": "start-storybook",
-    "build-storybook": "build-storybook"
+    "build-watch": "rollup -c -w",
+    "eslint": "eslint",
+    "lint": "eslint '*/**/*.{js,ts,tsx}'",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "test": "jest"
+  },
+  "dependencies": {
+    "canvas": "^2.8.0"
   }
 }
