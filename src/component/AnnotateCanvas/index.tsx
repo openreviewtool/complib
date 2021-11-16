@@ -16,8 +16,6 @@ import useApplyAttrsToSelection from './useApplyAttrsToSelection';
 import FabricCanvas from './FabricCanvas';
 import useRedrawElements from './useRedrawElements';
 
-const REDRAW_ON_ELEMENT_MODIFY = true;
-
 interface AnnotateCanvasProps {
   elements: AnnotateElement[];
   selection?: string[];
@@ -26,6 +24,9 @@ interface AnnotateCanvasProps {
   width?: number;
   height?: number;
   backgroundColor?: string;
+
+  // if true, redraw the entire canvas when ever one element updates
+  clearOnElementModify?: boolean; 
 
   onAddElement?: (etype: AnnotateElementType, element: fabric.Object) => void;
   onChangeElement?: (element: Partial<AnnotateElement>) => void;
@@ -44,6 +45,8 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = ({
   height = 100,
   backgroundColor = '',
   
+  clearOnElementModify = true,
+
   uiState = uiDefaults,
 
   ...props
@@ -54,7 +57,7 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = ({
     fabricCanvasRef,
     backgroundColor,
     elements,
-    REDRAW_ON_ELEMENT_MODIFY,
+    clearOnElementModify,
   );
   useSyncSelection(fabricCanvasRef, props.onSelection);
   useCustomSelectCorners(fabricCanvasRef);

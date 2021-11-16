@@ -46,6 +46,7 @@ function useDrawShapeHandler(
     fcanvas: fabric.Canvas,
     uiState: UserControllerInputs,
   ) => {
+    // setting the free draw mode
     fcanvas.isDrawingMode = uiState.mode === 'draw' && uiState.shape === 'Path';
     const brush = fcanvas.freeDrawingBrush;
     brush.width = uiState.strokeWidth || 1;

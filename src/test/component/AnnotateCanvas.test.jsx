@@ -1,14 +1,25 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 
 import AnnotateCanvas from '../../component/AnnotateCanvas';
 import {
   sampleAnnotations2,
+  samplePathElement,
+  sampleRectElement,
+  sampleRectElement2,
   sampleTextboxElement,
 } from '../../stories/testdata/annotationSamples';
 import { fabric } from 'fabric';
 import { FabricObjectDefaults } from '../../component/AnnotateCanvas/utils';
+import { uiDefaults } from '../../component/AnnotateCanvas/types';
 
+const sleep = async (msec) => {
+  await new Promise((r) => setTimeout(r, msec));
+};
+
+/**
+ * Mock the fabric canvas module.
+ */
 jest.mock('fabric', () => {
   const originalModule = jest.requireActual('fabric');
 
@@ -36,9 +47,22 @@ fabric.Canvas.mockImplementation((id, attr) => {
   return testFCanvas;
 });
 
-const sleep = async (msec) => {
-  await new Promise((r) => setTimeout(r, msec));
-};
+/**
+ * Mock render
+ */
+jest.mock('@testing-library/react', () => {
+  const originalModule = jest.requireActual('@testing-library/react');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    render: async (comp) => {
+      const result = originalModule.render(comp);
+      await sleep(0);
+      return result;
+    },
+  };
+});
 
 describe('AnnotateCanvas Intialization', () => {
   beforeEach = () => {
@@ -55,10 +79,9 @@ describe('AnnotateCanvas Intialization', () => {
     expect(testFCanvas.backgroundColor).toEqual('#112233');
   });
 
-  it('should draw elements.', async () => {
-    render(<AnnotateCanvas elements={sampleAnnotations2} />);
+  it('should initialize with elements.', async () => {
+    await render(<AnnotateCanvas elements={sampleAnnotations2} />);
 
-    await sleep();
     const objs = testFCanvas.getObjects();
     expect(objs.length).toEqual(sampleAnnotations2.length);
     expect(objs.map((x) => x.id)).toEqual(sampleAnnotations2.map((x) => x.id));
@@ -68,9 +91,8 @@ describe('AnnotateCanvas Intialization', () => {
   });
 
   it('should draw text element.', async () => {
-    render(<AnnotateCanvas elements={[sampleTextboxElement]} />);
+    await render(<AnnotateCanvas elements={[sampleTextboxElement]} />);
 
-    await sleep();
     const allObjs = testFCanvas.getObjects();
     expect(allObjs.length).toEqual(1);
     expect(allObjs[0].perPixelTargetFind).toEqual(
@@ -92,21 +114,17 @@ describe('AnnotateCanvas Mouse Draw', () => {
     'should draw at coords: %o %o, shape: %s, color: %s, stroke: %i, extra: %o',
     async (p0, p1, shape, color, strokeWidth, extraFields) => {
       const addElementHandler = jest.fn();
-      render(
+      await render(
         <AnnotateCanvas
           onAddElement={addElementHandler}
           uiState={{
             mode: 'draw',
             shape,
-            // fontSize: number,
             color,
             strokeWidth,
-            // fontFamily: string;
           }}
         />,
       );
-
-      await sleep();
 
       const downevt = new MouseEvent('mousedown', {
         clientX: p0[0],
@@ -128,9 +146,9 @@ describe('AnnotateCanvas Mouse Draw', () => {
         expect.objectContaining({
           width: p1[0] - p0[0],
           height: p1[1] - p0[1],
-          color,
           top: p0[1],
           left: p0[0],
+          stroke: color,
           strokeWidth,
           fill: '',
           ...extraFields,
@@ -138,6 +156,86 @@ describe('AnnotateCanvas Mouse Draw', () => {
       );
     },
   );
+
+  it('should draw path', async () => {
+    const addElementHandler = jest.fn();
+    await render(<AnnotateCanvas onAddElement={addElementHandler} />);
+
+    const pathObj = new fabric.Path(samplePathElement.path, {
+      strokeLineCap: 'round',
+      ...FabricObjectDefaults,
+      stroke: '#321',
+    });
+
+    await testFCanvas.fire('path:created', { path: pathObj });
+
+    expect(addElementHandler).toBeCalled();
+    expect(addElementHandler).toBeCalledWith(
+      'Path',
+      expect.objectContaining({
+        path: [['M', 0, 0], ['L', 200, 100], ['L', 170, 200], ['z']],
+        height: 200,
+        width: 200,
+        stroke: '#321',
+      }),
+    );
+  });
 });
 
+describe('AnnotateCanvas Move Element', () => {
+  it('should move element', async () => {
+    const changeElementHandler = jest.fn();
+    await render(
+      <AnnotateCanvas
+        elements={[sampleRectElement]}
+        onChangeElement={changeElementHandler}
+      />,
+    );
 
+    const rect = testFCanvas.getObjects()[0];
+    await testFCanvas.fire('object:modified', { target: rect });
+
+    expect(changeElementHandler).toBeCalled();
+    expect(changeElementHandler).toBeCalledWith({
+      id: sampleRectElement.id,
+      transformMatrix: sampleRectElement.transformMatrix,
+    });
+  });
+});
+
+describe('AnnotateCanvas Apply Properties to Selected Element', () => {
+  it('should apply properties element', async () => {
+    const changeElementHandler = jest.fn();
+    const elements = [sampleRectElement];
+    const { rerender } = await render(
+      <AnnotateCanvas
+        elements={elements}
+        onChangeElement={changeElementHandler}
+        uiState={{ color: 'red' }}
+        selection={[]}
+      />,
+    );
+
+    // const rect = testFCanvas.getObjects()[0];
+    // await testFCanvas.fire('object:modified', { target: rect });
+
+    // uiState.color = '#123123';
+    // sleep(0);
+    console.log('...rerender', rerender);
+    rerender(
+      <AnnotateCanvas
+        elements={elements}
+        onChangeElement={changeElementHandler}
+        uiState={{ color: 'blue' }}
+        selection={[sampleRectElement.id]}
+      />,
+    );
+    sleep(0);
+
+    expect(changeElementHandler).toBeCalled();
+    expect(changeElementHandler).toBeCalledWith({
+      id: sampleRectElement.id,
+      transformMatrix: sampleRectElement.transformMatrix,
+    });
+  });
+});

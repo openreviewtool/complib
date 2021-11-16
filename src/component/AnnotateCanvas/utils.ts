@@ -141,7 +141,7 @@ export const useCanvasDebugger = (
     );
     if (elementSelection.length) {
       console.log(
-        // '...Selected UiState',
+        'selected: ',
         getUiStateFromElement(elementSelection[0]),
       );
     }
