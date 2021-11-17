@@ -6,7 +6,6 @@ import {
   sampleAnnotations2,
   samplePathElement,
   sampleRectElement,
-  sampleRectElement2,
   sampleTextboxElement,
 } from '../../stories/testdata/annotationSamples';
 import { fabric } from 'fabric';
@@ -57,9 +56,15 @@ jest.mock('@testing-library/react', () => {
     __esModule: true,
     ...originalModule,
     render: async (comp) => {
-      const result = originalModule.render(comp);
+      const { rerender, ...others } = originalModule.render(comp);
+      
+      const rerenderWithSleep = async (comp) => {
+        const rerenderResult = rerender(comp);
+        await sleep(0);
+        return rerenderResult 
+      };
       await sleep(0);
-      return result;
+      return {rerender: rerenderWithSleep, ...others};
     },
   };
 });
@@ -206,36 +211,57 @@ describe('AnnotateCanvas Move Element', () => {
 describe('AnnotateCanvas Apply Properties to Selected Element', () => {
   it('should apply properties element', async () => {
     const changeElementHandler = jest.fn();
-    const elements = [sampleRectElement];
+    const elements = [sampleRectElement, samplePathElement];
+    const uiState = {};
     const { rerender } = await render(
       <AnnotateCanvas
         elements={elements}
         onChangeElement={changeElementHandler}
-        uiState={{ color: 'red' }}
+        uiState={uiState}
         selection={[]}
       />,
     );
 
-    // const rect = testFCanvas.getObjects()[0];
-    // await testFCanvas.fire('object:modified', { target: rect });
-
-    // uiState.color = '#123123';
-    // sleep(0);
-    console.log('...rerender', rerender);
-    rerender(
+    // select something
+    await rerender(
       <AnnotateCanvas
         elements={elements}
         onChangeElement={changeElementHandler}
-        uiState={{ color: 'blue' }}
+        uiState={uiState}
         selection={[sampleRectElement.id]}
       />,
     );
-    sleep(0);
 
-    expect(changeElementHandler).toBeCalled();
+    // apply red as color
+    uiState.color = 'red'
+    await rerender(
+      <AnnotateCanvas
+        elements={elements}
+        onChangeElement={changeElementHandler}
+        uiState={uiState}
+        selection={[sampleRectElement.id]}
+      />,
+    );
+
     expect(changeElementHandler).toBeCalledWith({
       id: sampleRectElement.id,
-      transformMatrix: sampleRectElement.transformMatrix,
+      stroke: 'red'
+    });
+
+    // apply strokeWidth
+    uiState.strokeWidth = 50
+    await rerender(
+      <AnnotateCanvas
+        elements={elements}
+        onChangeElement={changeElementHandler}
+        uiState={uiState}
+        selection={[sampleRectElement.id]}
+      />,
+    );
+
+    expect(changeElementHandler).toBeCalledWith({
+      id: sampleRectElement.id,
+      strokeWidth: 50,
     });
   });
 });
