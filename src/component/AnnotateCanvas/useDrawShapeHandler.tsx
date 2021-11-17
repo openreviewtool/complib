@@ -138,7 +138,7 @@ function useDrawShapeHandler(
     fcanvas.renderAll();
   }, []);
 
-  const draw_shape_handle_pointer_up = useCallback((opt: fabric.IEvent) => {
+  const draw_shape_handle_pointer_up = useCallback((_opt: fabric.IEvent) => {
     const isDrawinShape =
       uiStateRef.current?.mode === 'draw' &&
       SHAPES.indexOf(uiStateRef.current?.shape) !== -1;

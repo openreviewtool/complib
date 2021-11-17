@@ -1,6 +1,6 @@
 {
   "name": "@openreviewtool/complibrary",
-  "version": "0.1.8",
+  "version": "0.2.1",
   "main": "lib/index.js",
   "repository": "git@github.com:openreviewtool/complib2.git",
   "homepage": "https://github.com/openreviewtool/complib2#readme",
