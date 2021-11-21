@@ -50,7 +50,7 @@
     "eslint": "eslint",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
+    "build-storybook": "build-storybook -o docs-build",
     "test": "jest"
   }
 }
