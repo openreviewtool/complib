@@ -59,9 +59,6 @@ export const Default = (): JSX.Element => {
     strokeWidth: strokeWidthKnob,
     fontFamily: 'Times New Roman',
   };
-  // const handleDeleteShape = () => {
-  //   elementsDispatcher({ type: 'removeElement', removeIds: selection });
-  // };
 
   return (
     <div>
@@ -72,33 +69,10 @@ export const Default = (): JSX.Element => {
         width={800}
         height={600}
         backgroundColor={'darkgreen'}
-        // onChangeElement={(elementUpdate) => {
-        //   const id = elementUpdate.id;
-        //   console.log('...on changed elment', elementUpdate);
-
-        // setElements((prevElements) => {
-        //   return prevElements.map((element) => {
-        //     if (element.id === id) {
-        //       return {
-        //         ...element,
-        //         ...elementUpdate,
-        //         [element.etype === 'Textbox' ? 'fill' : 'stroke']: `rgb(${Math.floor(
-        //           Math.random() * 128 + 128,
-        //         )},${Math.floor(Math.random() * 128 + 128)},${Math.floor(Math.random() * 255)})`,
-        //       };
-        //     } else {
-        //       return element;
-        //     }
-        //   });
-        // });
-        // }}
-        // canvasMode={canvasModeKnob as CanvasMode}
         onChangeElement={(elementUpdates) =>
           elementsDispatcher({ type: 'changeElement', elementUpdates })
         }
         onAddElement={(etype, newThing) => {
-          // console.log('....new element added', etype, newThing, newThing instanceof fabric.Object);
-          // // setSelection([newElement.id]);
           const newElement = makeElement(etype, newThing);
           elementsDispatcher({ type: 'addElement', newElement });
         }}
