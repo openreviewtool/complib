@@ -1,16 +1,15 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import AnnotateCanvas from '../../component/AnnotateCanvas';
 import {
-  sampleAnnotations2,
+  sampleAnnotations,
   samplePathElement,
   sampleRectElement,
   sampleTextboxElement,
 } from '../../stories/testdata/annotationSamples';
 import { fabric } from 'fabric';
 import { FabricObjectDefaults } from '../../component/AnnotateCanvas/utils';
-import { uiDefaults } from '../../component/AnnotateCanvas/types';
 
 const sleep = async (msec) => {
   await new Promise((r) => setTimeout(r, msec));
@@ -85,13 +84,13 @@ describe('AnnotateCanvas Intialization', () => {
   });
 
   it('should initialize with elements.', async () => {
-    await render(<AnnotateCanvas elements={sampleAnnotations2} />);
+    await render(<AnnotateCanvas elements={sampleAnnotations} />);
 
     const objs = testFCanvas.getObjects();
-    expect(objs.length).toEqual(sampleAnnotations2.length);
-    expect(objs.map((x) => x.id)).toEqual(sampleAnnotations2.map((x) => x.id));
+    expect(objs.length).toEqual(sampleAnnotations.length);
+    expect(objs.map((x) => x.id)).toEqual(sampleAnnotations.map((x) => x.id));
     expect(objs.map((x) => x.eType)).toEqual(
-      sampleAnnotations2.map((x) => x.eType),
+      sampleAnnotations.map((x) => x.eType),
     );
   });
 

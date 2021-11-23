@@ -6,10 +6,10 @@ import { UserControllerInputs } from '../../component/AnnotateCanvas/types';
 import elementsActionReducer from '../../component/AnnotateCanvas/elementActionReducer';
 import { makeElement } from '../../component/AnnotateCanvas/utils';
 
-import { sampleAnnotations2 } from '../testdata/annotationSamples';
+import { sampleAnnotations } from '../testdata/annotationSamples';
 
 const story = {
-  title: 'Components/AnnotateCanvas',
+  title: 'AnnotateCanvas',
 };
 
 export const Default = (): JSX.Element => {
@@ -18,7 +18,6 @@ export const Default = (): JSX.Element => {
     {
       Ellipse: 'Ellipse',
       Rect: 'Rect',
-      SVG: 'SVG',
       Textbox: 'Textbox',
       Path: 'Path',
     },
@@ -27,7 +26,7 @@ export const Default = (): JSX.Element => {
   );
   const canvasModeKnob = optionsKnob(
     'Canvas Mode',
-    { draw: 'draw', selection: 'selection', panZoom: 'panZoom' },
+    { draw: 'draw', selection: 'selection'},
     'draw',
     { display: 'inline-radio' },
   );
@@ -48,7 +47,7 @@ export const Default = (): JSX.Element => {
   const [selection, setSelection] = useState<string[]>([]);
   const [elementsState, elementsDispatcher] = React.useReducer(
     elementsActionReducer,
-    sampleAnnotations2,
+    sampleAnnotations,
   );
 
   const uiState: UserControllerInputs = {
@@ -68,7 +67,7 @@ export const Default = (): JSX.Element => {
         uiState={uiState}
         width={800}
         height={600}
-        backgroundColor={'darkgreen'}
+        backgroundColor={'LightSteelBlue'}
         onChangeElement={(elementUpdates) =>
           elementsDispatcher({ type: 'changeElement', elementUpdates })
         }

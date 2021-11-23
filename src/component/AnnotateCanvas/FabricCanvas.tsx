@@ -23,7 +23,7 @@ interface FabricCanvasProps {
 const FabricCanvas: React.FC<FabricCanvasProps> = ({
   width = 100,
   height = 100,
-  backgroundColor = 'green',
+  backgroundColor = 'LightSteelBlue',
   attrs = DEFAULT_CANVAS_ATTRS,
   ...props
 }) => {

@@ -1,19 +1,5 @@
 import { AnnotateElement } from '../../component/AnnotateCanvas/types';
 
-export const sampelAnnotations1: AnnotateElement[] = [
-  {
-    etype: 'Rect',
-    width: 100,
-    height: 100,
-    strokeWidth: 3,
-    stroke: 'darkblue',
-    fill: '',
-    transformMatrix: [1, 0, 0, 1, 100, 100],
-    id: 'blue_rect_id',
-  },
-  { etype: 'Circle', radius: 50, fill: '', strokeWidth: 2, stroke: 'green', id: 'circle_green_id' },
-];
-
 export const sampleRectElement: AnnotateElement = {
   id: 'pink_rect_id',
   etype: 'Rect',
@@ -21,7 +7,7 @@ export const sampleRectElement: AnnotateElement = {
 
   fill: '',
   stroke: 'pink',
-  strokeWidth: 2,
+  strokeWidth: 3,
 
   width: 100,
   height: 100,
@@ -30,7 +16,7 @@ export const sampleRectElement: AnnotateElement = {
 export const sampleRectElement2: AnnotateElement = {
   ...sampleRectElement,
   id: 'blue_rect_id',
-  stroke: 'skyblue',
+  stroke: 'SlateGray',
   transformMatrix: [1, 0, 0, 1, 180, 140],
   width: 150,
   height: 100,
@@ -72,5 +58,5 @@ export const sampleTextboxElement: AnnotateElement = {
   width: 200,
 };
 
-export const sampleAnnotations2 = [sampleRectElement, sampleRectElement2, sampleCircleElement, 
+export const sampleAnnotations = [sampleRectElement, sampleRectElement2, sampleCircleElement, 
   sampleTextboxElement, samplePathElement]; 
