@@ -10,7 +10,7 @@ See demo and sample code in our [storybook](https://openreviewtool.github.io/com
 Install the package from npm:
 
 ```
-npm install @openreviewtool/complibrary
+npm install @openreviewtool/compl
 ```
 
 The project used [@vijayt/counter](https://vijayt.com/post/boilerplate-for-publishing-components-with-a-storybook/) template.
