@@ -1,7 +1,7 @@
 import { AnnotateElement } from '../../component/AnnotateCanvas/types';
 
 export const sampleRectElement: AnnotateElement = {
-  id: 'pink_rect_id',
+  id: 'rect1_id',
   etype: 'Rect',
   transformMatrix: [1, 0, 0, 1, 100, 100],
 
@@ -15,8 +15,8 @@ export const sampleRectElement: AnnotateElement = {
 
 export const sampleRectElement2: AnnotateElement = {
   ...sampleRectElement,
-  id: 'blue_rect_id',
-  stroke: 'SlateGray',
+  id: 'rect2_id',
+  stroke: 'Indigo',
   transformMatrix: [1, 0, 0, 1, 180, 140],
   width: 150,
   height: 100,

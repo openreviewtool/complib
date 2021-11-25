@@ -65,9 +65,9 @@ export const Default = (): JSX.Element => {
         elements={elementsState}
         selection={selection}
         uiState={uiState}
-        width={800}
-        height={600}
-        backgroundColor={'LightSteelBlue'}
+        width={480}
+        height={480}
+        backgroundColor={'SlateGray'}
         onChangeElement={(elementUpdates) =>
           elementsDispatcher({ type: 'changeElement', elementUpdates })
         }
@@ -76,7 +76,6 @@ export const Default = (): JSX.Element => {
           elementsDispatcher({ type: 'addElement', newElement });
         }}
         onSelection={(selection) => {
-          console.log('...on selection', selection);
           setSelection(selection);
         }}
       />

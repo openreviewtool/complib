@@ -1,16 +1,8 @@
 import React, { useEffect } from 'react';
 import { fabric } from 'fabric';
 import { v4 as uuidv4 } from 'uuid';
+import { DEFAULT_CANVAS_ATTRS } from './defaults';
 
-const DEFAULT_CANVAS_ATTRS: Record<string, number | string | boolean> = {
-  uniformScaling: false,
-  preserveObjectStacking: true,
-  targetFindTolerance: 10,
-  // note: currently, canvas group selection only the selection rect with shape bounds.
-  // ref: https://github.com/fabricjs/fabric.js/issues/3773
-  // So next best thing is to require user's selection rect to contain the entire object.
-  selectionFullyContained: true,
-};
 
 interface FabricCanvasProps {
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>;

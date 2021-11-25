@@ -5,7 +5,7 @@ import {
   AnnotateElementType,
   AnnotateElement,
   UserControllerInputs,
-  uiDefaults,
+  UserSelectionConfig,
 } from './types';
 import { useCanvasDebugger } from './utils';
 import useDrawShapeHandler from './useDrawShapeHandler';
@@ -15,26 +15,31 @@ import useSyncSelection from './useSyncSelection';
 import useApplyAttrsToSelection from './useApplyAttrsToSelection';
 import FabricCanvas from './FabricCanvas';
 import useRedrawElements from './useRedrawElements';
+import { DEFAULT_SELECTION_CONFIG, DEFAULT_UI_ATTRS } from './defaults';
 
 interface AnnotateCanvasProps {
   elements: AnnotateElement[];
   selection?: string[];
-  uiState?: UserControllerInputs;
-
+  
   width?: number;
   height?: number;
   backgroundColor?: string;
-
+  
   // if true, redraw the entire canvas when ever one element updates
   clearOnElementModify?: boolean; 
-
+  
   onAddElement?: (etype: AnnotateElementType, element: fabric.Object) => void;
   onChangeElement?: (element: Partial<AnnotateElement>) => void;
   onSelection?: (
     selected: string[],
     added: string[],
     removed: string[],
-  ) => void;
+    ) => void;
+    
+  uiState?: UserControllerInputs;
+  selectionConfig?: UserSelectionConfig,
+
+  debugLogging?: boolean,
 }
 
 const AnnotateCanvas: React.FC<AnnotateCanvasProps> = ({
@@ -45,9 +50,12 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = ({
   height = 100,
   backgroundColor = '',
   
-  clearOnElementModify = true,
+  clearOnElementModify = false,
 
-  uiState = uiDefaults,
+  uiState = DEFAULT_UI_ATTRS,
+  selectionConfig = DEFAULT_SELECTION_CONFIG,
+
+  debugLogging = false,
 
   ...props
 }) => {
@@ -70,7 +78,7 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = ({
     elements,
     props.onChangeElement,
   );
-  useCanvasDebugger(elements, selection);
+  useCanvasDebugger(debugLogging, elements, selection);
 
   return (
     <FabricCanvas

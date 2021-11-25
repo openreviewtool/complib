@@ -32,8 +32,6 @@ export default function useApplyAttrsToSelection(
           element.fabricObj.set(adjKey as keyof fabric.Object, value);
         }
         if (onChangeElement) {
-          // console.log('....useApplyAttrsToSelection onChange', key, adjKey)
-          // onChangeElement({ ...element, [adjKey]: value });
           onChangeElement({ id: element.id, [adjKey]: value });
         }
       }

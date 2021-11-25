@@ -40,14 +40,11 @@ export interface UserControllerInputs {
   fontFamily: string;
 }
 
-export const uiDefaults: UserControllerInputs = {
-  mode: 'draw',
-  shape: 'Rect',
-  fontSize: 12,
-  color: 'blue',
-  strokeWidth: 3,
-  fontFamily: 'Times New Roman',
-};
+export interface UserSelectionConfig {
+  perPixelSelection: boolean;
+  selectionColor: string;
+  hoverBoundingBox: boolean;
+}
 
 export const fabricObjAttrsLookup: Record<string, string[]> = {
   Rect: [...baseAttrNames, 'width', 'height'],

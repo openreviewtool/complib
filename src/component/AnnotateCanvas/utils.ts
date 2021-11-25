@@ -1,6 +1,7 @@
 import { fabric } from 'fabric';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { FabricObjectDefaults } from './defaults';
 
 import {
   AnnotateElement,
@@ -19,12 +20,6 @@ export const makeElement = (
   }, {} as Partial<AnnotateElement>);
   element.transformMatrix = fObj.calcTransformMatrix();
   return { etype, id: uuidv4(), ...element };
-};
-
-export const FabricObjectDefaults = {
-  perPixelTargetFind: true,
-  noScaleCache: false,
-  strokeUniform: true,
 };
 
 /**
@@ -72,7 +67,6 @@ export const makeFabricObj = async (
   }
 
   if (props.transformMatrix) {
-    // const t = fabric.util.qrDecompose((newFObj as fObjExtend).transformMatrix);
     const t = fabric.util.qrDecompose(props.transformMatrix as number[]);
 
     newFObj.set(t);
@@ -83,6 +77,19 @@ export const makeFabricObj = async (
     );
   }
   newFObj.setCoords();
+
+  // set hover properties
+  newFObj.on('mouseover', function (this: any) {
+    this._renderControls(this.canvas.contextTop, {
+      hasControls: false,
+    });
+  });
+  newFObj.on('mousedown', function (this: any) {
+    this.canvas.clearContext(this.canvas.contextTop);
+  });
+  newFObj.on('mouseout', function (this: any) {
+    this.canvas.clearContext(this.canvas.contextTop);
+  });
 
   return newFObj;
 };
@@ -129,21 +136,21 @@ export const getUiStateFromElement = (
 };
 
 export const useCanvasDebugger = (
+  on: boolean,
   elements: AnnotateElement[],
   selection: string[],
 ): void => {
   // this is loggig for debugging only
   React.useEffect(() => {
-    // console.log('...Elements', elements);
-    // console.log('...Selection', selection);
+    if (!on) return;
+
+    console.log('All elements: ', elements);
+    console.log('All selections: ', selection);
     const elementSelection = elements.filter(
       (e) => selection.indexOf(e.id) !== -1,
     );
     if (elementSelection.length) {
-      console.log(
-        'selected: ',
-        getUiStateFromElement(elementSelection[0]),
-      );
+      console.log('Selected: ', getUiStateFromElement(elementSelection[0]));
     }
   }, [elements, selection]);
 };

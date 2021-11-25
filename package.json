@@ -1,8 +1,8 @@
 {
   "name": "@openreviewtool/complib",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "repository": "git@github.com:openreviewtool/complib.git",
-  "homepage": "https://github.com/openreviewtool/complib#readme",
+  "homepage": "https://openreviewtool.github.io/complib",
   "bugs": "https://github.com/openreviewtool/complib/issues",
   "author": "Tommy Zhu <tzhu2001@gmail.com>",
   "license": "MIT",

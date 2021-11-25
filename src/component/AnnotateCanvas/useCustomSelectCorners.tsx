@@ -39,6 +39,7 @@ const setSelectionControls = (
   newElement.cornerStrokeColor = 'white';
   newElement.cornerSize = 10;
   newElement.borderDashArray = [5, 5];
+  newElement.borderColor = 'Pink';
 
   if (!HAS_ROTATE_HANDLE) {
     newElement.setControlVisible('mtr', false);

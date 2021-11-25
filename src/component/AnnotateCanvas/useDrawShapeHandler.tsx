@@ -3,13 +3,13 @@ import { useCallback } from 'react';
 import {
   makeFabricObj,
   getElementPropsFromUiState,
-  FabricObjectDefaults,
 } from './utils';
 import { AnnotateElementType, fObjExtend, UserControllerInputs } from './types';
 import { fabric } from 'fabric';
 import { IEvent } from 'fabric/fabric-impl';
+import { FabricObjectDefaults } from './defaults';
 
-const SHAPES = ['Ellipse', 'Rect', 'Circle', 'Triangle'];
+const SHAPES = ['Ellipse', 'Rect', 'Circle', 'Triangle', 'Textbox'];
 
 export interface NewShape {
   etype: AnnotateElementType;
