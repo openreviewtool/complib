@@ -86,5 +86,11 @@ export interface fObjExtend extends fabric.Object {
   rx: number;
   ry: number;
   text: string;
-  _objects: fObjExtend[]; // from group selections.
+  _objects?: fObjExtend[]; // from group selections.
+}
+
+export interface fSelectionEvent extends fabric.IEvent {
+  target: fObjExtend,
+  selected: fObjExtend[],
+  deselected: fObjExtend[],
 }

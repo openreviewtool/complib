@@ -56,14 +56,14 @@ jest.mock('@testing-library/react', () => {
     ...originalModule,
     render: async (comp) => {
       const { rerender, ...others } = originalModule.render(comp);
-      
+
       const rerenderWithSleep = async (comp) => {
         const rerenderResult = rerender(comp);
         await sleep(0);
-        return rerenderResult 
+        return rerenderResult;
       };
       await sleep(0);
-      return {rerender: rerenderWithSleep, ...others};
+      return { rerender: rerenderWithSleep, ...others };
     },
   };
 });
@@ -94,7 +94,7 @@ describe('AnnotateCanvas Intialization', () => {
     );
   });
 
-  it('should draw text element.', async () => {
+  it('should init text element.', async () => {
     await render(<AnnotateCanvas elements={[sampleTextboxElement]} />);
 
     const allObjs = testFCanvas.getObjects();
@@ -114,15 +114,29 @@ describe('AnnotateCanvas Mouse Draw', () => {
     [[10, 20], [100, 120], 'Rect', '#123', 1, {}],
     [[10, 30], [120, 240], 'Rect', '#321', 2, {}],
     [[30, 20], [100, 120], 'Ellipse', '#123', 1, { rx: 35, ry: 50 }],
+    [
+      [30, 20],
+      [100, 120],
+      'Textbox',
+      '#123',
+      1,
+      {
+        text: 'Hello',
+        fill: '#123',
+        stroke: '',
+        strokeWidth: 0,
+      },
+    ],
   ])(
-    'should draw at coords: %o %o, shape: %s, color: %s, stroke: %i, extra: %o',
-    async (p0, p1, shape, color, strokeWidth, extraFields) => {
+    'should draw at coords: %o %o, shape: %s, color: %s, stroke: %i, results: %o',
+    async (p0, p1, shape, color, strokeWidth, outExtra) => {
       const addElementHandler = jest.fn();
       await render(
         <AnnotateCanvas
           onAddElement={addElementHandler}
           uiState={{
             mode: 'draw',
+            text: 'Hello',
             shape,
             color,
             strokeWidth,
@@ -144,19 +158,23 @@ describe('AnnotateCanvas Mouse Draw', () => {
       await testFCanvas.fire('mouse:move', { e: moveevt });
       await testFCanvas.fire('mouse:up', {});
 
-      expect(addElementHandler).toBeCalled();
-      expect(addElementHandler).toBeCalledWith(
-        shape,
-        expect.objectContaining({
+      let result = {
+        stroke: color,
+        strokeWidth,
+        fill: '',
+        top: p0[1],
+        left: p0[0],
+      };
+      if (shape !== 'Textbox') {
+        result = {
+          ...result,
           width: p1[0] - p0[0],
           height: p1[1] - p0[1],
-          top: p0[1],
-          left: p0[0],
-          stroke: color,
-          strokeWidth,
-          fill: '',
-          ...extraFields,
-        }),
+        };
+      }
+      expect(addElementHandler).toBeCalledWith(
+        shape,
+        expect.objectContaining({ ...result, ...outExtra }),
       );
     },
   );
@@ -232,7 +250,7 @@ describe('AnnotateCanvas Apply Properties to Selected Element', () => {
     );
 
     // apply red as color
-    uiState.color = 'red'
+    uiState.color = 'red';
     await rerender(
       <AnnotateCanvas
         elements={elements}
@@ -244,11 +262,11 @@ describe('AnnotateCanvas Apply Properties to Selected Element', () => {
 
     expect(changeElementHandler).toBeCalledWith({
       id: sampleRectElement.id,
-      stroke: 'red'
+      stroke: 'red',
     });
 
     // apply strokeWidth
-    uiState.strokeWidth = 50
+    uiState.strokeWidth = 50;
     await rerender(
       <AnnotateCanvas
         elements={elements}

@@ -30,3 +30,5 @@ export const FabricObjectDefaults = {
   noScaleCache: false,
   strokeUniform: true,
 };
+
+export const HAS_ROTATE_HANDLE = true

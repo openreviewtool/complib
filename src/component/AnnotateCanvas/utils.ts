@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { FabricObjectDefaults } from './defaults';
+import { FabricObjectDefaults, HAS_ROTATE_HANDLE } from './defaults';
 
 import {
   AnnotateElement,
@@ -78,19 +78,6 @@ export const makeFabricObj = async (
   }
   newFObj.setCoords();
 
-  // set hover properties
-  newFObj.on('mouseover', function (this: any) {
-    this._renderControls(this.canvas.contextTop, {
-      hasControls: false,
-    });
-  });
-  newFObj.on('mousedown', function (this: any) {
-    this.canvas.clearContext(this.canvas.contextTop);
-  });
-  newFObj.on('mouseout', function (this: any) {
-    this.canvas.clearContext(this.canvas.contextTop);
-  });
-
   return newFObj;
 };
 
@@ -153,4 +140,56 @@ export const useCanvasDebugger = (
       console.log('Selected: ', getUiStateFromElement(elementSelection[0]));
     }
   }, [elements, selection]);
+};
+
+export const setHoverStyle = (newElement: fabric.Object, selected: boolean) => {
+  newElement.cornerStyle = 'circle';
+  newElement.cornerStrokeColor = 'white';
+  newElement.cornerSize = 10;
+  newElement.borderDashArray = selected ? undefined : [5, 5];
+  newElement.borderColor = 'Azure';
+};
+
+/**
+ * Set the selection handle for fabric shape and groups.
+ * @param newElement new Fabric Object
+ * @param elementType the fabric object type
+ */
+export const setSelectionControls = (
+  newElement: fabric.Object,
+  elementType?: string,
+): void => {
+  newElement.cornerStyle = 'circle';
+  newElement.cornerStrokeColor = 'white';
+  newElement.cornerSize = 10;
+  newElement.borderDashArray = undefined;
+  newElement.borderColor = 'Azure';
+
+  if (!HAS_ROTATE_HANDLE) {
+    newElement.setControlVisible('mtr', false);
+  }
+
+  if (elementType === 'Textbox') {
+    newElement.setControlVisible('tl', false);
+    newElement.setControlVisible('mt', false);
+    newElement.setControlVisible('tr', false);
+    newElement.setControlVisible('bl', false);
+    newElement.setControlVisible('mb', false);
+    newElement.setControlVisible('br', false);
+  }
+};
+
+export const bootstrapHoverHandler = (newFObj: fabric.Object) => {
+  // set hover properties
+  newFObj.on('mouseover', function (this: any) {
+    this._renderControls(this.canvas.contextTop, {
+      hasControls: false,
+    });
+  });
+  newFObj.on('mousedown', function (this: any) {
+    this.canvas.clearContext(this.canvas.contextTop);
+  });
+  newFObj.on('mouseout', function (this: any) {
+    this.canvas.clearContext(this.canvas.contextTop);
+  });
 };
