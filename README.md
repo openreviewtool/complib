@@ -14,6 +14,6 @@ npm install @openreviewtool/complib
 ```
 
 ## Credits
-Typescript Project Boilerplate: [@vijayt/counter](https://vijayt.com/post/boilerplate-for-publishing-components-with-a-storybook/) template.
-Github actions: pascalgn/npm-publish-action, JamesIves/github-pages-deploy-action
-Libraries: [Fabricjs](http://fabricjs.com/)
+* Typescript Project Boilerplate: [@vijayt/counter](https://vijayt.com/post/boilerplate-for-publishing-components-with-a-storybook/) template.
+* Github actions: pascalgn/npm-publish-action, JamesIves/github-pages-deploy-action
+* Libraries: [Fabricjs](http://fabricjs.com/)
