@@ -5,7 +5,7 @@ This ui library intend to be use to build a review system, featuring:
 * Video Player (wip)
 * Video Slider (wip)
 
-See demo and sample code in our [storybook](https://openreviewtool.github.io/complib). 
+See the library in action in our [Storybook demo](https://openreviewtool.github.io/complib)!
 
 Install the package from npm:
 
