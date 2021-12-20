@@ -78,6 +78,7 @@ export const Default = (): JSX.Element => {
         onSelection={(selection) => {
           setSelection(selection);
         }}
+        clearOnElementModify={false}
       />
     </div>
   );

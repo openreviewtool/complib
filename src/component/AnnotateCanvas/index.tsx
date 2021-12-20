@@ -10,6 +10,7 @@ import {
 import { useCanvasDebugger } from './utils';
 import useDrawShapeHandler from './useDrawShapeHandler';
 import useCustomSelectCorners from './useCustomSelectCorners';
+import useCustomHoverStyle from './useCustomHoverStyle';
 import useModifyHandler from './useModifyHandler';
 import useSyncSelection from './useSyncSelection';
 import useApplyAttrsToSelection from './useApplyAttrsToSelection';
@@ -69,6 +70,7 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = ({
   );
   useSyncSelection(fabricCanvasRef, props.onSelection);
   useCustomSelectCorners(fabricCanvasRef);
+  useCustomHoverStyle(fabricCanvasRef);
   useDrawShapeHandler(fabricCanvasRef, uiState, props.onAddElement);
   useModifyHandler(fabricCanvasRef, props.onChangeElement);
   useApplyAttrsToSelection(
