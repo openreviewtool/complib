@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import AnnotateCanvas from '../../component/AnnotateCanvas';
+import AnnotateCanvas from '../../component/core/AnnotateCanvas';
 import {
   sampleAnnotations,
   samplePathElement,
@@ -9,7 +9,7 @@ import {
   sampleTextboxElement,
 } from '../../stories/testdata/annotationSamples';
 import { fabric } from 'fabric';
-import { FabricObjectDefaults } from '../../component/AnnotateCanvas/defaults';
+import { FabricObjectDefaults } from '../../component/core/AnnotateCanvas/defaults';
 
 const sleep = async (msec) => {
   await new Promise((r) => setTimeout(r, msec));
