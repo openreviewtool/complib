@@ -1,5 +1,5 @@
 import React from 'react';
-import StopWatch from '../../component/StopWatch';
+import StopWatch from '../../component/core/StopWatch';
 import { button } from '@storybook/addon-knobs';
 
 const story = {

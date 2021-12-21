@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { optionsKnob, number, color } from '@storybook/addon-knobs';
-import AnnotateCanvas from '../../component/AnnotateCanvas';
+import AnnotateCanvas from '../../component/core/AnnotateCanvas';
 
-import { UserControllerInputs } from '../../component/AnnotateCanvas/types';
-import elementsActionReducer from '../../component/AnnotateCanvas/elementActionReducer';
-import { makeElement } from '../../component/AnnotateCanvas/utils';
+import { UserControllerInputs } from '../../component/core/AnnotateCanvas/types';
+import elementsActionReducer from '../../component/core/AnnotateCanvas/elementActionReducer';
+import { makeElement } from '../../component/core/AnnotateCanvas/utils';
 
 import { sampleAnnotations } from '../testdata/annotationSamples';
 
