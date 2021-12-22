@@ -111,8 +111,8 @@ describe('AnnotateCanvas Intialization', () => {
 
 describe('AnnotateCanvas Mouse Draw', () => {
   it.each([
-    [[10, 20], [100, 120], 'Rect', '#123', 1, {}],
-    [[10, 30], [120, 240], 'Rect', '#321', 2, {}],
+    [[10, 20], [100, 120], 'Rect', '#123', 1, {width: 90, height: 100}],
+    [[10, 30], [120, 240], 'Rect', '#321', 2, {width: 110, height: 210}],
     [[30, 20], [100, 120], 'Ellipse', '#123', 1, { rx: 35, ry: 50 }],
     [
       [30, 20],
@@ -162,19 +162,9 @@ describe('AnnotateCanvas Mouse Draw', () => {
         stroke: color,
         strokeWidth,
         fill: '',
-        top: p0[1],
-        left: p0[0],
       };
-      if (shape !== 'Textbox') {
-        result = {
-          ...result,
-          width: p1[0] - p0[0],
-          height: p1[1] - p0[1],
-        };
-      }
       expect(addElementHandler).toBeCalledWith(
-        shape,
-        expect.objectContaining({ ...result, ...outExtra }),
+        expect.objectContaining({...result, ...outExtra }),
       );
     },
   );
@@ -193,11 +183,8 @@ describe('AnnotateCanvas Mouse Draw', () => {
 
     expect(addElementHandler).toBeCalled();
     expect(addElementHandler).toBeCalledWith(
-      'Path',
       expect.objectContaining({
         path: [['M', 0, 0], ['L', 200, 100], ['L', 170, 200], ['z']],
-        height: 200,
-        width: 200,
         stroke: '#321',
       }),
     );

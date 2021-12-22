@@ -21,7 +21,7 @@ export default function useApplyAttrsToSelection(
       if (selectedIds.indexOf(element.id) !== -1) {
         const etype = element.etype;
         let adjKey = key;
-
+        
         if (etype === 'Textbox' && key === 'strokeWidth') return;
 
         if (key === 'color') {

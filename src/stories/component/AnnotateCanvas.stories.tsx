@@ -30,7 +30,7 @@ export const Default = (): JSX.Element => {
     'draw',
     { display: 'inline-radio' },
   );
-  const fontSizeKnob = number('Attr/Font Size', 12, {
+  const fontSizeKnob = number('Attr/Font Size', 24, {
     range: true,
     min: 6,
     max: 50,
@@ -71,14 +71,14 @@ export const Default = (): JSX.Element => {
         onChangeElement={(elementUpdates) =>
           elementsDispatcher({ type: 'changeElement', elementUpdates })
         }
-        onAddElement={(etype, newThing) => {
-          const newElement = makeElement(etype, newThing);
+        onAddElement={(newElement) => {
           elementsDispatcher({ type: 'addElement', newElement });
         }}
         onSelection={(selection) => {
           setSelection(selection);
         }}
-        clearOnElementModify={false}
+        clearOnElementModify={true}
+        debugLogging={false}
       />
     </div>
   );
