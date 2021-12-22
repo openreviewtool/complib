@@ -2,7 +2,6 @@ import React from 'react';
 import { fabric } from 'fabric';
 
 import {
-  AnnotateElementType,
   AnnotateElement,
   UserControllerInputs,
   UserSelectionConfig,
@@ -29,7 +28,7 @@ interface AnnotateCanvasProps {
   // if true, redraw the entire canvas when ever one element updates
   clearOnElementModify?: boolean; 
   
-  onAddElement?: (etype: AnnotateElementType, element: fabric.Object) => void;
+  onAddElement?: (element: AnnotateElement) => void;
   onChangeElement?: (element: Partial<AnnotateElement>) => void;
   onSelection?: (
     selected: string[],
@@ -80,7 +79,7 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = ({
     elements,
     props.onChangeElement,
   );
-  useCanvasDebugger(debugLogging, elements, selection);
+  useCanvasDebugger(debugLogging, elements, selection, fabricCanvasRef);
 
   return (
     <FabricCanvas

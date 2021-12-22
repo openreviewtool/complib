@@ -5,60 +5,81 @@ import { FabricObjectDefaults, HAS_ROTATE_HANDLE } from './defaults';
 
 import {
   AnnotateElement,
-  AnnotateElementType,
   fabricObjAttrsLookup,
+  fObjExtend,
   UserControllerInputs,
 } from './types';
 
+/**
+ * Serialize the fabric object by extracting the attributes into a hash.
+ * This happens when user draws a new element.
+ * @param props
+ * @returns
+ */
 export const makeElement = (
-  etype: AnnotateElementType,
-  fObj: fabric.Object,
+  // etype: AnnotateElementType,
+  fObj: fObjExtend,
 ): AnnotateElement => {
-  const element = fabricObjAttrsLookup[etype].reduce((p, c) => {
+  const element = fabricObjAttrsLookup[fObj.etype].reduce((p, c) => {
     p[c] = (fObj as any)[c];
     return p;
   }, {} as Partial<AnnotateElement>);
-  element.transformMatrix = fObj.calcTransformMatrix();
-  return { etype, id: uuidv4(), ...element };
+  return {
+    etype: fObj.etype,
+    id: fObj.id,
+    transformMatrix: fObj.calcTransformMatrix(),
+    fabricObj: fObj,
+    ...element,
+  };
 };
 
 /**
- * Deserialize the element
+ * Make an extended fabric object, this is called when deserializing
+ * the fabric object from data, or when creating a new shape from drawing event.
  * @param props
  * @returns
  */
 export const makeFabricObj = async (
   props: Partial<AnnotateElement>,
-): Promise<fabric.Object> => {
+): Promise<fObjExtend> => {
   let newFObj: fabric.Object;
+  const fObjProps = { ...props };
+
+  if (fObjProps.transformMatrix) {
+    delete fObjProps.transformMatrix;
+    // keep the id and the etype
+  }
+  if (!fObjProps.etype || !fObjProps.id) {
+    throw 'Can not make extended fabric object without etype and id.';
+  }
 
   if (props.etype === 'Textbox') {
     newFObj = new fabric.Textbox('text', {
       text: 'Enter text...',
       fontFamily: 'Times New Roman',
       ...FabricObjectDefaults,
-      ...props,
+      ...fObjProps,
     });
   } else if (props.etype === 'Path') {
     newFObj = new fabric.Path(props.path as string, {
       strokeLineCap: 'round',
       ...FabricObjectDefaults,
-      ...props,
+      ...fObjProps,
     });
   } else if (props.etype === 'Rect') {
     newFObj = new fabric.Rect({
       ...FabricObjectDefaults,
-      ...props,
+      ...fObjProps,
     });
   } else if (props.etype === 'Circle') {
     newFObj = new fabric.Circle({
       ...FabricObjectDefaults,
-      ...props,
+      ...fObjProps,
     });
   } else if (props.etype === 'Ellipse') {
     newFObj = new fabric.Ellipse({
       ...FabricObjectDefaults,
-      ...props,
+      ...fObjProps,
     });
   } else {
     throw Error(
@@ -66,6 +87,7 @@ export const makeFabricObj = async (
     );
   }
 
+  // set the object position based on the transform matrix.
   if (props.transformMatrix) {
     const t = fabric.util.qrDecompose(props.transformMatrix as number[]);
 
@@ -78,7 +100,7 @@ export const makeFabricObj = async (
   }
   newFObj.setCoords();
 
-  return newFObj;
+  return newFObj as fObjExtend;
 };
 
 export const getElementPropsFromUiState = (
@@ -126,13 +148,17 @@ export const useCanvasDebugger = (
   on: boolean,
   elements: AnnotateElement[],
   selection: string[],
+  fCanvasRef: React.MutableRefObject<fabric.Canvas>,
 ): void => {
   // this is loggig for debugging only
   React.useEffect(() => {
-    if (!on) return;
+    if (!on || !fCanvasRef?.current) return;
 
     console.log('All elements: ', elements);
-    console.log('All selections: ', selection);
+    if (fCanvasRef?.current) {
+      console.log('All Fabric Objects: ', fCanvasRef.current.getObjects());
+    }
+    console.log('Selection Ids: ', selection);
     const elementSelection = elements.filter(
       (e) => selection.indexOf(e.id) !== -1,
     );

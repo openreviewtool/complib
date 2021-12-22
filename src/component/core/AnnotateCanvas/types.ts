@@ -77,15 +77,13 @@ export type ElementsAction =
     };
 
 export interface fObjExtend extends fabric.Object {
-  // interface ObjectWithTypeAndId<T> {
   id: string;
   etype: AnnotateElementType;
-  transformMatrix: number[];
 
-  // missing properties from the standard def.
-  rx: number;
-  ry: number;
-  text: string;
+  // missing properties from the typescript wrapper.
+  rx?: number;
+  ry?: number;
+  text?: string;
   _objects?: fObjExtend[]; // from group selections.
 }
 

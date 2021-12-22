@@ -1,20 +1,17 @@
 import React from 'react';
 import { useCallback } from 'react';
-import {
-  makeFabricObj,
-  getElementPropsFromUiState,
-} from './utils';
-import { AnnotateElementType, fObjExtend, UserControllerInputs } from './types';
+import { v4 as uuid4 } from 'uuid';
+import { makeFabricObj, getElementPropsFromUiState, makeElement } from './utils';
+import { AnnotateElement, fObjExtend, UserControllerInputs } from './types';
 import { fabric } from 'fabric';
 import { IEvent } from 'fabric/fabric-impl';
 import { FabricObjectDefaults } from './defaults';
 
 const SHAPES = ['Ellipse', 'Rect', 'Circle', 'Triangle', 'Textbox'];
 
+// temporary holds the preiew element while it's drawn.
 export interface NewShape {
-  etype: AnnotateElementType;
-
-  fabObj: fabric.Object;
+  newFObjExt: fObjExtend;
 
   originX: number;
   originY: number;
@@ -25,7 +22,7 @@ export interface NewShape {
 function useDrawShapeHandler(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,
   uiState: UserControllerInputs,
-  onAddElement?: (etype: AnnotateElementType, element: fabric.Object) => void,
+  onAddElement?: (element: AnnotateElement) => void,
 ): void {
   const uiStateRef = React.useRef<UserControllerInputs>(uiState);
 
@@ -55,14 +52,15 @@ function useDrawShapeHandler(
   };
 
   const handle_path_created = (meta: IEvent) => {
-    const fObj: fabric.Object = (meta as any).path;
+    const fObj: fObjExtend = (meta as any).path;
 
     let k: keyof typeof FabricObjectDefaults;
     for (k in FabricObjectDefaults) {
       fObj.set(k, FabricObjectDefaults[k]);
     }
-
-    onAddElement?.('Path', fObj);
+    fObj.etype = 'Path';
+    fObj.id = uuid4();   
+    onAddElement?.(makeElement(fObj));
   };
 
   React.useEffect(() => {
@@ -92,16 +90,17 @@ function useDrawShapeHandler(
 
     const newElementDefaults = getElementPropsFromUiState(uiStateRef.current);
 
+    // this is a preview element.
     makeFabricObj({
       ...newElementDefaults,
+      id: uuid4(),
       transformMatrix: [1, 0, 0, 1, originX, originY],
     }).then((shape) => {
       fcanvas.add(shape);
       currentShapeDrawnRef.current = {
-        etype: newElementDefaults.etype!,
         originX,
         originY,
-        fabObj: shape,
+        newFObjExt: shape,
       };
     });
   }, []);
@@ -116,9 +115,14 @@ function useDrawShapeHandler(
     const fcanvas = fabricCanvasRef.current;
     const pointer = fcanvas.getPointer(opt.e);
     const { originX, originY } = currentShapeDrawnRef.current;
-    const fabObj = currentShapeDrawnRef.current.fabObj as fObjExtend;
+    const fabObj = currentShapeDrawnRef.current.newFObjExt;
 
-    if (SHAPES.indexOf(fabObj.etype) !== -1) {
+    if (fabObj.etype === 'Textbox') {
+      fabObj.set({
+        left: pointer.x,
+        top: pointer.y,
+      });
+    } else if (SHAPES.indexOf(fabObj.etype) !== -1) {
       fabObj.set({
         left: Math.min(originX, pointer.x),
         top: Math.min(originY, pointer.y),
@@ -134,8 +138,8 @@ function useDrawShapeHandler(
       fabObj.set({ width: Math.abs(originX - pointer.x) });
       fabObj.set({ height: Math.abs(originY - pointer.y) });
     }
-
-    fcanvas.renderAll();
+    fabObj.setCoords();
+    fcanvas.requestRenderAll();
   }, []);
 
   const draw_shape_handle_pointer_up = useCallback((_opt: fabric.IEvent) => {
@@ -146,20 +150,21 @@ function useDrawShapeHandler(
     const fcanvas = fabricCanvasRef.current;
     if (currentShapeDrawnRef.current === null || !isDrawinShape) return;
 
-    const newShape = currentShapeDrawnRef.current;
+    const { newFObjExt } = currentShapeDrawnRef.current;
 
     if (
-      SHAPES.indexOf(newShape.etype) !== -1 &&
-      (newShape.fabObj!.width! < 4 || newShape.fabObj!.height! < 4)
+      SHAPES.indexOf(newFObjExt.etype) !== -1 &&
+      (newFObjExt!.width! < 4 || newFObjExt!.height! < 4)
     ) {
       // don't add it if it's too small
-      fcanvas?.remove(newShape.fabObj);
+      fcanvas?.remove(newFObjExt);
     } else {
-      onAddElement?.(newShape.etype, newShape.fabObj);
+      onAddElement?.(makeElement(newFObjExt));
 
-      // selection
-      fcanvas.setActiveObject(newShape.fabObj);
-      fcanvas.requestRenderAll();
+      // fcanvas.setActiveObject(newFObjExt);
+      // newFObjExt.set({dirty: true})
+      // fcanvas.renderAll();
+      // fcanvas.discardActiveObject().renderAll();
     }
 
     currentShapeDrawnRef.current = null;
