@@ -8,6 +8,7 @@ import {
   fabricObjAttrsLookup,
   fObjExtend,
   UserControllerInputs,
+  UserSelectionConfig,
 } from './types';
 
 /**
@@ -168,12 +169,17 @@ export const useCanvasDebugger = (
   }, [elements, selection]);
 };
 
-export const setHoverStyle = (newElement: fabric.Object, selected: boolean) => {
+export const setHoverStyle = (
+  newElement: fabric.Object,
+  selected: boolean,
+  config?: UserSelectionConfig,
+) => {
   newElement.cornerStyle = 'circle';
-  newElement.cornerStrokeColor = 'white';
-  newElement.cornerSize = 10;
+  newElement.transparentCorners = false;
+  newElement.cornerSize = 20;
   newElement.borderDashArray = selected ? undefined : [5, 5];
-  newElement.borderColor = 'Azure';
+  newElement.borderColor = config?.selectionColor;
+  newElement.cornerColor = config?.selectionColor;
 };
 
 /**
@@ -184,12 +190,13 @@ export const setHoverStyle = (newElement: fabric.Object, selected: boolean) => {
 export const setSelectionControls = (
   newElement: fabric.Object,
   elementType?: string,
+  config?: UserSelectionConfig,
 ): void => {
   newElement.cornerStyle = 'circle';
-  newElement.cornerStrokeColor = 'white';
-  newElement.cornerSize = 10;
+  newElement.cornerSize = 20;
   newElement.borderDashArray = undefined;
-  newElement.borderColor = 'Azure';
+  newElement.borderColor = config?.selectionColor;
+  newElement.borderColor = config?.selectionColor;
 
   if (!HAS_ROTATE_HANDLE) {
     newElement.setControlVisible('mtr', false);

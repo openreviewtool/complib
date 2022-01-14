@@ -20,36 +20,36 @@ import { DEFAULT_SELECTION_CONFIG, DEFAULT_UI_ATTRS } from './defaults';
 interface AnnotateCanvasProps {
   elements: AnnotateElement[];
   selection?: string[];
-  
+
   width?: number;
   height?: number;
   backgroundColor?: string;
-  
+
   // if true, redraw the entire canvas when ever one element updates
-  clearOnElementModify?: boolean; 
-  
+  clearOnElementModify?: boolean;
+
   onAddElement?: (element: AnnotateElement) => void;
   onChangeElement?: (element: Partial<AnnotateElement>) => void;
   onSelection?: (
     selected: string[],
     added: string[],
     removed: string[],
-    ) => void;
-    
-  uiState?: UserControllerInputs;
-  selectionConfig?: UserSelectionConfig,
+  ) => void;
 
-  debugLogging?: boolean,
+  uiState?: UserControllerInputs;
+  selectionConfig?: UserSelectionConfig;
+
+  debugLogging?: boolean;
 }
 
 const AnnotateCanvas: React.FC<AnnotateCanvasProps> = ({
   elements = [],
   selection = [],
-  
+
   width = 100,
   height = 100,
   backgroundColor = '',
-  
+
   clearOnElementModify = false,
 
   uiState = DEFAULT_UI_ATTRS,
@@ -68,8 +68,9 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = ({
     clearOnElementModify,
   );
   useSyncSelection(fabricCanvasRef, props.onSelection);
-  useCustomSelectCorners(fabricCanvasRef);
-  useCustomHoverStyle(fabricCanvasRef);
+  useCustomSelectCorners(fabricCanvasRef, selectionConfig);
+  if (selectionConfig?.hoverBoundingBox)
+    useCustomHoverStyle(fabricCanvasRef, selectionConfig);
   useDrawShapeHandler(fabricCanvasRef, uiState, props.onAddElement);
   useModifyHandler(fabricCanvasRef, props.onChangeElement);
   useApplyAttrsToSelection(

@@ -1,4 +1,4 @@
-export const mediaSamples1 = [
+export const mediaSamples = [
   {
     provider_name: 'YouTube',
     url: 'https://www.youtube.com/watch?v=KMX_FuOLoCI',

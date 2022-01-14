@@ -30,7 +30,7 @@ const Timeline: React.FC<TimelineProps> = ({
   ...props
 }) => {
   const progressDisplayTimeoutRef = useRef<number | null>(null);
-  const timelineRef = React.createRef<HTMLInputElement>();
+  const timelineRef = useRef<HTMLInputElement|null>(null);
 
   const [innerCaptured, setInnerCaptured] = useState<boolean>(false);
   const [seekPercentage, setSeekPercentage] = useState<number>(0);

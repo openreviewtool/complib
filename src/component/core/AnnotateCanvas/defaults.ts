@@ -1,7 +1,7 @@
 import { UserControllerInputs, UserSelectionConfig } from "./types";
 
 export const DEFAULT_UI_ATTRS: UserControllerInputs = {
-  mode: 'draw',
+  mode: 'selection',
   shape: 'Rect',
   fontSize: 12,
   color: 'blue',
@@ -21,7 +21,7 @@ export const DEFAULT_CANVAS_ATTRS: Record<string, number | string | boolean> = {
 
 export const DEFAULT_SELECTION_CONFIG: UserSelectionConfig = {
   perPixelSelection: false,
-  selectionColor: 'MintCream',
+  selectionColor: 'Azure',
   hoverBoundingBox: true,
 }
 
