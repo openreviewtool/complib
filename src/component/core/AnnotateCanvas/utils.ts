@@ -176,7 +176,7 @@ export const setHoverStyle = (
 ) => {
   newElement.cornerStyle = 'circle';
   newElement.transparentCorners = false;
-  newElement.cornerSize = 20;
+  newElement.cornerSize = 12;
   newElement.borderDashArray = selected ? undefined : [5, 5];
   newElement.borderColor = config?.selectionColor;
   newElement.cornerColor = config?.selectionColor;
@@ -193,7 +193,7 @@ export const setSelectionControls = (
   config?: UserSelectionConfig,
 ): void => {
   newElement.cornerStyle = 'circle';
-  newElement.cornerSize = 20;
+  newElement.cornerSize = 12;
   newElement.borderDashArray = undefined;
   newElement.borderColor = config?.selectionColor;
   newElement.borderColor = config?.selectionColor;

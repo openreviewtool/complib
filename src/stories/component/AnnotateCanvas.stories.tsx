@@ -12,7 +12,7 @@ const story = {
   title: 'AnnotateCanvas',
 };
 
-export const Simple = (): JSX.Element => {
+export const Default = (): JSX.Element => {
   return (
     <div>
       <AnnotateCanvas

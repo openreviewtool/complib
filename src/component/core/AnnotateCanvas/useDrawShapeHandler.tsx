@@ -23,6 +23,7 @@ function useDrawShapeHandler(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,
   uiState: UserControllerInputs,
   onAddElement?: (element: AnnotateElement) => void,
+  disabled?: boolean,
 ): void {
   const uiStateRef = React.useRef<UserControllerInputs>(uiState);
 
@@ -69,11 +70,13 @@ function useDrawShapeHandler(
       setPathDrawing(fcanvas, uiState);
       const isDrawingMode = uiState.mode === 'draw';
 
-      fcanvas.selection = !isDrawingMode;
+      console.log('..1..disabled', disabled);
+
+      fcanvas.selection = !disabled || !isDrawingMode;
       fcanvas.defaultCursor = isDrawingMode ? 'crosshair' : '';
       fcanvas.skipTargetFind = isDrawingMode;
     }
-  }, [uiState.mode, uiState.shape, uiState.shape]);
+  }, [uiState.mode, uiState.shape, uiState.shape, disabled]);
 
   const currentShapeDrawnRef = React.useRef<NewShape | null>(null);
 

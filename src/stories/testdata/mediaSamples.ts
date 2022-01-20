@@ -83,3 +83,8 @@ export const mediaSamples = [
 ];
 
 export const svgShapeUrls = ['https://upload.wikimedia.org/wikipedia/commons/7/71/Arrow_east.svg'];
+
+export const artUrls = [
+  'https://upload.wikimedia.org/wikipedia/commons/9/9c/Claude_Monet_-_Nymph%C3%A9as%2C_effet_du_soir_W1504_-_Mus%C3%A9e_Marmottan-Monet.jpg',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Tsunami_by_hokusai_19th_century.jpg/1024px-Tsunami_by_hokusai_19th_century.jpg',
+];

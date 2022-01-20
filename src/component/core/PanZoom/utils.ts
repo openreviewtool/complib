@@ -89,3 +89,22 @@ export const getTouchMoveSpec = (
     scale: oriPanZoom.scale * scale,
   };
 };
+
+/**
+ * Normalize the resolution of annotate canvas for the content so that 
+ * the canvas resolution stays same regardless of the content resolution.
+ * @param contentSize content width and height in pixel
+ * @param scale the content pixel to screen pixel scale
+ * @param resolution the desired annotate canvas resolution
+ * @returns the normalized scale
+ */
+export const normalizeScale = (
+  contentSize: RectSize,
+  scale: number,
+  resolution: number,
+): number => {
+  return (
+    Math.max(contentSize.width / resolution, contentSize.height / resolution) *
+    scale
+  );
+};

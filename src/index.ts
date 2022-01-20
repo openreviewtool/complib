@@ -3,11 +3,11 @@ import {
   AnnotateElement,
   AnnotateElementType,
 } from './component/core/AnnotateCanvas/types';
-import PlayDeck from './component/ui/PlayDeck';
+import PlayDeck from './component/core/PlayDeck';
 
 export {
   AnnotateElement,
   AnnotateElementType,
   AnnotateCanvas,
-  PlayDeck as uiPlayDeck
+  PlayDeck,
 };

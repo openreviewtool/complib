@@ -9,11 +9,13 @@ function useCustomHoverStyle(
   selectionConfig?: UserSelectionConfig,
 ): void {
   React.useEffect(() => {
-    fabricCanvasRef.current.on('object:added', handle_object_added);
-    fabricCanvasRef.current.on('path:created', handle_object_added);
-    fabricCanvasRef.current.on('selection:created', handle_selection);
-    fabricCanvasRef.current.on('selection:updated', handle_selection);
-    fabricCanvasRef.current.on('selection:cleared', handle_selection);
+    if (selectionConfig?.hoverBoundingBox) {
+      fabricCanvasRef.current.on('object:added', handle_object_added);
+      fabricCanvasRef.current.on('path:created', handle_object_added);
+      fabricCanvasRef.current.on('selection:created', handle_selection);
+      fabricCanvasRef.current.on('selection:updated', handle_selection);
+      fabricCanvasRef.current.on('selection:cleared', handle_selection);
+    }
   }, []);
 
   const handle_object_added = (event: IEvent) => {
