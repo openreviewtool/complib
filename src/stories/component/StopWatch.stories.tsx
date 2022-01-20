@@ -1,5 +1,5 @@
 import React from 'react';
-import StopWatch from '../../component/core/StopWatch';
+import StopWatch from '../../component/experiment/StopWatch';
 import { button } from '@storybook/addon-knobs';
 
 const story = {
@@ -7,7 +7,7 @@ const story = {
 };
 
 export const Default = (): JSX.Element => {
-  const stopWatchTimeDisplayInputRef = React.createRef<HTMLInputElement>();
+  const stopWatchTimeDisplayInputRef = React.useRef<HTMLInputElement|null>(null);
 
   button('Tell time using Ref', () => {
     alert(stopWatchTimeDisplayInputRef.current?.value);

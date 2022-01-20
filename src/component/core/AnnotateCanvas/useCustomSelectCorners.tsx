@@ -1,10 +1,11 @@
 import React from 'react';
 import { fabric } from 'fabric';
-import { fObjExtend, fSelectionEvent } from './types';
+import { fObjExtend, fSelectionEvent, UserSelectionConfig } from './types';
 import { setSelectionControls } from './utils';
 
 function useCustomSelectCorners(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,
+  selectionConfig?: UserSelectionConfig,
 ): void {
   React.useEffect(() => {
     fabricCanvasRef.current.on('selection:created', handle_selection);
@@ -15,7 +16,7 @@ function useCustomSelectCorners(
   const handle_selection = (event: fSelectionEvent) => {
     if (event.target) {
       const fObj = event.target as fObjExtend;
-      setSelectionControls(event.target, fObj.etype);
+      setSelectionControls(event.target, fObj.etype, selectionConfig);
 
       // multiselections
       if (fObj._objects) {

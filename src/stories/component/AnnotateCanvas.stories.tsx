@@ -13,6 +13,19 @@ const story = {
 };
 
 export const Default = (): JSX.Element => {
+  return (
+    <div>
+      <AnnotateCanvas
+        elements={sampleAnnotations}
+        width={480}
+        height={480}
+        backgroundColor={'SlateGray'}
+      />
+    </div>
+  );
+};
+
+export const Edit = (): JSX.Element => {
   const shapeKnob = optionsKnob(
     'Shape',
     {
@@ -26,7 +39,7 @@ export const Default = (): JSX.Element => {
   );
   const canvasModeKnob = optionsKnob(
     'Canvas Mode',
-    { draw: 'draw', selection: 'selection'},
+    { draw: 'draw', selection: 'selection' },
     'draw',
     { display: 'inline-radio' },
   );
@@ -77,7 +90,7 @@ export const Default = (): JSX.Element => {
         onSelection={(selection) => {
           setSelection(selection);
         }}
-        clearOnElementModify={true}
+        clearOnElementModify={false}
         debugLogging={false}
       />
     </div>

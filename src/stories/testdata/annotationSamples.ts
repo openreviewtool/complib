@@ -25,7 +25,7 @@ export const sampleRectElement2: AnnotateElement = {
 export const samplePathElement: AnnotateElement = {
   id: 'path_id',
   etype: 'Path',
-  transformMatrix: [1, 0, 0, 1, 200, 200],
+  transformMatrix: [1, 0, 0, 1, 290, 150],
 
   stroke: 'DodgerBlue',
   strokeWidth: 3,
@@ -48,7 +48,7 @@ export const sampleCircleElement: AnnotateElement = {
 export const sampleTextboxElement: AnnotateElement = {
   id: 'textbox_id',
   etype: 'Textbox',
-  transformMatrix: [1, 0, 0, 1, 200, 200],
+  transformMatrix: [1, 0, 0, 1, 150, 200],
 
   text: 'hello, world!',
   fontSize: 25,
