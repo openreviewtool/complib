@@ -193,10 +193,11 @@ export const setSelectionControls = (
   config?: UserSelectionConfig,
 ): void => {
   newElement.cornerStyle = 'circle';
+  newElement.transparentCorners = false;
   newElement.cornerSize = 12;
   newElement.borderDashArray = undefined;
   newElement.borderColor = config?.selectionColor;
-  newElement.borderColor = config?.selectionColor;
+  newElement.cornerColor = config?.selectionColor;
 
   if (!HAS_ROTATE_HANDLE) {
     newElement.setControlVisible('mtr', false);

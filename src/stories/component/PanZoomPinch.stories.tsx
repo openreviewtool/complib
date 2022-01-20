@@ -81,7 +81,6 @@ export const WithAnnotation = (): JSX.Element => {
       />
       <PanZoomOverlay
         render={(panZoom, contentSize, containerSize, inProgress) => {
-          console.log('.....panzoom', panZoom)
           return (
             <AnnotateCanvas
               elements={sampleAnnotations}
@@ -91,7 +90,6 @@ export const WithAnnotation = (): JSX.Element => {
                 ...panZoom,
                 scale: normalizeScale(contentSize, panZoom.scale, resKnob),
               }}
-              // disabled={inProgress}
               disabled={modeKnob !== 'Annotate'}
             />
           );

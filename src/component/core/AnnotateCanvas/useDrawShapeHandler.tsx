@@ -69,10 +69,7 @@ function useDrawShapeHandler(
     if (uiState.mode) {
       setPathDrawing(fcanvas, uiState);
       const isDrawingMode = uiState.mode === 'draw';
-
-      console.log('..1..disabled', disabled);
-
-      fcanvas.selection = !disabled || !isDrawingMode;
+      fcanvas.selection = !disabled && !isDrawingMode;
       fcanvas.defaultCursor = isDrawingMode ? 'crosshair' : '';
       fcanvas.skipTargetFind = isDrawingMode;
     }
