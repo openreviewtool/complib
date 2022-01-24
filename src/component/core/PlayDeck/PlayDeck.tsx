@@ -13,7 +13,7 @@ import './style.css';
 export type LOOPTYPE = 'off' | 'loopCurrent' | 'loopAll';
 export const LOOP_TYPE_LIST: LOOPTYPE[] = ['off', 'loopCurrent', 'loopAll'];
 
-interface PlayDeckProps {
+export interface PlayDeckProps {
   className?: string; // to override styling
 
   playing?: boolean;

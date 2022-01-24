@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import './style.css';
 
-interface TimelineProps {
+export interface TimelineProps {
   className?: string; // to override styling
 
   duration: number; // in sec as a float
