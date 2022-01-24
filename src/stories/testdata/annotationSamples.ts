@@ -1,4 +1,4 @@
-import { AnnotateElement } from '../../component/AnnotateCanvas/types';
+import { AnnotateElement } from "../..";
 
 export const sampleRectElement: AnnotateElement = {
   id: 'rect1_id',
@@ -58,5 +58,10 @@ export const sampleTextboxElement: AnnotateElement = {
   width: 200,
 };
 
-export const sampleAnnotations = [sampleRectElement, sampleRectElement2, sampleCircleElement, 
-  sampleTextboxElement, samplePathElement]; 
+export const sampleAnnotations = [
+  sampleRectElement,
+  sampleRectElement2,
+  sampleCircleElement,
+  sampleTextboxElement,
+  samplePathElement,
+];

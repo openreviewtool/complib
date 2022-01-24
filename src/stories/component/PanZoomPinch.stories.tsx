@@ -10,6 +10,7 @@ import {
 } from '../../component/core/PanZoom/PanZoom';
 import { normalizeScale } from '../../component/core/PanZoom/utils';
 import { artUrls } from '../testdata/mediaSamples';
+import StoryHint from './StoryHint';
 
 const story = {
   title: 'PanZoom',
@@ -20,42 +21,35 @@ export const Default = (): JSX.Element => {
   const disabled = boolean('Disabled', false);
 
   return (
-    <div style={{ display: 'flex', flexFlow: 'row wrap', height: '100vh' }}>
-      <div
-        id="side_panel"
-        style={{
-          paddingLeft: '10px',
-          background: 'gray',
-          width: '150px',
-          height: '100%',
-        }}
-      >
-        <p>
-          <b>Tablet</b>: pan and zoom using two fingers
-        </p>
-        <p>
-          <b>Laptop</b>: zoom using mouse wheel or using two finger gesture on
-          trackpad
-        </p>
-      </div>
-      <div style={{ flexGrow: 1, position: 'relative' }}>
-        <PanZoom disabled={disabled}>
-          <PanZoomContent
-            render={(setContentSize) => (
-              <img
-                src={videoUrlKnob}
-                onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                  setContentSize({
-                    width: e.currentTarget.width,
-                    height: e.currentTarget.height,
-                  });
-                }}
-              />
-            )}
-          />
-        </PanZoom>
-      </div>
-    </div>
+    <StoryHint
+      hint={
+        <div>
+          <p>
+            <b>Tablet</b>: pan and zoom using two fingers
+          </p>
+          <p>
+            <b>Laptop</b>: zoom using mouse wheel or using two finger gesture on
+            trackpad
+          </p>
+        </div>
+      }
+    >
+      <PanZoom disabled={disabled}>
+        <PanZoomContent
+          render={(setContentSize) => (
+            <img
+              src={videoUrlKnob}
+              onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                setContentSize({
+                  width: e.currentTarget.width,
+                  height: e.currentTarget.height,
+                });
+              }}
+            />
+          )}
+        />
+      </PanZoom>
+    </StoryHint>
   );
 };
 

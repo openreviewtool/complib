@@ -12,8 +12,9 @@ interface TimelineProps {
   useFrameDisplay?: boolean;
   frameRange?: [number, number];
 
+  timelineCaptured?: boolean;
   onTimelineSeek?: (seekTime: number, seekFrameIndex?: number) => void;
-  onTimelineCapture?: (captured: boolean) => void; // user mouse down / touch start on timeline
+  onTimelineCaptured?: (captured: boolean) => void; // user mouse down / touch start on timeline
   onPointerMove?: (e: any) => void; // user enter the timeline
 
   themeColor?: string;
@@ -25,16 +26,18 @@ const SCRUB_UPDATE_DELAY = 5;
 const Timeline: React.FC<TimelineProps> = ({
   frameRange,
   useFrameDisplay = false,
-  themeColor = 'indigo',
+  themeColor = 'red',
 
   ...props
 }) => {
   const progressDisplayTimeoutRef = useRef<number | null>(null);
   const timelineRef = useRef<HTMLInputElement|null>(null);
-
-  const [innerCaptured, setInnerCaptured] = useState<boolean>(false);
   const [seekPercentage, setSeekPercentage] = useState<number>(0);
 
+  const [innerCaptured, setInnerCaptured] = useState<boolean>(false);
+  const timelineCaptured = props.timelineCaptured || innerCaptured
+  const onTimelineCaptured = props.onTimelineCaptured || setInnerCaptured
+  
   const playPercentage = props.currentTime / props.duration; // actual percentage
 
   // display perentage as adjust at frame discret increment steps.
@@ -59,7 +62,7 @@ const Timeline: React.FC<TimelineProps> = ({
     displayPlayPercentage = Math.min(frameElapsed * oneFramePercent);
   }
 
-  if (innerCaptured) {
+  if (timelineCaptured) {
     displayPlayPercentage = seekPercentage;
   }
 
@@ -73,18 +76,12 @@ const Timeline: React.FC<TimelineProps> = ({
 
   const handleScrubStart = (event: any) => {
     handleScrubMove(event);
-    if (props.onTimelineCapture) {
-      props.onTimelineCapture(true);
-      setInnerCaptured(true);
-    }
+    if (onTimelineCaptured) onTimelineCaptured(true);
   };
 
   const handleScrubEnd = (event: any) => {
     handleScrubMoveFinish(event);
-    if (props.onTimelineCapture) {
-      props.onTimelineCapture(false);
-      setInnerCaptured(false);
-    }
+    if (onTimelineCaptured) onTimelineCaptured(false);
   };
 
   /**
@@ -164,12 +161,13 @@ const Timeline: React.FC<TimelineProps> = ({
 
   const playHead = (
     <>
-      {/* <div
+      <div
         className="timeline__track__playhead"
         style={{
           left: `${(displayPlayPercentage + oneFramePercent) * 100}%`,
+          backgroundColor: `${themeColor}`
         }}
-      /> */}
+      />
       <div
         className="timeline__track__playhead__text"
         style={{

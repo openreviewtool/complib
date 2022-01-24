@@ -101,7 +101,7 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
     setPanZoomState(fitSpec);
   }, [contentSize, containerSize]);
 
-  const touchHandlers = useTouchPanZoom(
+  const {inProgress: touchCaptured, ...touchHandlers} = useTouchPanZoom(
     panZoomState,
     setPanZoomState,
     contentFitSpecRef,
@@ -111,10 +111,10 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
     setPanZoomState,
     contentFitSpecRef,
   );
-  const pointerHandler = usePointerPan(
+  const {inProgress: pointerPanCaptured, ...pointerHandler} = usePointerPan(
     panZoomState,
     setPanZoomState,
-    disabled || touchHandlers.inProgress,
+    disabled || touchCaptured,
   );
 
 
@@ -135,7 +135,7 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
       <PanZoomContext.Provider
         value={{
           panZoom: panZoomState,
-          inProgress: touchHandlers.inProgress,
+          inProgress: touchCaptured,
           containerSize,
           contentSize,
           setContentSize,

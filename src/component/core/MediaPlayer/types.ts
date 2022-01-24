@@ -11,3 +11,9 @@ export interface MediaInfo {
 
   author_url?: string;
 }
+
+export interface PlayerState {
+  // these are in seconds
+  played: number;
+  loaded: number;
+}

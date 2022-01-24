@@ -81,7 +81,7 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = React.memo(
     );
     useSyncSelection(fabricCanvasRef, props.onSelection);
     useCustomSelectCorners(fabricCanvasRef, selectionConfig);
-    useCustomHoverStyle(fabricCanvasRef, selectionConfig);
+    useCustomHoverStyle(fabricCanvasRef);
     useDrawShapeHandler(fabricCanvasRef, uiState, props.onAddElement, disabled);
     useModifyHandler(fabricCanvasRef, props.onChangeElement);
     useApplyAttrsToSelection(
