@@ -1,5 +1,6 @@
 export interface MediaInfo {
   provider_name: string;
+  type: 'video' | 'image' | 'audio';
   url: string;
 
   width: number;

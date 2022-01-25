@@ -1,6 +1,23 @@
-export const mediaSamples = [
+import { MediaInfo } from "../../component/core/MediaPlayer/types";
+
+export const mediaSamples: MediaInfo[] = [
+  {
+    provider_name: 'Vimeo',
+    type: 'video',
+    url: 'https://vimeo.com/channels/staffpicks/539430817',
+
+    width: 640,
+    height: 360,
+
+    thumbnail_url: 'https://i.vimeocdn.com/video/1116774666_640.jpg',
+    title: 'The Pitch Song',
+    author_url: 'https://vimeo.com/giantant',
+
+    duration: 94.59,
+  },
   {
     provider_name: 'YouTube',
+    type: 'video',
     url: 'https://www.youtube.com/watch?v=KMX_FuOLoCI',
 
     width: 200,
@@ -14,6 +31,7 @@ export const mediaSamples = [
   },
   {
     provider_name: 'YouTube',
+    type: 'video',
     url: 'https://www.youtube.com/watch?v=-SGrRkUP0b0',
 
     width: 200,
@@ -24,19 +42,6 @@ export const mediaSamples = [
     title: 'NETS at RAPTORS | FULL GAME HIGHLIGHTS | April 27, 2021',
 
     author_url: 'https://www.youtube.com/c/AriWeinstein',
-  },
-  {
-    provider_name: 'Vimeo',
-    url: 'https://vimeo.com/channels/staffpicks/539430817',
-
-    width: 640,
-    height: 360,
-
-    thumbnail_url: 'https://i.vimeocdn.com/video/1116774666_640.jpg',
-    title: 'The Pitch Song',
-    author_url: 'https://vimeo.com/giantant',
-
-    duration: 94.59,
   },
   // {
   //   provider_name: '',
@@ -49,6 +54,8 @@ export const mediaSamples = [
   // },
   {
     provider_name: '',
+    type: 'video',
+
     url: 'https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_2MB.mp4',
     title: 'Big_Buck_Bunny_720_10s_2MB.mp4',
 
@@ -66,6 +73,7 @@ export const mediaSamples = [
   // },
   {
     provider_name: 'SoundCloud',
+    type: 'audio',
     url: 'https://soundcloud.com/miami-nights-1984/accelerated',
 
     width: 800,
@@ -76,6 +84,8 @@ export const mediaSamples = [
   },
   {
     provider_name: '',
+    type: 'video',
+
     url: 'https://cdn.videvo.net/videvo_files/video/free/2019-02/small_watermarked/181004_10_LABORATORIES-SCIENCE_12_preview.webm',
     title: '181004_10_LABORATORIES-SCIENCE_12_preview.webm',
 

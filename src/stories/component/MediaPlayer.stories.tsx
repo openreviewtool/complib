@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { mediaSamplesWithLabel as mediaList } from '../testdata/mediaSamples';
-import { button, select } from '@storybook/addon-knobs';
+import { select } from '@storybook/addon-knobs';
 import RPlayer from '../../component/core/MediaPlayer/RPlayer';
-import PlayDeck, {
-  PlayDeckProps,
-} from '../../component/core/PlayDeck/PlayDeck';
 import Timeline from '../../component/core/Timeline';
-import { MediaInfo, PlayerState } from '../../component/core/MediaPlayer/types';
-import { TimelineProps } from '../../component/core/Timeline/Timeline';
-import { composeMediaPlayer } from '../../component/core/MediaPlayer/composer';
+import { withPlaydeck } from '../../component/core/MediaPlayer/composer';
+import PlayDeck from '../../component/core/PlayDeck/PlayDeck';
 
 const story = {
   title: 'MediaPlayer',
@@ -31,7 +27,7 @@ export const CustomControls = (): JSX.Element => {
     setMediaIndex(index);
   }, [mediaKnob]);
 
-  return composeMediaPlayer(
+  return withPlaydeck(
     mediaList,
     mediaIndex,
     setMediaIndex,

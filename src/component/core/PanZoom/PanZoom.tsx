@@ -9,7 +9,7 @@ import {
   useWheelZoom,
 } from './hooks';
 import { PanZoomBounds, PanZoomSpec, RectSize } from './types';
-import { getContentFitSpec } from './utils';
+import { getContentFitSpec, normalizeSize } from './utils';
 
 import './style.css';
 
@@ -32,7 +32,7 @@ export const PanZoomContext = React.createContext({
 });
 
 export interface PanZoomOverlayProps {
-  disabled?: boolean,
+  disabled?: boolean;
   render: (
     panZoom: PanZoomSpec,
     contentSize: RectSize,
@@ -43,8 +43,10 @@ export interface PanZoomOverlayProps {
 export const PanZoomOverlay = (props: PanZoomOverlayProps) => {
   const ctx = useContext(PanZoomContext);
   return (
-    <div className="panzoom_overlay" 
-      style={{pointerEvents: (props.disabled)? 'none': undefined}}>
+    <div
+      className="panzoom_overlay"
+      style={{ pointerEvents: props.disabled ? 'none' : undefined }}
+    >
       {props.render(
         ctx.panZoom,
         ctx.contentSize,
@@ -61,14 +63,19 @@ export interface PanZoomContentProps {
 
 export const PanZoomContent = (props: PanZoomContentProps) => {
   const ctx = useContext(PanZoomContext);
+
   return (
     <div
       style={{
         transformOrigin: 'left top',
         transform: `translate(${ctx.panZoom.x}px, ${ctx.panZoom.y}px) scale(${ctx.panZoom.scale})`,
+        position: 'relative',
+        ...ctx.contentSize,
       }}
     >
-      {props.render(ctx.setContentSize)}
+      {props.render((s) => {
+        ctx.setContentSize(normalizeSize(s, 1000));
+      })}
     </div>
   );
 };
@@ -90,7 +97,7 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
 
   usePreventDefaultBrowserTouch(topContainerRef);
   usePreventDefaultBrowserWheel(topContainerRef);
-  
+
   // if either the container or content resize, center fit the content;
   const containerSize = useMonitorResizable(topContainerRef);
   const [contentSize, setContentSize] = useState({ width: 10, height: 10 });
@@ -101,7 +108,7 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
     setPanZoomState(fitSpec);
   }, [contentSize, containerSize]);
 
-  const {inProgress: touchCaptured, ...touchHandlers} = useTouchPanZoom(
+  const { inProgress: touchCaptured, ...touchHandlers } = useTouchPanZoom(
     panZoomState,
     setPanZoomState,
     contentFitSpecRef,
@@ -111,12 +118,11 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
     setPanZoomState,
     contentFitSpecRef,
   );
-  const {inProgress: pointerPanCaptured, ...pointerHandler} = usePointerPan(
+  const { inProgress: pointerPanCaptured, ...pointerHandler } = usePointerPan(
     panZoomState,
     setPanZoomState,
     disabled || touchCaptured,
   );
-
 
   useEffect(() => {
     if (props.onPanZoom) {

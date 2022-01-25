@@ -4,7 +4,7 @@ import { TimelineProps } from '../Timeline/Timeline';
 import RPlayer from './RPlayer';
 import { MediaInfo, PlayerState } from './types';
 
-export const composeMediaPlayer = (
+export const withPlaydeck = (
   mediaList: MediaInfo[],
   mediaIndex: number,
   setMediaIndex: (index: number) => void,
@@ -15,6 +15,9 @@ export const composeMediaPlayer = (
   const [playing, setPlaying] = useState(false);
   const [seekTime, setSeekTime] = useState<number>(); // seek time
   const [pState, setPState] = useState<PlayerState>({ played: 0, loaded: 0 });
+  const showTimeline =
+    (typeof pState.loaded === 'number' && pState.loaded !== 0) ||
+    (typeof pState.played === 'number' && pState.played !== 0);
 
   return (
     <div>
@@ -30,8 +33,7 @@ export const composeMediaPlayer = (
         onEnded={() => setPlaying(false)}
       />
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-        {((typeof pState.loaded === 'number' && pState.loaded !== 0) ||
-          (typeof pState.played === 'number' && pState.played !== 0)) && (
+        {showTimeline && (
           <TimelineComp
             currentTime={pState.played}
             duration={mediaList[mediaIndex].duration}

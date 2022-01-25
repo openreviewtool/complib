@@ -65,8 +65,8 @@ const RPlayer: React.FC<RPlayerProps> = ({
         bottom: '0px',
         overflow: 'hidden',
       }}
-      width={'100hw'}
-      height={'100vh'}
+      width={'100%'}
+      height={'100%'}
       {...props}
     />
   );
