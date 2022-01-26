@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { AnnotateElement, UserControllerInputs } from './types';
+import { AnnotateElement, UserControllerInputs } from '../types';
 
 /**
  * Depending on the type of element, the ui controls state affects the element attribute differently.

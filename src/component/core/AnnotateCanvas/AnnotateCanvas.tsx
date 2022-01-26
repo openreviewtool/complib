@@ -7,16 +7,16 @@ import {
   UserSelectionConfig,
 } from './types';
 import { useCanvasDebugger } from './utils';
-import useDrawShapeHandler from './useDrawShapeHandler';
-import useCustomSelectCorners from './useCustomSelectCorners';
-import useCustomHoverStyle from './useCustomHoverStyle';
-import useModifyHandler from './useModifyHandler';
-import useSyncSelection from './useSyncSelection';
-import useApplyAttrsToSelection from './useApplyAttrsToSelection';
+import useDrawShapeHandler from './hooks/useDrawShapeHandler';
+import useCustomSelectCorners from './hooks/useCustomSelectCorners';
+import useCustomHoverStyle from './hooks/useCustomHoverStyle';
+import useModifyHandler from './hooks/useModifyHandler';
+import useSyncSelection from './hooks/useSyncSelection';
+import useApplyAttrsToSelection from './hooks/useApplyAttrsToSelection';
 import FabricCanvas from './FabricCanvas';
-import useRedrawElements from './useRedrawElements';
+import useRedrawElements from './hooks/useRedrawElements';
 import { DEFAULT_SELECTION_CONFIG, DEFAULT_UI_ATTRS } from './defaults';
-import usePanZoom from './usePanZoom';
+import usePanZoom from './hooks/usePanZoom';
 
 interface AnnotateCanvasProps {
   elements: AnnotateElement[];
