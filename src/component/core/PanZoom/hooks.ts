@@ -51,7 +51,7 @@ export const usePreventDefaultBrowserWheel = (
  */
 export const usePreventDefaultBrowserPointer = (
   ref: React.RefObject<HTMLElement>,
-  disabled: false, 
+  disabled: false,
 ) => {
   useEffect(() => {
     ref.current?.addEventListener(
@@ -123,6 +123,7 @@ export const useTouchPanZoom = (
   panZoomState: PanZoomSpec,
   setPanZoomState: React.Dispatch<React.SetStateAction<PanZoomSpec>>,
   contentFitSpec: React.MutableRefObject<PanZoomBounds>,
+  disabled?: boolean,
 ) => {
   const touchState = useRef<{ start: Coords[]; oriPanZoom: PanZoomSpec }>();
   const [inProgress, setInProgress] = useState(false);
@@ -172,6 +173,7 @@ export const useTouchPanZoom = (
 
   return {
     onTouchStart: (evt: React.TouchEvent) => {
+      if (disabled) return;
       touchState.current = {
         start: getTouchCoords(evt),
         oriPanZoom: { ...panZoomState },
@@ -192,8 +194,11 @@ export const useWheelZoom = (
   panZoomState: PanZoomSpec,
   setPanZoomState: React.Dispatch<React.SetStateAction<PanZoomSpec>>,
   contentFitSpec: React.MutableRefObject<PanZoomBounds>,
+  disabled?: boolean,
 ) => {
   const handleWheel = (evt: React.WheelEvent) => {
+    if (disabled) return;
+
     const coords = getAbsoluteCoords(
       evt,
       evt.currentTarget.getBoundingClientRect(),
@@ -238,15 +243,15 @@ export const useWheelZoom = (
 export const usePointerPan = (
   panZoomState: PanZoomSpec,
   setPanZoomState: React.Dispatch<React.SetStateAction<PanZoomSpec>>,
-  disabled: boolean,
+  disabled?: boolean,
 ) => {
   const pointerState = useRef<{ start: Coords; oriPanZoom: PanZoomSpec }>();
   const [inProgress, setInProgress] = useState(false);
 
   return {
     onPointerDown: (evt: React.PointerEvent) => {
-      if (disabled) return;
-
+      if (disabled || evt.button === 2 ) return;
+      
       const coords = getAbsoluteCoords(
         evt,
         evt.currentTarget.getBoundingClientRect(),
@@ -280,7 +285,7 @@ export const usePointerPan = (
           pointerState.current.oriPanZoom.scale,
           coords.y,
           panZoomState.scale,
-        );        
+        );
         setPanZoomState({ x, y, scale: panZoomState.scale });
       }
     },

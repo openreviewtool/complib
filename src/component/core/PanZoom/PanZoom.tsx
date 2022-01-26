@@ -32,20 +32,22 @@ export const PanZoomContext = React.createContext({
 });
 
 export interface PanZoomOverlayProps {
-  disabled?: boolean;
   render: (
     panZoom: PanZoomSpec,
     contentSize: RectSize,
     containerSize: RectSize,
     inProgress: boolean,
   ) => JSX.Element;
+  pointerEventPassthrough?: boolean;
 }
 export const PanZoomOverlay = (props: PanZoomOverlayProps) => {
   const ctx = useContext(PanZoomContext);
   return (
     <div
       className="panzoom_overlay"
-      style={{ pointerEvents: props.disabled ? 'none' : undefined }}
+      style={{
+        pointerEvents: props.pointerEventPassthrough ? 'none' : undefined,
+      }}
     >
       {props.render(
         ctx.panZoom,
@@ -59,6 +61,7 @@ export const PanZoomOverlay = (props: PanZoomOverlayProps) => {
 
 export interface PanZoomContentProps {
   render: (setContentSize: (s: RectSize) => void) => JSX.Element;
+  normalizeRes?: number;
 }
 
 export const PanZoomContent = (props: PanZoomContentProps) => {
@@ -73,9 +76,11 @@ export const PanZoomContent = (props: PanZoomContentProps) => {
         ...ctx.contentSize,
       }}
     >
-      {props.render((s) => {
-        ctx.setContentSize(normalizeSize(s, 1000));
-      })}
+      {props.normalizeRes
+        ? props.render((s) => {
+            ctx.setContentSize(normalizeSize(s, props.normalizeRes!));
+          })
+        : props.render(ctx.setContentSize)}
     </div>
   );
 };
@@ -117,6 +122,7 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
     panZoomState,
     setPanZoomState,
     contentFitSpecRef,
+    disabled,
   );
   const { inProgress: pointerPanCaptured, ...pointerHandler } = usePointerPan(
     panZoomState,

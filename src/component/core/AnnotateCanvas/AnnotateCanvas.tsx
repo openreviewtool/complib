@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { fabric } from 'fabric';
 
 import {
@@ -16,6 +16,7 @@ import useApplyAttrsToSelection from './useApplyAttrsToSelection';
 import FabricCanvas from './FabricCanvas';
 import useRedrawElements from './useRedrawElements';
 import { DEFAULT_SELECTION_CONFIG, DEFAULT_UI_ATTRS } from './defaults';
+import usePanZoom from './usePanZoom';
 
 interface AnnotateCanvasProps {
   elements: AnnotateElement[];
@@ -71,45 +72,28 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = React.memo(
 
     ...props
   }) => {
-    const fabricCanvasRef = React.useRef<fabric.Canvas>(EmptyCanvas);
+    const fcRef = React.useRef<fabric.Canvas>(EmptyCanvas);
 
-    useRedrawElements(
-      fabricCanvasRef,
-      backgroundColor,
-      elements,
-      clearOnElementModify,
-    );
-    useSyncSelection(fabricCanvasRef, props.onSelection);
-    useCustomSelectCorners(fabricCanvasRef, selectionConfig);
-    useCustomHoverStyle(fabricCanvasRef);
-    useDrawShapeHandler(fabricCanvasRef, uiState, props.onAddElement, disabled);
-    useModifyHandler(fabricCanvasRef, props.onChangeElement);
+    useRedrawElements(fcRef, backgroundColor, elements, clearOnElementModify);
+    useSyncSelection(fcRef, props.onSelection);
+    useCustomSelectCorners(fcRef, selectionConfig);
+    useCustomHoverStyle(fcRef, selectionConfig);
+    useDrawShapeHandler(fcRef, uiState, props.onAddElement, disabled);
+    useModifyHandler(fcRef, props.onChangeElement);
+    usePanZoom(fcRef, props.panZoom);
     useApplyAttrsToSelection(
-      fabricCanvasRef,
+      fcRef,
       uiState,
       selection,
       elements,
       props.onChangeElement,
     );
-    useCanvasDebugger(debugLogging, elements, selection, fabricCanvasRef);
+    useCanvasDebugger(debugLogging, elements, selection, fcRef);
 
-    useEffect(() => {
-      if (props.panZoom) {
-        fabricCanvasRef.current.setViewportTransform([
-          props.panZoom.scale,
-          0,
-          0,
-          props.panZoom.scale,
-          props.panZoom.x,
-          props.panZoom.y,
-        ]);
-      }
-    }, [props.panZoom]);
-    
     return (
       <div style={{ pointerEvents: disabled ? 'none' : undefined }}>
         <FabricCanvas
-          fabricCanvasRef={fabricCanvasRef}
+          fabricCanvasRef={fcRef}
           width={width}
           height={height}
           backgroundColor={backgroundColor}

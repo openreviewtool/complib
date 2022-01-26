@@ -1,9 +1,9 @@
-import { boolean } from '@storybook/addon-knobs';
+import { boolean, optionsKnob, select } from '@storybook/addon-knobs';
 import React from 'react';
 
-const StoryHint: React.FC<{ hint: JSX.Element, width?: number }> = ({
+export const StoryHint: React.FC<{ hint: JSX.Element; width?: number }> = ({
   hint = 'Some description about this story.',
-  width = 150, 
+  width = 150,
   ...props
 }) => {
   const displayHintKnob = boolean('Show Hint', true);
@@ -35,4 +35,18 @@ const StoryHint: React.FC<{ hint: JSX.Element, width?: number }> = ({
   );
 };
 
-export default StoryHint;
+export const getAnnotateKnobs = () => {
+  return {
+    resolutionKnob: select('Annotate resolution', [800, 1280, 1920], 800),
+    modeKnob: optionsKnob(
+      'Mode',
+      {
+        PanZoom: 'panZoom',
+        Selection: 'selection',
+        Annotate: 'draw',
+      },
+      'panZoom',
+      { display: 'inline-radio' },
+    ),
+  };
+};
