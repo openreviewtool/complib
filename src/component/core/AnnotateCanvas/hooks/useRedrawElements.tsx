@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { fabric } from 'fabric';
-import { makeFabricObj } from './utils';
-import { AnnotateElement } from './types';
+import { makeFabricObj } from './../utils';
+import { AnnotateElement } from './../types';
 
 function useRedrawElements(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,

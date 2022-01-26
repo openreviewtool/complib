@@ -1,11 +1,11 @@
 import React from 'react';
 import { useCallback } from 'react';
 import { v4 as uuid4 } from 'uuid';
-import { makeFabricObj, getElementPropsFromUiState, makeElement } from './utils';
-import { AnnotateElement, fObjExtend, UserControllerInputs } from './types';
+import { makeFabricObj, getElementPropsFromUiState, makeElement } from './../utils';
+import { AnnotateElement, fObjExtend, UserControllerInputs } from './../types';
 import { fabric } from 'fabric';
 import { IEvent } from 'fabric/fabric-impl';
-import { FabricObjectDefaults } from './defaults';
+import { FabricObjectDefaults } from './../defaults';
 
 const SHAPES = ['Ellipse', 'Rect', 'Circle', 'Triangle', 'Textbox'];
 

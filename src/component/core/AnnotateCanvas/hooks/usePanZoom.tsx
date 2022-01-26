@@ -1,6 +1,6 @@
 import React from 'react';
 import { fabric } from 'fabric';
-import { PanZoomSpec } from '../PanZoom/types';
+import { PanZoomSpec } from '../../PanZoom/types';
 
 
 const usePanZoom = (

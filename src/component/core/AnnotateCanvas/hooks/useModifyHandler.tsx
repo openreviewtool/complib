@@ -1,7 +1,7 @@
 import React from 'react';
 import { fabric } from 'fabric';
 import { IEvent } from 'fabric/fabric-impl';
-import { AnnotateElement, fObjExtend } from './types';
+import { AnnotateElement, fObjExtend } from './../types';
 
 function useModifyHandler(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,

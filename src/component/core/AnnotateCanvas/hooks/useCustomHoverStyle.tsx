@@ -1,8 +1,8 @@
 import React from 'react';
 import { fabric } from 'fabric';
 import { IEvent } from 'fabric/fabric-impl';
-import { fSelectionEvent, UserSelectionConfig } from './types';
-import { bootstrapHoverHandler, setHoverStyle } from './utils';
+import { fSelectionEvent, UserSelectionConfig } from './../types';
+import { bootstrapHoverHandler, setHoverStyle } from './../utils';
 
 function useCustomHoverStyle(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,

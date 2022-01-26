@@ -1,6 +1,6 @@
 import React from 'react';
 import { fabric } from 'fabric';
-import { fObjExtend } from './types';
+import { fObjExtend } from './../types';
 
 function useSyncSelection(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,

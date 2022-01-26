@@ -1,7 +1,7 @@
 import React from 'react';
 import { fabric } from 'fabric';
-import { fObjExtend, fSelectionEvent, UserSelectionConfig } from './types';
-import { setSelectionControls } from './utils';
+import { fObjExtend, fSelectionEvent, UserSelectionConfig } from './../types';
+import { setSelectionControls } from './../utils';
 
 function useCustomSelectCorners(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,
