@@ -45,7 +45,7 @@
   user-select: none;
   pointer-events: none;
   touch-action: none;
-  background-color: indigo;
+  /* background-color: indigo; */
   /* border-right: solid 1px white; */
 }
 

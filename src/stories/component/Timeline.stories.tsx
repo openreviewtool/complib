@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PlayDeck, { LOOP_TYPE_LIST } from '../../component/core/PlayDeck';
+import PlayDeck, { LOOP_TYPE_LIST } from '../../component/core/PlayDeck/PlayDeck';
 import Timeline from '../../component/core/Timeline';
 
 export default {

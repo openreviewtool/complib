@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { select, boolean } from '@storybook/addon-knobs';
+import { select, boolean, optionsKnob } from '@storybook/addon-knobs';
 import PanZoom from '../../component/core/PanZoom';
 import AnnotateCanvas from '../../component/core/AnnotateCanvas/AnnotateCanvas';
 import { sampleAnnotations } from '../testdata/annotationSamples';
@@ -10,95 +10,205 @@ import {
 } from '../../component/core/PanZoom/PanZoom';
 import { normalizeScale } from '../../component/core/PanZoom/utils';
 import { artUrls } from '../testdata/mediaSamples';
+import { getAnnotateKnobs, StoryHint } from './utils';
+
+import { mediaSamplesWithLabel as mediaList } from '../testdata/mediaSamples';
+import * as playerComposer from '../../component/core/MediaPlayer/composer';
+import { DEFAULT_UI_ATTRS } from '../../component/core/AnnotateCanvas/defaults';
 
 const story = {
   title: 'PanZoom',
 };
+
+const hintsDefault = (
+  <>
+    <h3>PanZoom</h3>
+    <p>
+      <b>Tablet</b>: pan and zoom using two fingers
+    </p>
+    <p>
+      <b>Laptop</b>: zoom using mouse wheel or using two finger gesture on
+      trackpad
+    </p>
+  </>
+);
+
+const hintsAnnotateMedia = (
+  <>
+    <h4>Annotation</h4>
+    <p>
+      Annotate on the media of your choice; switch the content using the media
+      selector.
+    </p>
+    <p>
+      <b>PanZoom</b>: panning and zooming the content
+    </p>
+    <p>
+      <b>Selection</b>: select the annotation
+    </p>
+    <p>
+      <b>Annotate</b>: annotate on the content
+    </p>
+  </>
+);
+
+const hintsAnnotateOembed = (
+  <>
+    <h4>Annotate oEmbed</h4>
+    oEmbed allows webapps to embed media from YouTube, Vimeo, Sound Cloud, etc.
+    You can annotate on these. WIP: per frame annotation.
+    <p>
+      <b>PanZoom</b>: panning and zooming the content
+    </p>
+    <p>
+      <b>Selection</b>: select the annotation
+    </p>
+    <p>
+      <b>Annotate</b>: annotate on the content
+    </p>
+  </>
+);
 
 export const Default = (): JSX.Element => {
   const videoUrlKnob = select('Media URL', artUrls, artUrls[0]);
   const disabled = boolean('Disabled', false);
 
   return (
-    <div style={{ display: 'flex', flexFlow: 'row wrap', height: '100vh' }}>
-      <div
-        id="side_panel"
-        style={{
-          paddingLeft: '10px',
-          background: 'gray',
-          width: '150px',
-          height: '100%',
-        }}
-      >
-        <p>
-          <b>Tablet</b>: pan and zoom using two fingers
-        </p>
-        <p>
-          <b>Laptop</b>: zoom using mouse wheel or using two finger gesture on
-          trackpad
-        </p>
-      </div>
-      <div style={{ flexGrow: 1, position: 'relative' }}>
-        <PanZoom disabled={disabled}>
-          <PanZoomContent
-            render={(setContentSize) => (
-              <img
-                src={videoUrlKnob}
-                onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                  setContentSize({
-                    width: e.currentTarget.width,
-                    height: e.currentTarget.height,
-                  });
-                }}
-              />
-            )}
-          />
-        </PanZoom>
-      </div>
-    </div>
+    <StoryHint hint={<div>{hintsDefault}</div>}>
+      <PanZoom disabled={disabled}>
+        <PanZoomContent
+          render={(setContentSize) => (
+            <img
+              style={{ pointerEvents: 'none', userSelect: 'none' }}
+              src={videoUrlKnob}
+              onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                setContentSize({
+                  width: e.currentTarget.width,
+                  height: e.currentTarget.height,
+                });
+              }}
+            />
+          )}
+        />
+      </PanZoom>
+    </StoryHint>
   );
 };
 
-export const WithAnnotation = (): JSX.Element => {
+export const WithAnnotationImage = (): JSX.Element => {
   const videoUrlKnob = select('Media URL', artUrls, artUrls[0]);
-  const resKnob = select('Annotate resolution', [800, 1280, 1920], 800);
-  const modeKnob = select('Mode', ['PanZoom', 'Annotate'], 'PanZoom');
+  const { modeKnob, resolutionKnob } = getAnnotateKnobs();
 
   return (
-    <PanZoom disabled={modeKnob !== 'PanZoom'}>
-      <PanZoomContent
-        render={(setContentSize) => (
-          <img
-            src={videoUrlKnob}
-            onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
-              setContentSize({
-                width: e.currentTarget.width,
-                height: e.currentTarget.height,
-              });
-            }}
-          />
-        )}
-      />
-      <PanZoomOverlay
-        render={(panZoom, contentSize, containerSize, inProgress) => {
-          return (
-            <AnnotateCanvas
-              elements={sampleAnnotations}
-              width={containerSize.width}
-              height={containerSize.height}
-              panZoom={{
-                ...panZoom,
-                scale: normalizeScale(contentSize, panZoom.scale, resKnob),
+    <StoryHint hint={<div>{hintsAnnotateMedia}</div>}>
+      <PanZoom disabled={modeKnob !== 'panZoom'}>
+        <PanZoomContent
+          render={(setContentSize) => (
+            <img
+              style={{ pointerEvents: 'none', userSelect: 'none' }}
+              src={videoUrlKnob}
+              onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                setContentSize({
+                  width: e.currentTarget.width,
+                  height: e.currentTarget.height,
+                });
               }}
-              disabled={modeKnob !== 'Annotate'}
             />
-          );
-        }}
-      />
-    </PanZoom>
+          )}
+        />
+        <PanZoomOverlay
+          pointerEventPassthrough={modeKnob === 'panZoom'}
+          render={(panZoom, contentSize, containerSize) => {
+            return (
+              <AnnotateCanvas
+                elements={sampleAnnotations}
+                width={containerSize.width}
+                height={containerSize.height}
+                panZoom={{
+                  ...panZoom,
+                  scale: normalizeScale(
+                    contentSize,
+                    panZoom.scale,
+                    resolutionKnob,
+                  ),
+                }}
+                uiState={{ ...DEFAULT_UI_ATTRS, mode: modeKnob, shape: 'Path' }}
+                disabled={modeKnob === 'panZoom'}
+              />
+            );
+          }}
+        />
+      </PanZoom>
+    </StoryHint>
+  );
+};
+
+export const WithAnnotationOembed = (): JSX.Element => {
+  const [mediaIndex, setMediaIndex] = useState(0);
+  const mediaKnob = select('Video', mediaList, mediaList[mediaIndex]);
+  const { modeKnob, resolutionKnob } = getAnnotateKnobs();
+
+  useEffect(() => {
+    const index = mediaList.reduce((a, c, i) => {
+      if (c.label === mediaKnob.label) a = i;
+      return a;
+    }, 0);
+    setMediaIndex(index);
+  }, [mediaKnob]);
+
+  return (
+    <StoryHint hint={<div>{hintsAnnotateOembed}</div>}>
+      <playerComposer.PlayerContextProvider
+        value={{ mediaList, mediaIndex, setMediaIndex }}
+      >
+        <div>
+          <PanZoom disabled={modeKnob !== 'panZoom'}>
+            <PanZoomContent
+              render={(setContentSize) => {
+                useEffect(() => {
+                  setContentSize(mediaList[mediaIndex]);
+                }, [mediaIndex]);
+                return <playerComposer.Player />;
+              }}
+              normalizeRes={1000}
+            />
+            <PanZoomOverlay
+              render={(panZoom, contentSize, containerSize) => {
+                return (
+                  <AnnotateCanvas
+                    elements={sampleAnnotations}
+                    width={containerSize.width}
+                    height={containerSize.height}
+                    panZoom={{
+                      ...panZoom,
+                      scale: normalizeScale(
+                        contentSize,
+                        panZoom.scale,
+                        resolutionKnob,
+                      ),
+                    }}
+                    uiState={{
+                      ...DEFAULT_UI_ATTRS,
+                      mode: modeKnob,
+                      shape: 'Path',
+                    }}
+                    disabled={modeKnob === 'panZoom'}
+                  />
+                );
+              }}
+            />
+          </PanZoom>
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <playerComposer.Timeline />
+            <playerComposer.PlayDeck />
+          </div>
+        </div>
+      </playerComposer.PlayerContextProvider>
+    </StoryHint>
   );
 };
 
 Default.parameters = { layout: 'fullscreen' };
-WithAnnotation.parameters = { layout: 'fullscreen' };
+WithAnnotationImage.parameters = { layout: 'fullscreen' };
+WithAnnotationOembed.parameters = { layout: 'fullscreen' };
 export default story;

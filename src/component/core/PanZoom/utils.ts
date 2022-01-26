@@ -1,11 +1,11 @@
-import { Coords, PanZoomSpec, RectSize } from "./types";
+import { Coords, PanZoomSpec, RectSize } from './types';
 
 /**
  * Returns the pan zoom specs for center fit content
  * @param content the dimensions of the content
  * @param container the dimensions of the container
  */
- export const getContentFitSpec = (
+export const getContentFitSpec = (
   content: RectSize,
   container: RectSize,
 ): PanZoomSpec => {
@@ -91,7 +91,7 @@ export const getTouchMoveSpec = (
 };
 
 /**
- * Normalize the resolution of annotate canvas for the content so that 
+ * Normalize the resolution of annotate canvas for the content so that
  * the canvas resolution stays same regardless of the content resolution.
  * @param contentSize content width and height in pixel
  * @param scale the content pixel to screen pixel scale
@@ -107,4 +107,33 @@ export const normalizeScale = (
     Math.max(contentSize.width / resolution, contentSize.height / resolution) *
     scale
   );
+};
+
+export const normalizeSize = (
+  contentSize: RectSize,
+  resolution: number,
+): RectSize => {
+  const widthRatio = contentSize.width / resolution;
+  const heightRatio = contentSize.height / resolution;
+
+  if (widthRatio > heightRatio) {
+    return {
+      width: resolution,
+      height: (contentSize.height / contentSize.width) * resolution,
+    };
+  } else {
+    return {
+      height: resolution,
+      width: (contentSize.width / contentSize.height) * resolution,
+    };
+  }
+};
+
+type normalizeSizeFuncReturnType = (c: RectSize) => RectSize;
+export const normalizeSizeFunc = (
+  resolution: number,
+): normalizeSizeFuncReturnType => {
+  return (contentSize: RectSize) => {
+    return normalizeSize(contentSize, resolution);
+  };
 };
