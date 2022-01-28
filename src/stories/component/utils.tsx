@@ -1,5 +1,6 @@
 import { boolean, optionsKnob, select } from '@storybook/addon-knobs';
 import React from 'react';
+import { isTablet } from '../../component/utils/browser';
 
 export const StoryHint: React.FC<{ hint: JSX.Element; width?: number }> = ({
   hint = 'Some description about this story.',
@@ -8,7 +9,7 @@ export const StoryHint: React.FC<{ hint: JSX.Element; width?: number }> = ({
 }) => {
   const displayHintKnob = boolean('Show Hint', true);
   return (
-    <div style={{ display: 'flex', flexFlow: 'row wrap', height: '100vh' }}>
+    <div style={{ display: 'flex', flexFlow: 'row wrap', height: '100vh', maxHeight: isTablet()? '650px': undefined }}>
       <div
         id="side_panel"
         style={{

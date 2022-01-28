@@ -8,63 +8,6 @@ import {
 } from './utils';
 
 /**
- * PinchZoomPan gesture on a web page manipuate the entire website,
- * This prevents that for the reference element.
- * @param ref html dom element where default guesture will be disabled.
- */
-export const usePreventDefaultBrowserTouch = (
-  ref: React.RefObject<HTMLElement>,
-) => {
-  useEffect(() => {
-    ref.current?.addEventListener(
-      'touchstart',
-      (evt: TouchEvent) => {
-        evt.preventDefault();
-      },
-      false,
-    );
-  }, []);
-};
-
-/**
- * Trackpad/mouse wheel gesture on a web page manipuate the entire website,
- * This prevents that for the reference element.
- * @param ref html dom element where default guesture will be disabled.
- */
-export const usePreventDefaultBrowserWheel = (
-  ref: React.RefObject<HTMLElement>,
-) => {
-  useEffect(() => {
-    ref.current?.addEventListener(
-      'wheel',
-      (evt: TouchEvent) => {
-        evt.preventDefault();
-      },
-      false,
-    );
-  }, []);
-};
-
-/**
- * Prevent dragging on a web dom element
- * @param ref html dom element where default guesture will be disabled.
- */
-export const usePreventDefaultBrowserPointer = (
-  ref: React.RefObject<HTMLElement>,
-  disabled: false,
-) => {
-  useEffect(() => {
-    ref.current?.addEventListener(
-      'pointerdown',
-      (evt: TouchEvent) => {
-        evt.preventDefault();
-      },
-      false,
-    );
-  }, [disabled]);
-};
-
-/**
  * This hook monitors an dom element's dimension
  * @param ref reference to the html element
  * @returns the update container size.
@@ -250,7 +193,8 @@ export const usePointerPan = (
 
   return {
     onPointerDown: (evt: React.PointerEvent) => {
-      if (disabled || evt.button === 2 ) return;
+      // if (disabled || evt.button === 2 ) return;
+      if ( (disabled && evt.button===0) || evt.button === 2 ) return;
       
       const coords = getAbsoluteCoords(
         evt,
@@ -264,7 +208,7 @@ export const usePointerPan = (
       setInProgress(false);
     },
     onPointerMove: (evt: React.PointerEvent) => {
-      if (disabled) return;
+      if ((disabled && evt.button===0) || evt.button === 2 ) return;
 
       const coords = getAbsoluteCoords(
         evt,

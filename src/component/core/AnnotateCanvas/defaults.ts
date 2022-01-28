@@ -2,9 +2,12 @@ import { UserControllerInputs, UserSelectionConfig } from "./types";
 
 export const DEFAULT_UI_ATTRS: UserControllerInputs = {
   mode: 'selection',
+  showAnnotation: true,
   shape: 'Rect',
-  fontSize: 12,
-  color: 'blue',
+  fontSize: 20,
+  // color: 'DeepSkyBlue',
+  // color: 'DodgerBlue',
+  color: 'Coral',
   strokeWidth: 3,
   fontFamily: 'Times New Roman',
 };

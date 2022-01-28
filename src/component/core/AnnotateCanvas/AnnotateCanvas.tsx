@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { fabric } from 'fabric';
 
 import {
@@ -19,9 +19,6 @@ import { DEFAULT_SELECTION_CONFIG, DEFAULT_UI_ATTRS } from './defaults';
 import usePanZoom from './hooks/usePanZoom';
 
 interface AnnotateCanvasProps {
-  elements: AnnotateElement[];
-  selection?: string[];
-
   width?: number;
   height?: number;
   backgroundColor?: string;
@@ -30,21 +27,25 @@ interface AnnotateCanvasProps {
   // if true, redraw the entire canvas when ever one element updates
   clearOnElementModify?: boolean;
 
+  elements: AnnotateElement[];
   onAddElement?: (element: AnnotateElement) => void;
   onChangeElement?: (element: Partial<AnnotateElement>) => void;
-  onSelection?: (
-    selected: string[],
-    added: string[],
-    removed: string[],
-  ) => void;
+
+  selection?: string[];
+  onSelection?: (selected: string[]) => void;
 
   uiState?: UserControllerInputs;
+  setUiState?: (u: UserControllerInputs) => void;
   selectionConfig?: UserSelectionConfig;
 
   disabled?: boolean;
 
   debugLogging?: boolean;
 }
+
+export const AnnotateUiContext = React.createContext({
+  uiState: {},
+});
 
 // this is use for initalization purpose.
 // this is dangerous to be used within a component as creates an expensive
@@ -55,7 +56,8 @@ const EmptyCanvas = new fabric.Canvas('');
 const AnnotateCanvas: React.FC<AnnotateCanvasProps> = React.memo(
   ({
     elements = [],
-    selection = [],
+    selection = undefined,
+    onSelection = undefined,
 
     width = 100,
     height = 100,
@@ -64,6 +66,7 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = React.memo(
     clearOnElementModify = false,
 
     uiState = DEFAULT_UI_ATTRS,
+    setUiState,
     selectionConfig = DEFAULT_SELECTION_CONFIG,
 
     debugLogging = false,
@@ -74,11 +77,26 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = React.memo(
   }) => {
     const fcRef = React.useRef<fabric.Canvas>(EmptyCanvas);
 
+    const [innerSelection, setInnerSelection] = useState<string[]>([]);
+    if (!selection) selection = innerSelection;
+    if (!onSelection) onSelection = setInnerSelection;
+
     useRedrawElements(fcRef, backgroundColor, elements, clearOnElementModify);
-    useSyncSelection(fcRef, props.onSelection);
+    //(s)=>{console.log('sync select set ui state', s.strokeWidth); if (setUiState) setUiState(s)}
+    useSyncSelection(fcRef, uiState, setUiState, onSelection);
     useCustomSelectCorners(fcRef, selectionConfig);
     useCustomHoverStyle(fcRef, selectionConfig);
-    useDrawShapeHandler(fcRef, uiState, props.onAddElement, disabled);
+    useDrawShapeHandler(
+      fcRef,
+      uiState,
+      (e) => {
+        if (props.onAddElement) props.onAddElement(e);
+        if (setUiState && e.etype !== 'Path') {                  
+          fcRef.current.setActiveObject(e.fabricObj!);
+        }
+      },
+      disabled,
+    );
     useModifyHandler(fcRef, props.onChangeElement);
     usePanZoom(fcRef, props.panZoom);
     useApplyAttrsToSelection(

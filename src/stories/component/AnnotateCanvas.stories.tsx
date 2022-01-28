@@ -4,9 +4,11 @@ import AnnotateCanvas from '../../component/core/AnnotateCanvas';
 
 import { UserControllerInputs } from '../../component/core/AnnotateCanvas/types';
 import elementsActionReducer from '../../component/core/AnnotateCanvas/elementActionReducer';
-import { makeElement } from '../../component/core/AnnotateCanvas/utils';
 
 import { sampleAnnotations } from '../testdata/annotationSamples';
+import BrushTools from '../../component/core/AnnotateCanvas/UI/BrushTools';
+import EditTools from '../../component/core/AnnotateCanvas/UI/EditTools';
+import { DEFAULT_UI_ATTRS } from '../../component/core/AnnotateCanvas/defaults';
 
 const story = {
   title: 'AnnotateCanvas',
@@ -57,7 +59,6 @@ export const Edit = (): JSX.Element => {
     step: 1,
   });
 
-  const [selection, setSelection] = useState<string[]>([]);
   const [elementsState, elementsDispatcher] = React.useReducer(
     elementsActionReducer,
     sampleAnnotations,
@@ -65,6 +66,7 @@ export const Edit = (): JSX.Element => {
 
   const uiState: UserControllerInputs = {
     mode: canvasModeKnob,
+    showAnnotation: true,
     shape: shapeKnob,
     fontSize: fontSizeKnob,
     color: colorKnob,
@@ -76,7 +78,6 @@ export const Edit = (): JSX.Element => {
     <div>
       <AnnotateCanvas
         elements={elementsState}
-        selection={selection}
         uiState={uiState}
         width={480}
         height={480}
@@ -87,14 +88,44 @@ export const Edit = (): JSX.Element => {
         onAddElement={(newElement) => {
           elementsDispatcher({ type: 'addElement', newElement });
         }}
-        onSelection={(selection) => {
-          setSelection(selection);
-        }}
-        clearOnElementModify={false}
+        clearOnElementModify={true}
         debugLogging={false}
       />
     </div>
   );
 };
 
+export const WithBrushControls = (): JSX.Element => {
+  const [uiState, setUiState] =
+    useState<UserControllerInputs>(DEFAULT_UI_ATTRS);
+
+  const [elementsState, elementsDispatcher] = React.useReducer(
+    elementsActionReducer,
+    sampleAnnotations,
+  );
+
+  return (
+    <div id="top_panel" style={{ display: 'flex' }}>
+      <AnnotateCanvas
+        elements={elementsState}
+        width={480}
+        height={480}
+        backgroundColor={'SlateGray'}
+        uiState={uiState}
+        setUiState={setUiState}
+        onChangeElement={(elementUpdates) =>
+          elementsDispatcher({ type: 'changeElement', elementUpdates })
+        }
+        onAddElement={(newElement) => {
+          elementsDispatcher({ type: 'addElement', newElement });
+        }}
+      />
+
+      <BrushTools uiState={uiState} setUIState={setUiState} />
+      <EditTools uiState={uiState} setUIState={setUiState} />
+    </div>
+  );
+};
+
+WithBrushControls.parameters = { layout: 'fullscreen' };
 export default story;

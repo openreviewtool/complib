@@ -1,7 +1,11 @@
 import React from 'react';
 import { useCallback } from 'react';
 import { v4 as uuid4 } from 'uuid';
-import { makeFabricObj, getElementPropsFromUiState, makeElement } from './../utils';
+import {
+  makeFabricObj,
+  getElementPropsFromUiState,
+  makeElement,
+} from './../utils';
 import { AnnotateElement, fObjExtend, UserControllerInputs } from './../types';
 import { fabric } from 'fabric';
 import { IEvent } from 'fabric/fabric-impl';
@@ -38,7 +42,22 @@ function useDrawShapeHandler(
 
   React.useEffect(() => {
     uiStateRef.current = uiState;
+
+    const fcanvas = fabricCanvasRef.current;
+    if (
+      (fcanvas.isDrawingMode =
+        uiState.mode === 'draw' && uiState.shape === 'Path')
+    ) {
+      syncBrush(fcanvas);
+    }
   }, [uiState]);
+
+  const syncBrush = (fcanvas: fabric.Canvas) => {
+    const brush = fcanvas.freeDrawingBrush;
+    brush.width = uiState.strokeWidth || 1;
+    brush.color = uiState.color || '#fff';
+    fcanvas.freeDrawingBrush = brush;
+  };
 
   const setPathDrawing = (
     fcanvas: fabric.Canvas,
@@ -46,10 +65,7 @@ function useDrawShapeHandler(
   ) => {
     // setting the free draw mode
     fcanvas.isDrawingMode = uiState.mode === 'draw' && uiState.shape === 'Path';
-    const brush = fcanvas.freeDrawingBrush;
-    brush.width = uiState.strokeWidth || 1;
-    brush.color = uiState.color || '#fff';
-    fcanvas.freeDrawingBrush = brush;
+    syncBrush(fcanvas);
   };
 
   const handle_path_created = (meta: IEvent) => {
@@ -60,7 +76,7 @@ function useDrawShapeHandler(
       fObj.set(k, FabricObjectDefaults[k]);
     }
     fObj.etype = 'Path';
-    fObj.id = uuid4();   
+    fObj.id = uuid4();
     onAddElement?.(makeElement(fObj));
   };
 

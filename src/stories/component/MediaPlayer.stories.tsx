@@ -31,7 +31,7 @@ export const CustomControls = (): JSX.Element => {
         value={{ mediaList, mediaIndex, setMediaIndex }}
       >
         <div>
-          <playerComposer.Player />;
+          <playerComposer.Player />
           <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
             <playerComposer.Timeline />
             <playerComposer.PlayDeck />

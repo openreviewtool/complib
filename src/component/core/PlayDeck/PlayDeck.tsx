@@ -1,12 +1,12 @@
 import React from 'react';
 
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import LoopIcon from '@material-ui/icons/Loop';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import LoopIcon from '@mui/icons-material/Loop';
 
-import { Badge, IconButton } from '@material-ui/core';
+import { Badge, IconButton } from '@mui/material';
 
 import './style.css';
 
@@ -29,7 +29,7 @@ export interface PlayDeckProps {
   onToggleLoop?: () => void;
 
   themeColor?: string;
-  iconSize?: "medium" | "small" | undefined;
+  iconSize?: "large" | "medium" | "small" | undefined;
 }
 
 const PlayDeck: React.FC<PlayDeckProps> = ({
