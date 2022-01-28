@@ -33,6 +33,7 @@ const baseAttrNames = ['fill', 'stroke', 'strokeWidth'];
 
 export interface UserControllerInputs {
   mode: CanvasMode;
+  showAnnotation: boolean;
   shape: AnnotateElementType;
   fontSize: number;
   color: string;
@@ -83,8 +84,12 @@ export interface fObjExtend extends fabric.Object {
   // missing properties from the typescript wrapper.
   rx?: number;
   ry?: number;
-  text?: string;
   _objects?: fObjExtend[]; // from group selections.
+
+  // for textbox objects
+  text?: string;
+  fontSize?: number;
+  fontFamily?: string;
 }
 
 export interface fSelectionEvent extends fabric.IEvent {

@@ -1,10 +1,7 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   useMonitorResizable,
   usePointerPan,
-  usePreventDefaultBrowserPointer,
-  usePreventDefaultBrowserTouch,
-  usePreventDefaultBrowserWheel,
   useTouchPanZoom,
   useWheelZoom,
 } from './hooks';
@@ -12,6 +9,7 @@ import { PanZoomBounds, PanZoomSpec, RectSize } from './types';
 import { getContentFitSpec, normalizeSize } from './utils';
 
 import './style.css';
+import { usePreventDefaultBrowserTouch, usePreventDefaultBrowserWheel } from '../../utils/browser';
 
 interface PanZoomProps {
   disabled?: boolean;
@@ -107,7 +105,7 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
   const containerSize = useMonitorResizable(topContainerRef);
   const [contentSize, setContentSize] = useState({ width: 10, height: 10 });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const fitSpec = getContentFitSpec(contentSize, containerSize);
     contentFitSpecRef.current = { fitSpec, ...zoomBounds };
     setPanZoomState(fitSpec);
@@ -117,12 +115,13 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
     panZoomState,
     setPanZoomState,
     contentFitSpecRef,
+    disabled, 
   );
   const wheelHandler = useWheelZoom(
     panZoomState,
     setPanZoomState,
     contentFitSpecRef,
-    disabled,
+    // disabled,
   );
   const { inProgress: pointerPanCaptured, ...pointerHandler } = usePointerPan(
     panZoomState,

@@ -7,7 +7,7 @@ function useRedrawElements(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,
   backgroundColor: string,
   elements: AnnotateElement[],
-  redrawOnModify: boolean, 
+  redrawOnModify: boolean,
 ): void {
   const redrawCanvas = (fCanvas: fabric.Canvas) => {
     fCanvas.clear();
