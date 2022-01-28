@@ -36,7 +36,8 @@ function useSyncSelection(
         const updatedUiState = {
           ...uiState,
           strokeWidth: obj.strokeWidth as number,
-          color: obj.stroke
+          color: obj.stroke,
+          shape: obj.etype,
         };
         setTimeout(setUIState, 200, updatedUiState);
       }
@@ -44,11 +45,8 @@ function useSyncSelection(
         setTimeout(setUIState, 200, {
           ...uiState,
           color: obj.fill,
-
-          // ToDo: temporary use stroke width to set font size, hack starts
-          // strokeWidth: obj.fontSize,
-          // fontSize: obj.fontSize,
-          // hack ends
+          fontSize: obj.fontSize,
+          shape: 'Textbox',
         });
       }
     }

@@ -20,20 +20,33 @@ const BrushTools = (props: BrushToolsProps) => {
   return (
     <div className="brush_tools" ref={divRef}>
       <div className="brush_tools_bar">
-        <Slider
-          orientation="vertical"
-          value={props.uiState.strokeWidth}
-          onChange={(_evt, value) => {
-            props.setUIState({
-              ...props.uiState,
-              strokeWidth: value as number,
-            });
-          }}
-          min={1}
-          max={50}
-        />
-        {/* <div style={{ height: '80px' }} /> */}
-        {/* <Slider orientation="vertical" defaultValue={30} min={1} max={100} /> */}
+        {props.uiState.shape === 'Textbox' ? (
+          <Slider
+            value={props.uiState.fontSize}
+            orientation="vertical"
+            min={1}
+            max={100}
+            onChange={(_evt, value) => {
+              props.setUIState({
+                ...props.uiState,
+                fontSize: value as number,
+              });
+            }}
+          />
+        ) : (
+          <Slider
+            orientation="vertical"
+            value={props.uiState.strokeWidth}
+            onChange={(_evt, value) => {
+              props.setUIState({
+                ...props.uiState,
+                strokeWidth: value as number,
+              });
+            }}
+            min={1}
+            max={40}
+          />
+        )}
       </div>
     </div>
   );
