@@ -46,6 +46,10 @@ const Timeline: React.FC<TimelineProps> = ({
   let frameDuration = -1;
   let frameIndex = -1;
 
+  if (timelineCaptured) {
+    displayPlayPercentage = seekPercentage;
+  }  
+
   if (useFrameDisplay && frameRange) {
     frameDuration = frameRange[1] - frameRange[0] + 1;
     oneFramePercent = 1 / frameDuration;
@@ -60,10 +64,6 @@ const Timeline: React.FC<TimelineProps> = ({
     frameIndex = frameElapsed + frameRange[0];
 
     displayPlayPercentage = Math.min(frameElapsed * oneFramePercent);
-  }
-
-  if (timelineCaptured) {
-    displayPlayPercentage = seekPercentage;
   }
 
   React.useEffect(() => {
