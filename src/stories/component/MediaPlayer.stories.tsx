@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { mediaSamplesWithLabel as mediaList } from '../testdata/mediaSamples';
 import { select } from '@storybook/addon-knobs';
 import RPlayer from '../../component/core/MediaPlayer/RPlayer';
-import * as playerComposer from '../../component/core/MediaPlayer/composer';
+import * as playerComposer from '../../component/core/MediaPlayer/playerComposer';
 
 const story = {
-  title: 'MediaPlayer',
+  title: 'Components/MediaPlayer',
 };
 
 export const Default = (): JSX.Element => {

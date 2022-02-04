@@ -24,7 +24,7 @@ const BrushTools = (props: BrushToolsProps) => {
           <Slider
             value={props.uiState.fontSize}
             orientation="vertical"
-            min={1}
+            min={5}
             max={100}
             onChange={(_evt, value) => {
               props.setUIState({

@@ -13,8 +13,9 @@ export interface TimelineProps {
   frameRange?: [number, number];
 
   timelineCaptured?: boolean;
-  onTimelineSeek?: (seekTime: number, seekFrameIndex?: number) => void;
   onTimelineCaptured?: (captured: boolean) => void; // user mouse down / touch start on timeline
+  
+  onTimelineSeek?: (seekTime: number, seekFrameIndex?: number) => void;
   onPointerMove?: (e: any) => void; // user enter the timeline
 
   themeColor?: string;
@@ -31,13 +32,13 @@ const Timeline: React.FC<TimelineProps> = ({
   ...props
 }) => {
   const progressDisplayTimeoutRef = useRef<number | null>(null);
-  const timelineRef = useRef<HTMLInputElement|null>(null);
+  const timelineRef = useRef<HTMLInputElement | null>(null);
   const [seekPercentage, setSeekPercentage] = useState<number>(0);
 
   const [innerCaptured, setInnerCaptured] = useState<boolean>(false);
-  const timelineCaptured = props.timelineCaptured || innerCaptured
-  const onTimelineCaptured = props.onTimelineCaptured || setInnerCaptured
-  
+  const timelineCaptured = props.timelineCaptured || innerCaptured;
+  const onTimelineCaptured = props.onTimelineCaptured || setInnerCaptured;
+
   const playPercentage = props.currentTime / props.duration; // actual percentage
 
   // display perentage as adjust at frame discret increment steps.
@@ -150,6 +151,20 @@ const Timeline: React.FC<TimelineProps> = ({
     }
   };
 
+  const formatTimeDisplay = (percent: number, duration: number) => {
+    const time = new Date(percent * duration * 1000).toISOString();
+
+    if (duration > 3600) {
+      return time.substr(11, 8);
+    } else if (duration > 60) {
+      const [min, sec] = time.substr(14, 5).split(':');
+      return `${parseInt(min)}:${sec}`;
+    } else {
+      const [sec, percentage] = time.substr(17, 4).split('.');
+      return `${parseInt(sec)}.${percentage}`;
+    }
+  };
+
   const handleScrubMoveFinish = (e: any) => {
     const isPointerEvent = e.type && e.type.startsWith('pointer');
 
@@ -165,7 +180,7 @@ const Timeline: React.FC<TimelineProps> = ({
         className="timeline__track__playhead"
         style={{
           left: `${(displayPlayPercentage + oneFramePercent) * 100}%`,
-          backgroundColor: `${themeColor}`
+          backgroundColor: `${themeColor}`,
         }}
       />
       <div
@@ -174,7 +189,9 @@ const Timeline: React.FC<TimelineProps> = ({
           left: `${(displayPlayPercentage + oneFramePercent) * 100}%`,
         }}
       >
-        {frameIndex !== -1 ? frameIndex : ''}
+        {frameIndex !== -1
+          ? frameIndex
+          : formatTimeDisplay(displayPlayPercentage, props.duration)}
       </div>
     </>
   );

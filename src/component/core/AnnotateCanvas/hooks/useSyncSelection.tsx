@@ -30,15 +30,20 @@ function useSyncSelection(
     const _added = added?.map((e) => (e as fObjExtend).id);
     const _removed = removed?.map((e) => (e as fObjExtend).id);
 
+    // sync the selected object state to the Ui controls
+    // Note: the timeout is neccessary because if an object is preselected
+    // then an new object gets selected, the new object sync the ui, and the ui
+    // properties are applied to the pre-selection before selection is cleared.
     if (activeObjs.length === 1 && setUIState) {
       const obj = activeObjs[0] as fObjExtend;
       if (['Rect', 'Ellipse', 'Path'].includes(obj.etype)) {
         const updatedUiState = {
           ...uiState,
           strokeWidth: obj.strokeWidth as number,
-          color: obj.stroke,
+          color: obj.stroke!,
           shape: obj.etype,
         };
+        // The timeout 
         setTimeout(setUIState, 200, updatedUiState);
       }
       if (['Textbox'].includes(obj.etype)) {

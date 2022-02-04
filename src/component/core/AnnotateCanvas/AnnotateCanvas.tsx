@@ -7,16 +7,16 @@ import {
   UserSelectionConfig,
 } from './types';
 import { useCanvasDebugger } from './utils';
-import useDrawShapeHandler from './hooks/useDrawShapeHandler';
 import useCustomSelectCorners from './hooks/useCustomSelectCorners';
 import useCustomHoverStyle from './hooks/useCustomHoverStyle';
 import useModifyHandler from './hooks/useModifyHandler';
 import useSyncSelection from './hooks/useSyncSelection';
 import useApplyAttrsToSelection from './hooks/useApplyAttrsToSelection';
 import FabricCanvas from './FabricCanvas';
-import useRedrawElements from './hooks/useRedrawElements';
 import { DEFAULT_SELECTION_CONFIG, DEFAULT_UI_ATTRS } from './defaults';
 import usePanZoom from './hooks/usePanZoom';
+import useRedrawElements from './hooks/useRedrawElements';
+import useDrawShapeHandler from './hooks/useDrawShapeHandler';
 
 interface AnnotateCanvasProps {
   width?: number;
@@ -29,7 +29,7 @@ interface AnnotateCanvasProps {
 
   elements: AnnotateElement[];
   onAddElement?: (element: AnnotateElement) => void;
-  onChangeElement?: (element: Partial<AnnotateElement>) => void;
+  onChangeElement?: (elementUpdates: Partial<AnnotateElement>[]) => void;
 
   selection?: string[];
   onSelection?: (selected: string[]) => void;
@@ -82,14 +82,13 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = React.memo(
     if (!onSelection) onSelection = setInnerSelection;
 
     useRedrawElements(fcRef, backgroundColor, elements, clearOnElementModify);
-    //(s)=>{console.log('sync select set ui state', s.strokeWidth); if (setUiState) setUiState(s)}
     useSyncSelection(fcRef, uiState, setUiState, onSelection);
     useCustomSelectCorners(fcRef, selectionConfig);
     useCustomHoverStyle(fcRef, selectionConfig);
     useDrawShapeHandler(
       fcRef,
       uiState,
-      (e) => {
+      (e: AnnotateElement) => {
         if (props.onAddElement) props.onAddElement(e);
         if (setUiState && e.etype !== 'Path') {                  
           fcRef.current.setActiveObject(e.fabricObj!);

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { PanZoomContext } from '../PanZoom/PanZoom';
+import { normalizeSize } from '../PanZoom/utils';
 import PlayDeckComp from '../PlayDeck';
 import TimelineComp from '../Timeline/Timeline';
 import RPlayer from './RPlayer';
@@ -15,6 +17,9 @@ interface playerContextInteface {
   seekTime?: number;
   setSeekTime: (t: number | undefined) => void;
 
+  seeking?: boolean;
+  setSeeking?: (s: boolean) => void;
+
   playerState: { played: number; loaded: number };
   setPlayerState: (p: PlayerState) => void;
 }
@@ -25,6 +30,8 @@ export const PlayerContext = React.createContext<playerContextInteface>({
   setMediaIndex: () => {},
   playing: false,
   setPlaying: () => {},
+  seeking: false,
+  setSeeking: () => {},
   seekTime: undefined,
   setSeekTime: () => {},
   playerState: { played: 0, loaded: 0 },
@@ -34,11 +41,7 @@ export const PlayerContext = React.createContext<playerContextInteface>({
 export const PlayerContextProvider: React.FC<{
   value: Partial<playerContextInteface>;
 }> = ({
-  value: {
-    mediaList = [],
-    mediaIndex = 0,
-    setMediaIndex = () => {},
-  },
+  value: { mediaList = [], mediaIndex = 0, setMediaIndex = () => {} },
   ...props
 }) => {
   const [seekTime, setSeekTime] = useState<number>(); // seek time
@@ -67,8 +70,14 @@ export const PlayerContextProvider: React.FC<{
   );
 };
 
-export const Player = () => {
+export const Player = ( props: {controls?: boolean}) => {
   const ctx = React.useContext(PlayerContext);
+  const { setContentSize } = React.useContext(PanZoomContext);
+
+  useEffect(() => {
+    setContentSize(normalizeSize(ctx.mediaList[ctx.mediaIndex], 1000));
+  }, [ctx.mediaIndex]);
+
   return (
     <RPlayer
       url={ctx.mediaList[ctx.mediaIndex].url}
@@ -80,6 +89,7 @@ export const Player = () => {
       }}
       seekTime={ctx.seekTime}
       onEnded={() => ctx.setPlaying(false)}
+      controls={ props.controls || false }
     />
   );
 };
@@ -98,32 +108,40 @@ export const Timeline = () => {
         currentTime={ctx.playerState.played}
         duration={ctx.mediaList[ctx.mediaIndex].duration}
         onTimelineSeek={ctx.setSeekTime}
+        timelineCaptured={ctx.seeking}
         onTimelineCaptured={(captured) => {
           // this is to enabled repeatly seeking same spot.
           if (!captured) ctx.setSeekTime(undefined);
+          if (ctx.setSeeking) ctx.setSeeking(captured);
         }}
       />
     </div>
   );
 };
 
-export const PlayDeck = () => (
-  <PlayerContext.Consumer>
-    {(ctx) => {
-      return (
-        <PlayDeckComp
-          playing={ctx.playing}
-          onPlay={() => ctx.setPlaying(!ctx.playing)}
-          onSkipNext={() => {
-            ctx.setMediaIndex((ctx.mediaIndex + 1) % ctx.mediaList.length);
-          }}
-          onSkipPrev={() => {
-            ctx.setMediaIndex(
-              (ctx.mediaIndex - 1 + ctx.mediaList.length) % ctx.mediaList.length,
-            );
-          }}
-        />
-      );
-    }}
-  </PlayerContext.Consumer>
-);
+export const PlayDeck = () => {
+  const ctx = React.useContext(PlayerContext);
+  return (
+    <PlayDeckComp
+      playing={ctx.playing}
+      onPlay={() => ctx.setPlaying(!ctx.playing)}
+      onSkipNext={() => {
+        ctx.setMediaIndex((ctx.mediaIndex + 1) % ctx.mediaList.length);
+      }}
+      onSkipPrev={() => {
+        ctx.setMediaIndex(
+          (ctx.mediaIndex - 1 + ctx.mediaList.length) % ctx.mediaList.length,
+        );
+      }}
+    />
+  );
+};
+
+export const PlayDeckWithTimeline = () => {
+  return (
+    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+      <Timeline />
+      <PlayDeck />
+    </div>
+  );
+};

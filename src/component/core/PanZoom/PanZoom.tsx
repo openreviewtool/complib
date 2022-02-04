@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   useMonitorResizable,
   usePointerPan,
@@ -9,7 +15,10 @@ import { PanZoomBounds, PanZoomSpec, RectSize } from './types';
 import { getContentFitSpec, normalizeSize } from './utils';
 
 import './style.css';
-import { usePreventDefaultBrowserTouch, usePreventDefaultBrowserWheel } from '../../utils/browser';
+import {
+  usePreventDefaultBrowserTouch,
+  usePreventDefaultBrowserWheel,
+} from '../../utils/browser';
 
 interface PanZoomProps {
   disabled?: boolean;
@@ -30,13 +39,14 @@ export const PanZoomContext = React.createContext({
 });
 
 export interface PanZoomOverlayProps {
-  render: (
+  render?: (
     panZoom: PanZoomSpec,
     contentSize: RectSize,
     containerSize: RectSize,
     inProgress: boolean,
   ) => JSX.Element;
   pointerEventPassthrough?: boolean;
+  children?: JSX.Element;
 }
 export const PanZoomOverlay = (props: PanZoomOverlayProps) => {
   const ctx = useContext(PanZoomContext);
@@ -47,19 +57,22 @@ export const PanZoomOverlay = (props: PanZoomOverlayProps) => {
         pointerEvents: props.pointerEventPassthrough ? 'none' : undefined,
       }}
     >
-      {props.render(
-        ctx.panZoom,
-        ctx.contentSize,
-        ctx.containerSize,
-        ctx.inProgress,
-      )}
+      {props.render
+        ? props.render(
+            ctx.panZoom,
+            ctx.contentSize,
+            ctx.containerSize,
+            ctx.inProgress,
+          )
+        : props.children}
     </div>
   );
 };
 
 export interface PanZoomContentProps {
-  render: (setContentSize: (s: RectSize) => void) => JSX.Element;
+  render?: (setContentSize: (s: RectSize) => void) => JSX.Element;
   normalizeRes?: number;
+  children?: JSX.Element;
 }
 
 export const PanZoomContent = (props: PanZoomContentProps) => {
@@ -74,11 +87,14 @@ export const PanZoomContent = (props: PanZoomContentProps) => {
         ...ctx.contentSize,
       }}
     >
-      {props.normalizeRes
+      {props.render
+        ? props.render(ctx.setContentSize)
+        : props.children}
+      {/* {props.normalizeRes
         ? props.render((s) => {
             ctx.setContentSize(normalizeSize(s, props.normalizeRes!));
           })
-        : props.render(ctx.setContentSize)}
+        : props.render(ctx.setContentSize)} */}
     </div>
   );
 };
@@ -115,7 +131,7 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
     panZoomState,
     setPanZoomState,
     contentFitSpecRef,
-    disabled, 
+    disabled,
   );
   const wheelHandler = useWheelZoom(
     panZoomState,

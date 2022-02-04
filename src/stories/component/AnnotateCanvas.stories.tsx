@@ -11,7 +11,7 @@ import EditTools from '../../component/core/AnnotateCanvas/UI/EditTools';
 import { DEFAULT_UI_ATTRS } from '../../component/core/AnnotateCanvas/defaults';
 
 const story = {
-  title: 'AnnotateCanvas',
+  title: 'Components/AnnotateCanvas',
 };
 
 export const Default = (): JSX.Element => {
@@ -88,8 +88,6 @@ export const Edit = (): JSX.Element => {
         onAddElement={(newElement) => {
           elementsDispatcher({ type: 'addElement', newElement });
         }}
-        clearOnElementModify={true}
-        debugLogging={false}
       />
     </div>
   );
@@ -106,20 +104,22 @@ export const WithBrushControls = (): JSX.Element => {
 
   return (
     <div id="top_panel" style={{ display: 'flex' }}>
-      <AnnotateCanvas
-        elements={elementsState}
-        width={480}
-        height={480}
-        backgroundColor={'SlateGray'}
-        uiState={uiState}
-        setUiState={setUiState}
-        onChangeElement={(elementUpdates) =>
-          elementsDispatcher({ type: 'changeElement', elementUpdates })
-        }
-        onAddElement={(newElement) => {
-          elementsDispatcher({ type: 'addElement', newElement });
-        }}
-      />
+      {uiState.showAnnotation && (
+        <AnnotateCanvas
+          elements={elementsState}
+          width={480}
+          height={480}
+          backgroundColor={'SlateGray'}
+          uiState={uiState}
+          setUiState={setUiState}
+          onChangeElement={(elementUpdates) =>
+            elementsDispatcher({ type: 'changeElement', elementUpdates })
+          }
+          onAddElement={(newElement) => {
+            elementsDispatcher({ type: 'addElement', newElement });
+          }}
+        />
+      )}
 
       <BrushTools uiState={uiState} setUIState={setUiState} />
       <EditTools uiState={uiState} setUIState={setUiState} />

@@ -31,6 +31,18 @@ export interface AnnotateElement
 }
 const baseAttrNames = ['fill', 'stroke', 'strokeWidth'];
 
+// annotateElement: a mark
+// list annotateElement: a sketch
+// list of sketch: media annotation
+export interface TimedSketch {
+  time: number;
+  sketch: AnnotateElement[];
+}
+
+export interface AnnotateSession {
+  data: TimedSketch[][]
+}
+
 export interface UserControllerInputs {
   mode: CanvasMode;
   showAnnotation: boolean;
@@ -66,7 +78,7 @@ export const fabricObjAttrsLookup: Record<string, string[]> = {
 export type ElementsAction =
   | {
       type: 'changeElement';
-      elementUpdates: Partial<AnnotateElement>;
+      elementUpdates: Partial<AnnotateElement>[];
     }
   | {
       type: 'addElement';
@@ -75,6 +87,10 @@ export type ElementsAction =
   | {
       type: 'removeElement';
       removeIds: string[];
+    }
+  | {
+      type: 'updateSketch';
+      sketch: AnnotateElement[];
     };
 
 export interface fObjExtend extends fabric.Object {
@@ -93,7 +109,7 @@ export interface fObjExtend extends fabric.Object {
 }
 
 export interface fSelectionEvent extends fabric.IEvent {
-  target: fObjExtend,
-  selected: fObjExtend[],
-  deselected: fObjExtend[],
+  target: fObjExtend;
+  selected: fObjExtend[];
+  deselected: fObjExtend[];
 }

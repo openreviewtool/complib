@@ -13,7 +13,7 @@ import { artUrls } from '../testdata/mediaSamples';
 import { getAnnotateKnobs, StoryHint } from './utils';
 
 import { mediaSamplesWithLabel as mediaList } from '../testdata/mediaSamples';
-import * as playerComposer from '../../component/core/MediaPlayer/composer';
+import * as playerComposer from '../../component/core/MediaPlayer/playerComposer';
 import { DEFAULT_UI_ATTRS } from '../../component/core/AnnotateCanvas/defaults';
 import { UserControllerInputs } from '../../component/core/AnnotateCanvas/types';
 import elementsActionReducer from '../../component/core/AnnotateCanvas/elementActionReducer';
@@ -21,7 +21,7 @@ import BrushTools from '../../component/core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../../component/core/AnnotateCanvas/UI/EditTools';
 
 const story = {
-  title: 'PanZoom',
+  title: 'Components/PanZoom',
 };
 
 const hintsDefault = (
