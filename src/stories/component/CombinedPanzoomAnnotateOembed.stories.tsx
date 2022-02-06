@@ -20,6 +20,7 @@ import {
 import BrushTools from '../../component/core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../../component/core/AnnotateCanvas/UI/EditTools';
 import { StoryHint } from './utils';
+import { boolean } from '@storybook/addon-knobs';
 
 const story = {
   title: 'Combined',
@@ -43,6 +44,8 @@ const hintsAnnotateOembed = (
 );
 
 export const PanZoomAnnotateOembed = (): JSX.Element => {
+  const nativeControls = false;
+
   const [mediaIndex, setMediaIndex] = useState(0);
 
   const [uiState, setUiState] =
@@ -51,8 +54,6 @@ export const PanZoomAnnotateOembed = (): JSX.Element => {
   const [annotationList, setAnnotationList] = useState<TimedSketch[][]>(
     sampleMediaAnnotateList,
   );
-
-  const customPlayDeck = false;
 
   return (
     <StoryHint hint={<div>{hintsAnnotateOembed}</div>}>
@@ -72,16 +73,16 @@ export const PanZoomAnnotateOembed = (): JSX.Element => {
           <div>
             <PanZoom disabled={uiState.mode !== 'panZoom'}>
               <PanZoomContent>
-                <playerComposer.Player controls={!customPlayDeck} />
+                <playerComposer.Player controls={nativeControls} />
               </PanZoomContent>
-              <PanZoomOverlay pointerEventPassthrough={!customPlayDeck}>
+              <PanZoomOverlay pointerEventPassthrough={nativeControls}>
                 <annotateComposer.AnnotateCanvas
                   uiState={uiState}
                   setUiState={setUiState}
                 />
               </PanZoomOverlay>
             </PanZoom>
-            {customPlayDeck && <playerComposer.PlayDeckWithTimeline />}
+            {!nativeControls && <playerComposer.PlayDeckWithTimeline />}
             <BrushTools uiState={uiState} setUIState={setUiState} />
             <EditTools uiState={uiState} setUIState={setUiState} />
           </div>

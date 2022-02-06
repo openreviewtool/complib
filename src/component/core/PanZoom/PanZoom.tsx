@@ -87,14 +87,7 @@ export const PanZoomContent = (props: PanZoomContentProps) => {
         ...ctx.contentSize,
       }}
     >
-      {props.render
-        ? props.render(ctx.setContentSize)
-        : props.children}
-      {/* {props.normalizeRes
-        ? props.render((s) => {
-            ctx.setContentSize(normalizeSize(s, props.normalizeRes!));
-          })
-        : props.render(ctx.setContentSize)} */}
+      {props.render ? props.render(ctx.setContentSize) : props.children}
     </div>
   );
 };

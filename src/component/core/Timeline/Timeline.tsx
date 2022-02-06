@@ -14,11 +14,16 @@ export interface TimelineProps {
 
   timelineCaptured?: boolean;
   onTimelineCaptured?: (captured: boolean) => void; // user mouse down / touch start on timeline
-  
+
   onTimelineSeek?: (seekTime: number, seekFrameIndex?: number) => void;
   onPointerMove?: (e: any) => void; // user enter the timeline
 
   themeColor?: string;
+
+  // anything smaller than threshold (sec) for a clip bigger than duration
+  // will be zeroed.  This is help with some players that seem to have issue
+  // seeking locations smaller than 1 sec.
+  zeroClamp?: { clipDuration: number; threshold: number };
 }
 
 // the millesec of delay between emitting scrubbing updates.
@@ -28,6 +33,7 @@ const Timeline: React.FC<TimelineProps> = ({
   frameRange,
   useFrameDisplay = false,
   themeColor = 'red',
+  zeroClamp,
 
   ...props
 }) => {
@@ -123,8 +129,17 @@ const Timeline: React.FC<TimelineProps> = ({
 
     const _seekPercentage = offset / totalWidth;
     setSeekPercentage(_seekPercentage);
-    const seekTime = _seekPercentage * props.duration;
+    let seekTime = _seekPercentage * props.duration;
     let seekFrameIndex = -1;
+
+    if (
+      zeroClamp &&
+      props.duration > zeroClamp.clipDuration &&
+      seekTime < zeroClamp.threshold
+    ) {
+      // some reason seek to 0 doesn't do anything for react-player
+      seekTime = 0.001;
+    }
 
     if (props.onTimelineSeek) {
       if (progressDisplayTimeoutRef.current) {

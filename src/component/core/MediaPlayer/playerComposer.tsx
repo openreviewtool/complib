@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { PanZoomContext } from '../PanZoom/PanZoom';
 import { normalizeSize } from '../PanZoom/utils';
 import PlayDeckComp from '../PlayDeck';
@@ -70,7 +70,7 @@ export const PlayerContextProvider: React.FC<{
   );
 };
 
-export const Player = ( props: {controls?: boolean}) => {
+export const Player = (props: { controls?: boolean }) => {
   const ctx = React.useContext(PlayerContext);
   const { setContentSize } = React.useContext(PanZoomContext);
 
@@ -89,7 +89,7 @@ export const Player = ( props: {controls?: boolean}) => {
       }}
       seekTime={ctx.seekTime}
       onEnded={() => ctx.setPlaying(false)}
-      controls={ props.controls || false }
+      controls={props.controls || false}
     />
   );
 };
@@ -114,6 +114,7 @@ export const Timeline = () => {
           if (!captured) ctx.setSeekTime(undefined);
           if (ctx.setSeeking) ctx.setSeeking(captured);
         }}
+        zeroClamp = {{clipDuration: 30, threshold: 1}}
       />
     </div>
   );

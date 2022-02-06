@@ -16,7 +16,6 @@ import { mediaSamplesWithLabel as mediaList } from '../testdata/mediaSamples';
 import * as playerComposer from '../../component/core/MediaPlayer/playerComposer';
 import { DEFAULT_UI_ATTRS } from '../../component/core/AnnotateCanvas/defaults';
 import { UserControllerInputs } from '../../component/core/AnnotateCanvas/types';
-import elementsActionReducer from '../../component/core/AnnotateCanvas/elementActionReducer';
 import BrushTools from '../../component/core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../../component/core/AnnotateCanvas/UI/EditTools';
 
@@ -25,7 +24,7 @@ const story = {
 };
 
 
-const Test2 = (): JSX.Element => {
+export const Test2 = (): JSX.Element => {
   const [mediaIndex, setMediaIndex] = useState(0);
   const mediaKnob = select('Video', mediaList, mediaList[mediaIndex]);
 
