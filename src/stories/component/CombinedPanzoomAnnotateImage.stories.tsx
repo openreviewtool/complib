@@ -19,7 +19,7 @@ import BrushTools from '../../component/core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../../component/core/AnnotateCanvas/UI/EditTools';
 
 const story = {
-  title: 'Combined',
+  title: 'All Together Now',
 };
 
 const hintsAnnotateMedia = (

@@ -13,15 +13,76 @@ import elementsActionReducer from './elementActionReducer';
 import { AnnotateElement, TimedSketch, UserControllerInputs } from './types';
 import { PanZoomContext } from '../PanZoom/PanZoom';
 import AnnotateCanvasComp from './AnnotateCanvas';
+import BrushTools from './UI/BrushTools';
+import EditTools from './UI/EditTools';
 
 interface AnnotateContextInteface {
   mediaAnnotation: TimedSketch[];
   setMediaAnnotation?: (s: TimedSketch[]) => void;
+  annotateTimeList?: number[];
+  holdKey?: boolean;
+  setHoldKey?: () => void;
+
+  isKey: boolean;
+  setIsKey: (v: boolean) => void;
+
+  onAddKey?: () => void;
+  onRemoveKey?: () => void;
 }
 
 export const AnnotateContext = React.createContext<AnnotateContextInteface>({
   mediaAnnotation: [],
+  isKey: false,
+  setIsKey: () => {},
 });
+
+export const AnnotateContextProvider: React.FC<{
+  value: Partial<AnnotateContextInteface>;
+}> = ({
+  value: { mediaAnnotation = [], setMediaAnnotation = () => {} },
+  ...props
+}) => {
+  const { playerState } = useContext(playerComposer.PlayerContext);
+  const [annotateTimeList, setAnnotateTimeList] = useState<number[]>([]);
+  const [isKey, setIsKey] = useState<boolean>(false);
+
+  useEffect(() => {
+    setAnnotateTimeList(mediaAnnotation.map((m) => m.time / 1000));
+  }, [mediaAnnotation]);
+
+  const onAddKey = () => {
+    console.log(
+      'ToDo:',
+      playerState.played,
+      getWholeFrameTime(playerState.played),
+    );
+  };
+
+  const onRemoveKey = () => {
+    console.log(
+      '...add key at',
+      playerState.played,
+      getWholeFrameTime(playerState.played),
+    );
+  };
+
+
+  return (
+    <AnnotateContext.Provider
+      value={{
+        mediaAnnotation,
+        setMediaAnnotation,
+        annotateTimeList,
+        isKey,
+        setIsKey,
+        onAddKey,
+        onRemoveKey,
+      }}
+    >
+      {props.children}
+    </AnnotateContext.Provider>
+  );
+};
 
 /**
  * find the sketch best matching the current time
@@ -41,10 +102,10 @@ const findAnnotation = (
   keyTime: number | null;
   isKey: boolean;
 } => {
-  hold = hold === undefined ? false : true;
+  hold = hold === undefined ? false : hold;
   fps = fps || 24;
 
-  const frameDurationInMSec = (1 / fps) * 1000;
+  const frameDurationInMSec = 500; //(12 / fps) * 1000;
 
   // find the matching key for the time.
   let matchSketch: AnnotateElement[] | null = null;
@@ -70,12 +131,35 @@ const findAnnotation = (
   return { sketch: matchSketch, keyTime: matchKeyTime, isKey };
 };
 
-const hasAnnotation = (mediaAnnotation: TimedSketch[], time: number) => {
-  const wholeTime = getWholeFrameTime(time);
-  return (
-    mediaAnnotation.filter((s: TimedSketch) => s.time === wholeTime).length !==
-    0
-  );
+export const findNextKeyTime = (
+  keyList: number[],
+  currentTime: number,
+): number | null => {
+  const adjKeys = keyList.filter((t) => currentTime < t);
+
+  if (adjKeys.length === 0) {
+    if (keyList.length === 0) {
+      return null;
+    } else {
+      return keyList[0];
+    }
+  } else {
+    return adjKeys[0];
+  }
+};
+
+export const findPrevKeyTime = (keyList: number[], currentTime: number) => {
+  const adjKeys = keyList.filter((t) => t < currentTime);
+
+  if (adjKeys.length === 0) {
+    if (keyList.length === 0) {
+      return null;
+    } else {
+      return keyList[keyList.length - 1];
+    }
+  } else {
+    return adjKeys[adjKeys.length - 1];
+  }
 };
 
 /**
@@ -87,11 +171,13 @@ const hasAnnotation = (mediaAnnotation: TimedSketch[], time: number) => {
  * @returns
  */
 const getWholeFrameTime = (time: number, fps?: number) => {
-  return Math.round((Math.round(1.26667001919 * 24) / 24) * 1000);
+  fps = fps || 24;
+  return Math.round((Math.round(time * fps) / fps) * 1000);
 };
 
 const useMediaAnnotation = () => {
-  const { mediaAnnotation, setMediaAnnotation } = useContext(AnnotateContext);
+  const { mediaAnnotation, setMediaAnnotation, setIsKey } =
+    useContext(AnnotateContext);
   const { playerState } = useContext(playerComposer.PlayerContext);
 
   const [elementsState, elementsDispatcher] = React.useReducer(
@@ -102,24 +188,27 @@ const useMediaAnnotation = () => {
   const { sketch, keyTime, isKey } = findAnnotation(
     mediaAnnotation,
     Math.round(playerState.played * 1000),
-    true,
+    false,
   );
 
-  const keyTimeRef = useRef(keyTime);
+  const keyTimeRef = useRef<number | null>(null);
 
   // pushing the new sketch associated with the current to the annotation.
-  useEffect(
-    () =>
+  useEffect(() => {
+    if (keyTimeRef.current !== keyTime) {
+      keyTimeRef.current = keyTime;
       elementsDispatcher({
         type: 'updateSketch',
         sketch: sketch || [],
-      }),
-    [sketch],
-  );
+      });
+    }
+  }, [sketch]);
+
+  useEffect(() => setIsKey(isKey), [isKey]);
 
   // push the updates up.
   useEffect(() => {
-    if (setMediaAnnotation && keyTimeRef.current !== keyTime) {
+    if (setMediaAnnotation) {
       const updated = [...mediaAnnotation];
 
       for (let k = 0; k < updated.length; k++) {
@@ -142,9 +231,17 @@ const useMediaAnnotation = () => {
     [],
   );
 
-  const onAddElement = useCallback((newElement) => {
-    elementsDispatcher({ type: 'addElement', newElement });
-  }, []);
+  const onAddElement = (newElement: AnnotateElement) => {
+    if (isKey) {
+      elementsDispatcher({ type: 'addElement', newElement });
+    } else {
+      const updated = [...mediaAnnotation];
+      const key = getWholeFrameTime(playerState.played);
+      updated.push({ time: key, sketch: [newElement] });
+      updated.sort((a, b) => a.time - b.time);
+      if (setMediaAnnotation) setMediaAnnotation(updated);
+    }
+  };
 
   return { elementsState, onAddElement, onChangeElement };
 };
@@ -155,6 +252,7 @@ export const AnnotateCanvas = (props: {
 }) => {
   const { containerSize, panZoom, contentSize } = useContext(PanZoomContext);
   const [normPanZoomSpec, setNormPanZoomSpec] = useState(panZoom);
+  const [selection, setSelection] = useState<string[]>([]);
 
   // normalize the annotate canvas to have 1000x1000 regardless of the content
   useEffect(
@@ -167,19 +265,49 @@ export const AnnotateCanvas = (props: {
   );
 
   const { elementsState, onAddElement, onChangeElement } = useMediaAnnotation();
+  // auto select newly created shape (except path).
+  const onAddElementHelper = (elm: AnnotateElement) => {
+    onAddElement(elm);
+    if (elm.etype!=='Path') {
+      props.setUiState({ ...props.uiState, mode: 'selection' });
+      window.setTimeout( setSelection, 100, [elm.id]);
+    }
+  };
 
   return props.uiState.showAnnotation ? (
     <AnnotateCanvasComp
       elements={elementsState}
+      selection={selection}
+      onSelection={setSelection}
       width={containerSize.width}
       height={containerSize.height}
       panZoom={normPanZoomSpec}
       uiState={props.uiState}
       setUiState={props.setUiState}
       disabled={props.uiState.mode === 'panZoom'}
-      onAddElement={onAddElement}
+      onAddElement={onAddElementHelper}
       onChangeElement={onChangeElement}
       clearOnElementModify={true}
     />
   ) : null;
+};
+
+export const AnnotateTools = (props: {
+  uiState: UserControllerInputs;
+  setUiState: (u: UserControllerInputs) => void;
+}) => {
+  const { isKey, onRemoveKey } = useContext(AnnotateContext);
+  return (
+    <>
+      <BrushTools uiState={props.uiState} setUIState={props.setUiState} />
+      <EditTools
+        uiState={props.uiState}
+        setUIState={props.setUiState}
+        // onAddKey={onAddKey}
+        // disableAddKey={isKey}
+        onRemoveKey={onRemoveKey}
+        disableRemoveKey={!isKey}
+      />
+    </>
+  );
 };

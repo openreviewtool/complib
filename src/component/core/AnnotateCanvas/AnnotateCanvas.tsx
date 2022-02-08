@@ -82,20 +82,10 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = React.memo(
     if (!onSelection) onSelection = setInnerSelection;
 
     useRedrawElements(fcRef, backgroundColor, elements, clearOnElementModify);
-    useSyncSelection(fcRef, uiState, setUiState, onSelection);
+    useSyncSelection(fcRef, uiState, setUiState, selection, onSelection);
     useCustomSelectCorners(fcRef, selectionConfig);
     useCustomHoverStyle(fcRef, selectionConfig);
-    useDrawShapeHandler(
-      fcRef,
-      uiState,
-      (e: AnnotateElement) => {
-        if (props.onAddElement) props.onAddElement(e);
-        if (setUiState && e.etype !== 'Path') {                  
-          fcRef.current.setActiveObject(e.fabricObj!);
-        }
-      },
-      disabled,
-    );
+    useDrawShapeHandler(fcRef, uiState, props.onAddElement, disabled);
     useModifyHandler(fcRef, props.onChangeElement);
     usePanZoom(fcRef, props.panZoom);
     useApplyAttrsToSelection(

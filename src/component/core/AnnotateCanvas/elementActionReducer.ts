@@ -29,10 +29,15 @@ export default function elementsActionReducer(
     case 'changeElement':
       action.elementUpdates.forEach((updates)=>{
         const index = elementIndexById[updates.id!]
-        updatedElements[index] = {...updatedElements[index], ...updates}
+        // this goes against the conventions of react, to directly manipulate
+        // the state, that because the changes has already done to the elements
+        // and we dont' want to trigger a re-render.
+        state[index] = {...updatedElements[index], ...updates}
+        // updatedElements[index] = {...updatedElements[index], ...updates}
       })
 
-      return updatedElements
+      // return updatedElements
+      return state
 
     case 'removeElement':
       // ToDo: update this now that there is a elemetIndexById look up.

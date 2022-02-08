@@ -5,6 +5,8 @@ import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import LoopIcon from '@mui/icons-material/Loop';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { Badge, IconButton } from '@mui/material';
 
@@ -29,7 +31,10 @@ export interface PlayDeckProps {
   onToggleLoop?: () => void;
 
   themeColor?: string;
-  iconSize?: "large" | "medium" | "small" | undefined;
+  iconSize?: 'large' | 'medium' | 'small' | undefined;
+
+  onPrevAnnotation?: () => void;
+  onNextAnnotation?: () => void;
 }
 
 const PlayDeck: React.FC<PlayDeckProps> = ({
@@ -49,6 +54,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
           onClick={props.onSkipPrev}
           disabled={disablePrev}
           style={{ color: themeColor }}
+          title={'Skip prev'}
         >
           <SkipPreviousIcon />
         </IconButton>
@@ -57,6 +63,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
         size={iconSize}
         onClick={props.onPlay}
         style={{ color: themeColor }}
+        title={'Play'}
       >
         {props.playing ? <PauseIcon /> : <PlayArrowIcon />}
       </IconButton>
@@ -66,6 +73,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
           onClick={props.onSkipNext}
           disabled={disableNext}
           style={{ color: themeColor }}
+          title={'Skip next'}
         >
           <SkipNextIcon />
         </IconButton>
@@ -88,6 +96,27 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
             />
           </Badge>
         </IconButton>
+      )}
+
+      {props.onNextAnnotation !== undefined && (
+        <>
+          <IconButton
+            size={iconSize}
+            onClick={props.onPrevAnnotation}
+            style={{ color: themeColor }}
+            title={'Prev annotation'}
+          >
+            <ChevronLeftIcon />
+          </IconButton>
+          <IconButton
+            size={iconSize}
+            onClick={props.onNextAnnotation}
+            style={{ color: themeColor }}
+            title={'Next annotation'}
+          >
+            <ChevronRightIcon />
+          </IconButton>
+        </>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import PanZoom from '../../component/core/PanZoom';
 
@@ -17,13 +17,10 @@ import {
   TimedSketch,
   UserControllerInputs,
 } from '../../component/core/AnnotateCanvas/types';
-import BrushTools from '../../component/core/AnnotateCanvas/UI/BrushTools';
-import EditTools from '../../component/core/AnnotateCanvas/UI/EditTools';
 import { StoryHint } from './utils';
-import { boolean } from '@storybook/addon-knobs';
 
 const story = {
-  title: 'Combined',
+  title: 'All Together Now',
 };
 
 const hintsAnnotateOembed = (
@@ -60,7 +57,7 @@ export const PanZoomAnnotateOembed = (): JSX.Element => {
       <playerComposer.PlayerContextProvider
         value={{ mediaList: mediaSamples2, mediaIndex, setMediaIndex }}
       >
-        <annotateComposer.AnnotateContext.Provider
+        <annotateComposer.AnnotateContextProvider
           value={{
             mediaAnnotation: annotationList[mediaIndex],
             setMediaAnnotation: (s: TimedSketch[]) => {
@@ -83,10 +80,12 @@ export const PanZoomAnnotateOembed = (): JSX.Element => {
               </PanZoomOverlay>
             </PanZoom>
             {!nativeControls && <playerComposer.PlayDeckWithTimeline />}
-            <BrushTools uiState={uiState} setUIState={setUiState} />
-            <EditTools uiState={uiState} setUIState={setUiState} />
+            <annotateComposer.AnnotateTools
+              uiState={uiState}
+              setUiState={setUiState}
+            />
           </div>
-        </annotateComposer.AnnotateContext.Provider>
+        </annotateComposer.AnnotateContextProvider>
       </playerComposer.PlayerContextProvider>
     </StoryHint>
   );

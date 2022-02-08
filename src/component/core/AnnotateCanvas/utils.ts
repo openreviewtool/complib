@@ -109,7 +109,13 @@ export const getElementPropsFromUiState = (
 ): Partial<AnnotateElement> => {
   const { shape } = uiState;
   return {
-    ...uiState,
+    // ...uiState,
+    // mode: CanvasMode;
+    // showAnnotation: boolean;
+    // shape: uiState.shape,
+    fontSize: uiState.fontSize,
+    color: uiState.color,
+    fontFamily: uiState.fontFamily,
     etype: shape,
     fill: (['Textbox', 'SVG'].indexOf(shape) !== -1
       ? uiState.color

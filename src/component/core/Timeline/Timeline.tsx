@@ -8,6 +8,7 @@ export interface TimelineProps {
 
   duration: number; // in sec as a float
   currentTime: number; // in sec as a float
+  currentCached?: number;
 
   useFrameDisplay?: boolean;
   frameRange?: [number, number];
@@ -24,6 +25,8 @@ export interface TimelineProps {
   // will be zeroed.  This is help with some players that seem to have issue
   // seeking locations smaller than 1 sec.
   zeroClamp?: { clipDuration: number; threshold: number };
+
+  markerList?: number[];
 }
 
 // the millesec of delay between emitting scrubbing updates.
@@ -137,8 +140,7 @@ const Timeline: React.FC<TimelineProps> = ({
       props.duration > zeroClamp.clipDuration &&
       seekTime < zeroClamp.threshold
     ) {
-      // some reason seek to 0 doesn't do anything for react-player
-      seekTime = 0.001;
+      seekTime = 0;
     }
 
     if (props.onTimelineSeek) {
@@ -211,6 +213,44 @@ const Timeline: React.FC<TimelineProps> = ({
     </>
   );
 
+  const playedGauge = (
+    <div
+      className="timeline__track__progress"
+      style={{
+        background: themeColor,
+        width: `${(displayPlayPercentage + oneFramePercent) * 100}%`,
+      }}
+    />
+  );
+
+  const cachedGauge = props.currentCached && (
+    <div
+      className="timeline__track__cache_gauge"
+      style={{
+        width: `${
+          (props.currentCached / props.duration + oneFramePercent) * 100
+        }%`
+      }}
+    />
+  );
+
+  const markers = props.markerList && (
+    <>
+      {props.markerList.map((t: number, i: number) => {
+        const markerPercentage = t / props.duration;
+        return (
+          <div
+            key={`timelineMarker${i}`}
+            className="timeline__track__marker_dot"
+            style={{
+              left: `${(markerPercentage + oneFramePercent) * 100}%`,
+            }}
+          ></div>
+        );
+      })}
+    </>
+  );
+
   return (
     <div className={classNames('timeline', props.className)}>
       <div
@@ -224,15 +264,10 @@ const Timeline: React.FC<TimelineProps> = ({
         onTouchEnd={handleScrubEnd}
       >
         <div className="timeline__track">
-          <div
-            className="timeline__track__progress"
-            style={{
-              background: themeColor,
-              width: `${(displayPlayPercentage + oneFramePercent) * 100}%`,
-            }}
-          />
-
+          {cachedGauge}
+          {playedGauge}
           {playHead}
+          {markers}
         </div>
       </div>
     </div>

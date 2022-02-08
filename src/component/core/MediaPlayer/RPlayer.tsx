@@ -20,7 +20,7 @@ const RPlayer: React.FC<RPlayerProps> = ({
   } | null>(null);
 
   useEffect(() => {
-    if (reactPlayerRef.current && seekTime && seekTime >= 0) {
+    if (reactPlayerRef.current && seekTime!==undefined && seekTime >= 0) {
       if (reactPlayerRef.current.getInternalPlayer().nodeName === 'VIDEO') {
         reactPlayerRef.current.getInternalPlayer().currentTime = seekTime;
       } else {

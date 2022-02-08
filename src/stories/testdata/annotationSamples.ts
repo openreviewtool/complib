@@ -7,7 +7,7 @@ export const sampleRectElement: AnnotateElement = {
 
   fill: '',
   stroke: 'pink',
-  strokeWidth: 3,
+  strokeWidth: 7,
 
   width: 100,
   height: 100,
@@ -17,6 +17,7 @@ export const sampleRectElement2: AnnotateElement = {
   ...sampleRectElement,
   id: 'rect2_id',
   stroke: 'Indigo',
+  strokeWidth: 9,
   transformMatrix: [1, 0, 0, 1, 180, 140],
   width: 150,
   height: 100,
@@ -28,7 +29,7 @@ export const samplePathElement: AnnotateElement = {
   transformMatrix: [1, 0, 0, 1, 290, 150],
 
   stroke: 'DodgerBlue',
-  strokeWidth: 3,
+  strokeWidth: 7,
   fill: '',
 
   path: 'M 0 0 L 200 100 L 170 200 z',
@@ -37,12 +38,12 @@ export const samplePathElement: AnnotateElement = {
 export const sampleCircleElement: AnnotateElement = {
   id: 'circle_id',
   etype: 'Circle',
-  transformMatrix: [1, 0, 0, 1, 50, 50],
+  transformMatrix: [1, 0, 0, 1, 400, 200],
 
-  radius: 30,
+  radius: 150,
   fill: '',
   stroke: 'MediumSeaGreen',
-  strokeWidth: 5,
+  strokeWidth: 8,
 };
 
 export const sampleTextboxElement: AnnotateElement = {
@@ -51,7 +52,7 @@ export const sampleTextboxElement: AnnotateElement = {
   transformMatrix: [1, 0, 0, 1, 300, 200],
 
   text: 'hello, world!',
-  fontSize: 40,
+  fontSize: 50,
   fontFamily: 'Times New Roman',
   fill: 'rgba(255,200,100,1)',
 
@@ -72,12 +73,12 @@ const mediaAnnotate: { time: number; sketch: AnnotateElement[] }[] = [
     sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '0' }],
   },
   {
-    time: 1000,
-    sketch: [samplePathElement, { ...sampleTextboxElement, text: '1000' }],
+    time: 3500,
+    sketch: [samplePathElement, { ...sampleTextboxElement, text: '3500' }],
   },
   {
-    time: 2000,
-    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '2000' }],
+    time: 6000,
+    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '6000' }],
   }
 ];
 
@@ -87,12 +88,12 @@ const mediaAnnotate2 = [
     sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '1000' }],
   },
   {
-    time: 1500,
-    sketch: [samplePathElement, { ...sampleTextboxElement, text: '1500' }],
+    time: 4500,
+    sketch: [samplePathElement, { ...sampleTextboxElement, text: '4500' }],
   },
   {
-    time: 1750,
-    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '1750' }],
+    time: 9050,
+    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '9050' }],
   }
 ];
 
