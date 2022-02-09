@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCallback } from 'react';
 import { v4 as uuid4 } from 'uuid';
 import {
@@ -30,6 +30,11 @@ function useDrawShapeHandler(
   disabled?: boolean,
 ): void {
   const uiStateRef = React.useRef<UserControllerInputs>(uiState);
+  const onAddElementFuncRef = React.useRef(onAddElement)
+
+  useEffect(()=>{
+    onAddElementFuncRef.current = onAddElement;
+  }, [onAddElement])
 
   React.useEffect(() => {
     const fcanvas = fabricCanvasRef.current;
@@ -77,7 +82,7 @@ function useDrawShapeHandler(
     }
     fObj.etype = 'Path';
     fObj.id = uuid4();
-    onAddElement?.(makeElement(fObj));
+    onAddElementFuncRef.current?.(makeElement(fObj));
   };
 
   React.useEffect(() => {
@@ -175,7 +180,7 @@ function useDrawShapeHandler(
       // don't add it if it's too small
       fcanvas?.remove(newFObjExt);
     } else {
-      onAddElement?.(makeElement(newFObjExt));
+      onAddElementFuncRef.current?.(makeElement(newFObjExt));
 
       // fcanvas.setActiveObject(newFObjExt);
       // newFObjExt.set({dirty: true})

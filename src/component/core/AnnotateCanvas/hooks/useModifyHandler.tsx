@@ -5,7 +5,7 @@ import { AnnotateElement, fObjExtend } from './../types';
 
 function useModifyHandler(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,
-  onChangeElement?: (element: Partial<AnnotateElement>) => void,
+  onChangeElement?: (elementUpdates: Partial<AnnotateElement>[]) => void,
 ): void {
   React.useEffect(() => {
     fabricCanvasRef.current.on('object:modified', handle_object_modified);
@@ -20,8 +20,9 @@ function useModifyHandler(
         selection = [event.target];
       }
 
-      selection.forEach((obj) => {
-        if (onChangeElement) {
+      if (onChangeElement) {
+        const changeBatch: Partial<AnnotateElement>[] = [];
+        selection.forEach((obj) => {
           const updates: Partial<AnnotateElement> = {
             transformMatrix: obj.calcTransformMatrix(),
           };
@@ -30,9 +31,10 @@ function useModifyHandler(
             updates.text = fObj.text;
             updates.width = fObj.width;
           }
-          onChangeElement({ id: fObj.id, ...updates });
-        }
-      });
+          changeBatch.push({ id: fObj.id, ...updates });
+        });
+        onChangeElement(changeBatch);
+      }
     }
   };
 }

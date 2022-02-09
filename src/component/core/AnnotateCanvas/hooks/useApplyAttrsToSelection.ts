@@ -14,7 +14,7 @@ export default function useApplyAttrsToSelection(
   uiState: UserControllerInputs,
   selectedIds: string[],
   elements: AnnotateElement[],
-  onChangeElement?: (element: Partial<AnnotateElement>) => void,
+  onChangeElement?: (element: Partial<AnnotateElement>[]) => void,
 ): void {
   const updateSelectedElement = (key: string, value: number | string) => {
     elements.forEach((element) => {
@@ -28,11 +28,15 @@ export default function useApplyAttrsToSelection(
           adjKey = etype === 'Textbox' ? 'fill' : 'stroke';
         }
 
-        if (element.fabricObj) {
+        if (
+          element.fabricObj &&
+          element.fabricObj.get(adjKey as keyof fabric.Object) !== value
+        ) {
           element.fabricObj.set(adjKey as keyof fabric.Object, value);
-        }
-        if (onChangeElement) {
-          onChangeElement({ id: element.id, [adjKey]: value });
+
+          if (onChangeElement) {
+            onChangeElement([{ id: element.id, [adjKey]: value }]);
+          }
         }
       }
     });

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { mediaSamplesWithLabel as mediaList } from '../testdata/mediaSamples';
 import { select } from '@storybook/addon-knobs';
 import RPlayer from '../../component/core/MediaPlayer/RPlayer';
-import * as playerComposer from '../../component/core/MediaPlayer/composer';
+import * as playerComposer from '../../component/composer/playerComposer';
+import { PlayerContextProvider } from '../../component/core/MediaPlayer/PlayerContext';
 
 const story = {
-  title: 'MediaPlayer',
+  title: 'Components/MediaPlayer',
 };
 
 export const Default = (): JSX.Element => {
@@ -27,7 +28,7 @@ export const CustomControls = (): JSX.Element => {
 
   return (
     <div>
-      <playerComposer.PlayerContextProvider
+      <PlayerContextProvider
         value={{ mediaList, mediaIndex, setMediaIndex }}
       >
         <div>
@@ -37,7 +38,7 @@ export const CustomControls = (): JSX.Element => {
             <playerComposer.PlayDeck />
           </div>
         </div>
-      </playerComposer.PlayerContextProvider>
+      </PlayerContextProvider>
     </div>
   );
 };

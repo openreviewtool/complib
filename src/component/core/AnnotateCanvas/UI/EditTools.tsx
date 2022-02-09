@@ -8,6 +8,9 @@ import Create from '@mui/icons-material/Create';
 import TextFields from '@mui/icons-material/Title';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { UserControllerInputs } from '../types';
 import { SketchPicker, ColorResult } from 'react-color';
 
@@ -22,6 +25,16 @@ export interface EditToolsProps {
 
   iconSize?: 'large' | 'medium' | 'small' | undefined;
   themeColor?: string;
+
+  onAddKey?: () => void;
+  disableAddKey?: boolean;
+  
+  onRemoveKey?: () => void;
+  disableRemoveKey?: boolean;
+
+  onDeleteSelection?: ()=> void;
+  disableDeleteSelection?: boolean;
+
 }
 
 const colorPickerStyles = {
@@ -47,6 +60,7 @@ const EditTools: React.FC<EditToolsProps> = ({
   setUIState,
   themeColor = '#fff7',
   iconSize = 'large',
+  ...props
 }) => {
   const divRef = React.useRef<HTMLDivElement>(null);
   usePreventDefaultBrowserTouch(divRef, 'touchmove');
@@ -69,7 +83,7 @@ const EditTools: React.FC<EditToolsProps> = ({
           onPointerDown={() => {
             setShowColorPicker(false);
           }}
-          onTouchStart={()=>{
+          onTouchStart={() => {
             setShowColorPicker(false);
           }}
           style={{
@@ -92,6 +106,46 @@ const EditTools: React.FC<EditToolsProps> = ({
         >
           {showAnnotation ? <Visibility /> : <VisibilityOff />}
         </IconButton>
+        {props.onAddKey && (
+          <IconButton
+            size={iconSize}
+            style={{
+              color: themeColor,
+              opacity: props.disableAddKey ? 0.2 : 1.0,
+            }}
+            disabled={props.disableAddKey}
+            onPointerDown={props.onAddKey}
+          >
+            <AddIcon />
+          </IconButton>
+        )}
+        {props.onRemoveKey && (
+          <IconButton
+            size={iconSize}
+            style={{
+              color: themeColor,
+              opacity: props.disableRemoveKey ? 0.2 : 1.0,
+            }}
+            disabled={props.disableRemoveKey}
+            onPointerDown={props.onRemoveKey}
+          >
+            <RemoveIcon />
+          </IconButton>
+        )}
+
+        {props.onDeleteSelection && (
+          <IconButton
+            size={iconSize}
+            style={{
+              color: themeColor,
+              opacity: props.disableDeleteSelection ? 0.2 : 1.0,
+            }}
+            disabled={props.disableDeleteSelection}
+            onPointerDown={props.onDeleteSelection}
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
         <div className="icon_divider" />
         <IconButton
           color={mode === 'selection' ? 'primary' : undefined}
@@ -158,7 +212,7 @@ const EditTools: React.FC<EditToolsProps> = ({
           }}
         >
           <TextFields />
-        </IconButton>        
+        </IconButton>
         <IconButton
           style={{ color: uiState.color, opacity: 1.0 }}
           size={iconSize}
@@ -198,8 +252,7 @@ const EditTools: React.FC<EditToolsProps> = ({
                 color: colorResultToString(v),
               });
             }}
-            presetColors={[]} 
-            //['red', 'orange', 'yellow', '#0f0', 'blue', 'purple', 'white', 'black' ]}
+            presetColors={[]}
           />
         </div>
       </div>

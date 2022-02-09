@@ -2,22 +2,32 @@ import React, { useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import './style.css';
+import { formatTimeDisplay } from './util';
 
 export interface TimelineProps {
   className?: string; // to override styling
 
   duration: number; // in sec as a float
   currentTime: number; // in sec as a float
+  currentCached?: number;
 
   useFrameDisplay?: boolean;
   frameRange?: [number, number];
 
   timelineCaptured?: boolean;
-  onTimelineSeek?: (seekTime: number, seekFrameIndex?: number) => void;
   onTimelineCaptured?: (captured: boolean) => void; // user mouse down / touch start on timeline
+
+  onTimelineSeek?: (seekTime: number, seekFrameIndex?: number) => void;
   onPointerMove?: (e: any) => void; // user enter the timeline
 
   themeColor?: string;
+
+  // anything smaller than threshold (sec) for a clip bigger than duration
+  // will be zeroed.  This is help with some players that seem to have issue
+  // seeking locations smaller than 1 sec.
+  zeroClamp?: { clipDuration: number; threshold: number };
+
+  markerList?: number[];
 }
 
 // the millesec of delay between emitting scrubbing updates.
@@ -27,17 +37,18 @@ const Timeline: React.FC<TimelineProps> = ({
   frameRange,
   useFrameDisplay = false,
   themeColor = 'red',
+  zeroClamp,
 
   ...props
 }) => {
   const progressDisplayTimeoutRef = useRef<number | null>(null);
-  const timelineRef = useRef<HTMLInputElement|null>(null);
+  const timelineRef = useRef<HTMLInputElement | null>(null);
   const [seekPercentage, setSeekPercentage] = useState<number>(0);
 
   const [innerCaptured, setInnerCaptured] = useState<boolean>(false);
-  const timelineCaptured = props.timelineCaptured || innerCaptured
-  const onTimelineCaptured = props.onTimelineCaptured || setInnerCaptured
-  
+  const timelineCaptured = props.timelineCaptured || innerCaptured;
+  const onTimelineCaptured = props.onTimelineCaptured || setInnerCaptured;
+
   const playPercentage = props.currentTime / props.duration; // actual percentage
 
   // display perentage as adjust at frame discret increment steps.
@@ -45,6 +56,10 @@ const Timeline: React.FC<TimelineProps> = ({
   let oneFramePercent = 0;
   let frameDuration = -1;
   let frameIndex = -1;
+
+  if (timelineCaptured) {
+    displayPlayPercentage = seekPercentage;
+  }
 
   if (useFrameDisplay && frameRange) {
     frameDuration = frameRange[1] - frameRange[0] + 1;
@@ -60,10 +75,6 @@ const Timeline: React.FC<TimelineProps> = ({
     frameIndex = frameElapsed + frameRange[0];
 
     displayPlayPercentage = Math.min(frameElapsed * oneFramePercent);
-  }
-
-  if (timelineCaptured) {
-    displayPlayPercentage = seekPercentage;
   }
 
   React.useEffect(() => {
@@ -122,8 +133,16 @@ const Timeline: React.FC<TimelineProps> = ({
 
     const _seekPercentage = offset / totalWidth;
     setSeekPercentage(_seekPercentage);
-    const seekTime = _seekPercentage * props.duration;
+    let seekTime = _seekPercentage * props.duration;
     let seekFrameIndex = -1;
+
+    if (
+      zeroClamp &&
+      props.duration > zeroClamp.clipDuration &&
+      seekTime < zeroClamp.threshold
+    ) {
+      seekTime = 0;
+    }
 
     if (props.onTimelineSeek) {
       if (progressDisplayTimeoutRef.current) {
@@ -165,7 +184,7 @@ const Timeline: React.FC<TimelineProps> = ({
         className="timeline__track__playhead"
         style={{
           left: `${(displayPlayPercentage + oneFramePercent) * 100}%`,
-          backgroundColor: `${themeColor}`
+          backgroundColor: `${themeColor}`,
         }}
       />
       <div
@@ -174,8 +193,51 @@ const Timeline: React.FC<TimelineProps> = ({
           left: `${(displayPlayPercentage + oneFramePercent) * 100}%`,
         }}
       >
-        {frameIndex !== -1 ? frameIndex : ''}
+        {frameIndex !== -1
+          ? frameIndex
+          : formatTimeDisplay(
+              displayPlayPercentage * props.duration,
+              props.duration,
+            )}
       </div>
+    </>
+  );
+
+  const playedGauge = (
+    <div
+      className="timeline__track__progress"
+      style={{
+        background: themeColor,
+        width: `${(displayPlayPercentage + oneFramePercent) * 100}%`,
+      }}
+    />
+  );
+
+  const cachedGauge = props.currentCached && (
+    <div
+      className="timeline__track__cache_gauge"
+      style={{
+        width: `${
+          (props.currentCached / props.duration + oneFramePercent) * 100
+        }%`,
+      }}
+    />
+  );
+
+  const markers = props.markerList && (
+    <>
+      {props.markerList.map((t: number, i: number) => {
+        const markerPercentage = t / props.duration;
+        return (
+          <div
+            key={`timelineMarker${i}`}
+            className="timeline__track__marker_dot"
+            style={{
+              left: `${(markerPercentage + oneFramePercent) * 100}%`,
+            }}
+          ></div>
+        );
+      })}
     </>
   );
 
@@ -192,15 +254,10 @@ const Timeline: React.FC<TimelineProps> = ({
         onTouchEnd={handleScrubEnd}
       >
         <div className="timeline__track">
-          <div
-            className="timeline__track__progress"
-            style={{
-              background: themeColor,
-              width: `${(displayPlayPercentage + oneFramePercent) * 100}%`,
-            }}
-          />
-
+          {cachedGauge}
+          {playedGauge}
           {playHead}
+          {markers}
         </div>
       </div>
     </div>

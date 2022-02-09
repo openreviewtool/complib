@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import { select, boolean, optionsKnob } from '@storybook/addon-knobs';
+import { select, boolean } from '@storybook/addon-knobs';
 import PanZoom from '../../component/core/PanZoom';
-import AnnotateCanvas from '../../component/core/AnnotateCanvas/AnnotateCanvas';
-import { sampleAnnotations } from '../testdata/annotationSamples';
 import {
   PanZoomContent,
-  PanZoomOverlay,
 } from '../../component/core/PanZoom/PanZoom';
-import { normalizeScale } from '../../component/core/PanZoom/utils';
 import { artUrls } from '../testdata/mediaSamples';
-import { getAnnotateKnobs, StoryHint } from './utils';
-
-import { mediaSamplesWithLabel as mediaList } from '../testdata/mediaSamples';
-import * as playerComposer from '../../component/core/MediaPlayer/composer';
-import { DEFAULT_UI_ATTRS } from '../../component/core/AnnotateCanvas/defaults';
-import { UserControllerInputs } from '../../component/core/AnnotateCanvas/types';
-import elementsActionReducer from '../../component/core/AnnotateCanvas/elementActionReducer';
-import BrushTools from '../../component/core/AnnotateCanvas/UI/BrushTools';
-import EditTools from '../../component/core/AnnotateCanvas/UI/EditTools';
+import { StoryHint } from './utils';
 
 const story = {
-  title: 'PanZoom',
+  title: 'Components/PanZoom',
 };
 
 const hintsDefault = (

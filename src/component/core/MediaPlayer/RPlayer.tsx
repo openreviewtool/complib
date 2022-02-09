@@ -17,10 +17,11 @@ const RPlayer: React.FC<RPlayerProps> = ({
   const lastBroadcastTimeRef = useRef<{
     played: number;
     loaded: number;
+    duration: number;
   } | null>(null);
 
   useEffect(() => {
-    if (reactPlayerRef.current && seekTime && seekTime >= 0) {
+    if (reactPlayerRef.current && seekTime!==undefined && seekTime >= 0) {
       if (reactPlayerRef.current.getInternalPlayer().nodeName === 'VIDEO') {
         reactPlayerRef.current.getInternalPlayer().currentTime = seekTime;
       } else {
@@ -40,10 +41,11 @@ const RPlayer: React.FC<RPlayerProps> = ({
         if (reactPlayerRef.current) {
           const played = reactPlayerRef.current.getCurrentTime();
           const loaded = reactPlayerRef.current.getSecondsLoaded();
+          const duration = reactPlayerRef.current.getDuration();
           if (played !== lastBroadcastTimeRef.current?.played) {
-            onProgressHiFi({loaded, played});
+            onProgressHiFi({loaded, played, duration});
           }
-          lastBroadcastTimeRef.current = { played, loaded };
+          lastBroadcastTimeRef.current = { played, loaded, duration };
         }
       }, 20);
     }

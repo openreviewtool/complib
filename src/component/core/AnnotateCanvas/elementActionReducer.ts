@@ -10,6 +10,13 @@ export default function elementsActionReducer(
   state: AnnotateElement[],
   action: ElementsAction,
 ): AnnotateElement[] {
+  const elementIndexById = state.reduce((a: { [id: string]: number }, v, i) => {
+    a[v.id] = i;
+    return a;
+  }, {});
+
+  const updatedElements = [...state];
+
   switch (action.type) {
     case 'addElement':
       if (!action.newElement.id) {
@@ -20,27 +27,34 @@ export default function elementsActionReducer(
       return [...state, action.newElement];
 
     case 'changeElement':
-      return state.map((element) => {
-        if (element.id === action.elementUpdates.id) {
-          return { ...element, ...action.elementUpdates };
-        } else {
-          return element;
-        }
+      action.elementUpdates.forEach((updates) => {
+        const index = elementIndexById[updates.id!];
+        // this goes against the conventions of react, to directly manipulate
+        // the state, that because the changes has already done to the elements
+        // and we dont' want to trigger a re-render.
+        state[index] = { ...updatedElements[index], ...updates };
+        // updatedElements[index] = {...updatedElements[index], ...updates}
       });
 
-    case 'removeElement':
+      // return updatedElements
+      return state;
+
+    case 'removeElements':
+      // ToDo: update this now that there is a elemetIndexById look up.
       const removeIndex = state.reduce((a, c, index) => {
-        if (action.removeIds.indexOf(c.id) !== -1) {
+        if (action.ids.indexOf(c.id) !== -1) {
           a.push(index);
         }
         return a;
       }, [] as number[]);
 
-      const updatedElements = [...state];
       removeIndex.reverse().forEach((removeIndex) => {
         updatedElements.splice(removeIndex, 1);
       });
 
       return updatedElements;
+
+    case 'updateSketch':
+      return action.sketch;
   }
 }

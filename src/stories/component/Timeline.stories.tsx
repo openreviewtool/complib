@@ -3,7 +3,7 @@ import PlayDeck, { LOOP_TYPE_LIST } from '../../component/core/PlayDeck/PlayDeck
 import Timeline from '../../component/core/Timeline';
 
 export default {
-  title: 'Timeline',
+  title: 'Components/Timeline',
 };
 
 export const Default = (): JSX.Element => {
@@ -24,7 +24,7 @@ export const Default = (): JSX.Element => {
         width: 'calc(100% - 40px)',
       }}
     >
-      <Timeline currentTime={currentTime} duration={1} onTimelineSeek={handleTimelineSeek} />
+      <Timeline currentTime={currentTime} duration={300} onTimelineSeek={handleTimelineSeek} />
     </div>
   );
 };

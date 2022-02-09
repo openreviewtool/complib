@@ -1,4 +1,5 @@
-import { AnnotateElement } from "../..";
+import { AnnotateElement } from '../..';
+import { TimedSketch } from '../../component/core/AnnotateCanvas/types';
 
 export const sampleRectElement: AnnotateElement = {
   id: 'rect1_id',
@@ -7,7 +8,7 @@ export const sampleRectElement: AnnotateElement = {
 
   fill: '',
   stroke: 'pink',
-  strokeWidth: 3,
+  strokeWidth: 7,
 
   width: 100,
   height: 100,
@@ -17,6 +18,7 @@ export const sampleRectElement2: AnnotateElement = {
   ...sampleRectElement,
   id: 'rect2_id',
   stroke: 'Indigo',
+  strokeWidth: 9,
   transformMatrix: [1, 0, 0, 1, 180, 140],
   width: 150,
   height: 100,
@@ -28,7 +30,7 @@ export const samplePathElement: AnnotateElement = {
   transformMatrix: [1, 0, 0, 1, 290, 150],
 
   stroke: 'DodgerBlue',
-  strokeWidth: 3,
+  strokeWidth: 7,
   fill: '',
 
   path: 'M 0 0 L 200 100 L 170 200 z',
@@ -37,31 +39,91 @@ export const samplePathElement: AnnotateElement = {
 export const sampleCircleElement: AnnotateElement = {
   id: 'circle_id',
   etype: 'Circle',
-  transformMatrix: [1, 0, 0, 1, 50, 50],
+  transformMatrix: [1, 0, 0, 1, 400, 200],
 
-  radius: 30,
+  radius: 150,
   fill: '',
   stroke: 'MediumSeaGreen',
-  strokeWidth: 5,
+  strokeWidth: 8,
 };
 
 export const sampleTextboxElement: AnnotateElement = {
   id: 'textbox_id',
   etype: 'Textbox',
-  transformMatrix: [1, 0, 0, 1, 150, 200],
+  transformMatrix: [1, 0, 0, 1, 300, 200],
 
   text: 'hello, world!',
-  fontSize: 25,
+  fontSize: 50,
   fontFamily: 'Times New Roman',
-  fill: 'rgba(255,255,122,0.8)',
+  fill: 'rgba(255,200,100,1)',
 
   width: 200,
 };
 
-export const sampleAnnotations = [
+export const sampleAnnotations: AnnotateElement[] = [
   sampleRectElement,
   sampleRectElement2,
   sampleCircleElement,
   sampleTextboxElement,
   samplePathElement,
+];
+
+const mediaAnnotate: TimedSketch[] = [
+  {
+    time: 0,
+    id: 'sketch_0',
+    sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '0' }],
+  },
+  {
+    time: 3500,
+    id: 'sketch_1',
+    sketch: [samplePathElement, { ...sampleTextboxElement, text: '3500' }],
+  },
+  {
+    time: 6000,
+    id: 'sketch_2',
+    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '6000' }],
+  }
+];
+
+const mediaAnnotate2: TimedSketch[] = [
+  {
+    time: 1000,
+    id: 'sketch_0',
+    sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '1000' }],
+  },
+  {
+    time: 4500,
+    id: 'sketch_1',
+    sketch: [samplePathElement, { ...sampleTextboxElement, text: '4500' }],
+  },
+  {
+    time: 9050,
+    id: 'sketch_3',
+    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '9050' }],
+  }
+];
+
+const mediaAnnotate3: TimedSketch[] = [
+  {
+    time: 0,
+    id: 'sketch_0',
+    sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '0' }],
+  },
+  {
+    time: 1100,
+    id: 'sketch_1',
+    sketch: [samplePathElement, { ...sampleTextboxElement, text: '1100' }],
+  },
+  {
+    time: 2000,
+    id: 'sketch_2',
+    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '2000' }],
+  }
+]
+
+export const sampleMediaAnnotateList = [
+  mediaAnnotate,
+  mediaAnnotate2,
+  mediaAnnotate3,
 ];

@@ -9,7 +9,15 @@ export const StoryHint: React.FC<{ hint: JSX.Element; width?: number }> = ({
 }) => {
   const displayHintKnob = boolean('Show Hint', true);
   return (
-    <div style={{ display: 'flex', flexFlow: 'row wrap', height: '100vh', maxHeight: isTablet()? '650px': undefined }}>
+    <div
+      style={{
+        background: 'black',
+        display: 'flex',
+        flexFlow: 'row wrap',
+        height: '100vh',
+        maxHeight: isTablet() ? '650px' : undefined,
+      }}
+    >
       <div
         id="side_panel"
         style={{

@@ -21,7 +21,9 @@ function useCustomSelectCorners(
       // multiselections
       if (fObj._objects) {
         const selection = fObj._objects;
-        selection.forEach((s) => setSelectionControls(s, s.etype));
+        selection.forEach((s) =>
+          setSelectionControls(s, s.etype, selectionConfig),
+        );
       }
     }
   };

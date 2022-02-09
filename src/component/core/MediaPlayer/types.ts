@@ -17,4 +17,5 @@ export interface PlayerState {
   // these are in seconds
   played: number;
   loaded: number;
+  duration: number;
 }
