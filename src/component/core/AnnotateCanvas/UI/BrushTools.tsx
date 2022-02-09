@@ -44,7 +44,7 @@ const BrushTools = (props: BrushToolsProps) => {
               });
             }}
             min={1}
-            max={40}
+            max={50}
           />
         )}
       </div>

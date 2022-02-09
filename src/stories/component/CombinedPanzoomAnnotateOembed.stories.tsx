@@ -9,8 +9,8 @@ import {
 import { mediaSamples2 } from '../testdata/mediaSamples';
 import { sampleMediaAnnotateList } from '../testdata/annotationSamples';
 
-import * as playerComposer from '../../component/core/MediaPlayer/playerComposer';
-import * as annotateComposer from '../../component/core/AnnotateCanvas/annotateComposer';
+import * as playerComposer from '../../component/composer/playerComposer';
+import * as annotateComposer from '../../component/composer/annotateComposer';
 
 import { DEFAULT_UI_ATTRS } from '../../component/core/AnnotateCanvas/defaults';
 import {
@@ -18,6 +18,9 @@ import {
   UserControllerInputs,
 } from '../../component/core/AnnotateCanvas/types';
 import { StoryHint } from './utils';
+import { PlayerContextProvider } from '../../component/core/MediaPlayer/PlayerContext';
+import { MediaAnnotationContextProvider } from '../../component/core/AnnotateCanvas/MediaAnnotateContext';
+import { button } from '@storybook/addon-knobs';
 
 const story = {
   title: 'All Together Now',
@@ -27,7 +30,6 @@ const hintsAnnotateOembed = (
   <>
     <h4>Annotate oEmbed</h4>
     oEmbed allows webapps to embed media from YouTube, Vimeo, Sound Cloud, etc.
-    You can annotate on these.
     <p>
       <b>PanZoom</b>: panning and zooming the content
     </p>
@@ -42,8 +44,10 @@ const hintsAnnotateOembed = (
 
 export const PanZoomAnnotateOembed = (): JSX.Element => {
   const nativeControls = false;
-
   const [mediaIndex, setMediaIndex] = useState(0);
+  button('Log Annotation to Console', () => {
+    console.log('Annotation state: ', annotationList[mediaIndex]);
+  });
 
   const [uiState, setUiState] =
     useState<UserControllerInputs>(DEFAULT_UI_ATTRS);
@@ -54,17 +58,15 @@ export const PanZoomAnnotateOembed = (): JSX.Element => {
 
   return (
     <StoryHint hint={<div>{hintsAnnotateOembed}</div>}>
-      <playerComposer.PlayerContextProvider
+      <PlayerContextProvider
         value={{ mediaList: mediaSamples2, mediaIndex, setMediaIndex }}
       >
-        <annotateComposer.AnnotateContextProvider
-          value={{
-            mediaAnnotation: annotationList[mediaIndex],
-            setMediaAnnotation: (s: TimedSketch[]) => {
-              const newAnnotationList = [...annotationList];
-              newAnnotationList[mediaIndex] = s;
-              setAnnotationList(newAnnotationList);
-            },
+        <MediaAnnotationContextProvider
+          mediaAnnotation={annotationList[mediaIndex]}
+          setMediaAnnotation={(s: TimedSketch[]) => {
+            const newAnnotationList = [...annotationList];
+            newAnnotationList[mediaIndex] = s;
+            setAnnotationList(newAnnotationList);
           }}
         >
           <div>
@@ -85,8 +87,8 @@ export const PanZoomAnnotateOembed = (): JSX.Element => {
               setUiState={setUiState}
             />
           </div>
-        </annotateComposer.AnnotateContextProvider>
-      </playerComposer.PlayerContextProvider>
+        </MediaAnnotationContextProvider>
+      </PlayerContextProvider>
     </StoryHint>
   );
 };

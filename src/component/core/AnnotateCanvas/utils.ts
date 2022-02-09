@@ -7,6 +7,7 @@ import {
   AnnotateElement,
   fabricObjAttrsLookup,
   fObjExtend,
+  TimedSketch,
   UserControllerInputs,
   UserSelectionConfig,
 } from './types';
@@ -232,4 +233,98 @@ export const bootstrapHoverHandler = (newFObj: fabric.Object) => {
   newFObj.on('mouseout', function (this: any) {
     this.canvas.clearContext(this.canvas.contextTop);
   });
+};
+
+
+
+
+/**
+ * find the sketch best matching the current time
+ * @param mediaAnnotation
+ * @param currentTime
+ * @param hold
+ * @param fps
+ * @returns
+ */
+ export const findTimedSketch = (
+  mediaAnnotation: TimedSketch[],
+  currentTime: number, // in millisec
+  hold?: boolean,
+  fps?: number,
+): {
+  timedSketch: TimedSketch | null;
+  isKey: boolean;
+} => {
+  hold = hold === undefined ? false : hold;
+  fps = fps || 24;
+
+  const frameDurationInMSec = 500; //(12 / fps) * 1000;
+
+  // find the matching key for the time.
+  let matchSketch: TimedSketch | null = null;
+  let matchKeyTime = null;
+  let isKey = false;
+  for (let i = 0; i < mediaAnnotation.length; i++) {
+    const { time: keyTime } = mediaAnnotation[i];
+    if (currentTime >= keyTime && currentTime < keyTime + frameDurationInMSec) {
+      matchSketch = mediaAnnotation[i];
+      matchKeyTime = keyTime;
+      isKey = true;
+      break;
+    }
+    if (hold && currentTime >= keyTime) {
+      matchSketch = mediaAnnotation[i];
+      matchKeyTime = keyTime;
+      if (currentTime < keyTime) {
+        break;
+      }
+    }
+  }
+
+  return { timedSketch: matchSketch, isKey };
+};
+
+export const findNextKeyTime = (
+  keyList: number[],
+  currentTime: number,
+): number | null => {
+  const adjKeys = keyList.filter((t) => currentTime < t);
+
+  if (adjKeys.length === 0) {
+    if (keyList.length === 0) {
+      return null;
+    } else {
+      return keyList[0];
+    }
+  } else {
+    return adjKeys[0];
+  }
+};
+
+export const findPrevKeyTime = (keyList: number[], currentTime: number, fps?: number) => {
+  currentTime = getWholeFrameTime(currentTime, fps) / 1000
+  const adjKeys = keyList.filter((t) => t < currentTime);
+
+  if (adjKeys.length === 0) {
+    if (keyList.length === 0) {
+      return null;
+    } else {
+      return keyList[keyList.length - 1];
+    }
+  } else {
+    return adjKeys[adjKeys.length - 1];
+  }
+};
+
+/**
+ * return "whole" key times.
+ * otherwise say two people annotating accross two different sessions may key at
+ * fraction of frames
+ * @param time
+ * @param fps
+ * @returns
+ */
+ export const getWholeFrameTime = (time: number, fps?: number) => {
+  fps = fps || 24;
+  return Math.round((Math.round(time * fps) / fps) * 1000);
 };

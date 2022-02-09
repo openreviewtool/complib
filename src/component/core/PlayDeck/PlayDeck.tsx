@@ -56,7 +56,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
           style={{ color: themeColor }}
           title={'Skip prev'}
         >
-          <SkipPreviousIcon />
+          <SkipPreviousIcon fontSize={iconSize} />
         </IconButton>
       )}
       <IconButton
@@ -65,7 +65,11 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
         style={{ color: themeColor }}
         title={'Play'}
       >
-        {props.playing ? <PauseIcon /> : <PlayArrowIcon />}
+        {props.playing ? (
+          <PauseIcon fontSize={iconSize} />
+        ) : (
+          <PlayArrowIcon fontSize={iconSize} />
+        )}
       </IconButton>
       {props.onSkipNext && (
         <IconButton
@@ -75,7 +79,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
           style={{ color: themeColor }}
           title={'Skip next'}
         >
-          <SkipNextIcon />
+          <SkipNextIcon fontSize={iconSize} />
         </IconButton>
       )}
 
@@ -106,7 +110,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
             style={{ color: themeColor }}
             title={'Prev annotation'}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon fontSize={iconSize}/>
           </IconButton>
           <IconButton
             size={iconSize}
@@ -114,7 +118,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
             style={{ color: themeColor }}
             title={'Next annotation'}
           >
-            <ChevronRightIcon />
+            <ChevronRightIcon fontSize={iconSize}/>
           </IconButton>
         </>
       )}

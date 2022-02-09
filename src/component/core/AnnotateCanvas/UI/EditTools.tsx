@@ -10,6 +10,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { UserControllerInputs } from '../types';
 import { SketchPicker, ColorResult } from 'react-color';
 
@@ -25,10 +26,15 @@ export interface EditToolsProps {
   iconSize?: 'large' | 'medium' | 'small' | undefined;
   themeColor?: string;
 
-  onAddKey?: () => void | null;
+  onAddKey?: () => void;
   disableAddKey?: boolean;
-  onRemoveKey?: () => void | null;
+  
+  onRemoveKey?: () => void;
   disableRemoveKey?: boolean;
+
+  onDeleteSelection?: ()=> void;
+  disableDeleteSelection?: boolean;
+
 }
 
 const colorPickerStyles = {
@@ -124,6 +130,20 @@ const EditTools: React.FC<EditToolsProps> = ({
             onPointerDown={props.onRemoveKey}
           >
             <RemoveIcon />
+          </IconButton>
+        )}
+
+        {props.onDeleteSelection && (
+          <IconButton
+            size={iconSize}
+            style={{
+              color: themeColor,
+              opacity: props.disableDeleteSelection ? 0.2 : 1.0,
+            }}
+            disabled={props.disableDeleteSelection}
+            onPointerDown={props.onDeleteSelection}
+          >
+            <DeleteIcon />
           </IconButton>
         )}
         <div className="icon_divider" />

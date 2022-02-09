@@ -13,11 +13,12 @@ import { artUrls } from '../testdata/mediaSamples';
 import { getAnnotateKnobs, StoryHint } from '../component/utils';
 
 import { mediaSamplesWithLabel as mediaList } from '../testdata/mediaSamples';
-import * as playerComposer from '../../component/core/MediaPlayer/playerComposer';
+import * as playerComposer from '../../component/composer/playerComposer';
 import { DEFAULT_UI_ATTRS } from '../../component/core/AnnotateCanvas/defaults';
 import { UserControllerInputs } from '../../component/core/AnnotateCanvas/types';
 import BrushTools from '../../component/core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../../component/core/AnnotateCanvas/UI/EditTools';
+import { PlayerContextProvider } from '../../component/core/MediaPlayer/PlayerContext';
 
 const story = {
   title: 'Experiment',
@@ -41,7 +42,7 @@ export const Test2 = (): JSX.Element => {
 
   return (
     <StoryHint hint={<div>for experiment only</div>}>
-      <playerComposer.PlayerContextProvider
+      <PlayerContextProvider  
         value={{ mediaList, mediaIndex, setMediaIndex }}
       >
         <div>
@@ -84,10 +85,10 @@ export const Test2 = (): JSX.Element => {
           <BrushTools uiState={uiState} setUIState={setUiState} />
           <EditTools uiState={uiState} setUIState={setUiState} />
         </div>
-      </playerComposer.PlayerContextProvider>
+      </PlayerContextProvider>
     </StoryHint>
   );
 };
 
 Test2.parameters = { layout: 'fullscreen' };
-export default story;
+// export default sstory;

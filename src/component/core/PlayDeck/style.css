@@ -1,3 +1,6 @@
+.playDeck svg {
+  filter: drop-shadow(2px 2px 2.5px #0007);
+}
 /*
 .playDeck .MuiSvgIcon-root {
   fill: #fff;

@@ -12,7 +12,7 @@ import {
   useWheelZoom,
 } from './hooks';
 import { PanZoomBounds, PanZoomSpec, RectSize } from './types';
-import { getContentFitSpec, normalizeSize } from './utils';
+import { getContentFitSpec } from './utils';
 
 import './style.css';
 import {

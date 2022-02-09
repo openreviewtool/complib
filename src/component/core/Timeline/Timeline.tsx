@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import './style.css';
+import { formatTimeDisplay } from './util';
 
 export interface TimelineProps {
   className?: string; // to override styling
@@ -168,20 +169,6 @@ const Timeline: React.FC<TimelineProps> = ({
     }
   };
 
-  const formatTimeDisplay = (percent: number, duration: number) => {
-    const time = new Date(percent * duration * 1000).toISOString();
-
-    if (duration > 3600) {
-      return time.substr(11, 8);
-    } else if (duration > 60) {
-      const [min, sec] = time.substr(14, 5).split(':');
-      return `${parseInt(min)}:${sec}`;
-    } else {
-      const [sec, percentage] = time.substr(17, 4).split('.');
-      return `${parseInt(sec)}.${percentage}`;
-    }
-  };
-
   const handleScrubMoveFinish = (e: any) => {
     const isPointerEvent = e.type && e.type.startsWith('pointer');
 
@@ -208,7 +195,10 @@ const Timeline: React.FC<TimelineProps> = ({
       >
         {frameIndex !== -1
           ? frameIndex
-          : formatTimeDisplay(displayPlayPercentage, props.duration)}
+          : formatTimeDisplay(
+              displayPlayPercentage * props.duration,
+              props.duration,
+            )}
       </div>
     </>
   );
@@ -229,7 +219,7 @@ const Timeline: React.FC<TimelineProps> = ({
       style={{
         width: `${
           (props.currentCached / props.duration + oneFramePercent) * 100
-        }%`
+        }%`,
       }}
     />
   );

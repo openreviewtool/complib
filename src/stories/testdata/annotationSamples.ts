@@ -1,4 +1,5 @@
 import { AnnotateElement } from '../..';
+import { TimedSketch } from '../../component/core/AnnotateCanvas/types';
 
 export const sampleRectElement: AnnotateElement = {
   id: 'rect1_id',
@@ -67,47 +68,56 @@ export const sampleAnnotations: AnnotateElement[] = [
   samplePathElement,
 ];
 
-const mediaAnnotate: { time: number; sketch: AnnotateElement[] }[] = [
+const mediaAnnotate: TimedSketch[] = [
   {
     time: 0,
+    id: 'sketch_0',
     sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '0' }],
   },
   {
     time: 3500,
+    id: 'sketch_1',
     sketch: [samplePathElement, { ...sampleTextboxElement, text: '3500' }],
   },
   {
     time: 6000,
+    id: 'sketch_2',
     sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '6000' }],
   }
 ];
 
-const mediaAnnotate2 = [
+const mediaAnnotate2: TimedSketch[] = [
   {
     time: 1000,
+    id: 'sketch_0',
     sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '1000' }],
   },
   {
     time: 4500,
+    id: 'sketch_1',
     sketch: [samplePathElement, { ...sampleTextboxElement, text: '4500' }],
   },
   {
     time: 9050,
+    id: 'sketch_3',
     sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '9050' }],
   }
 ];
 
-const mediaAnnotate3 = [
+const mediaAnnotate3: TimedSketch[] = [
   {
     time: 0,
+    id: 'sketch_0',
     sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '0' }],
   },
   {
     time: 1100,
+    id: 'sketch_1',
     sketch: [samplePathElement, { ...sampleTextboxElement, text: '1100' }],
   },
   {
     time: 2000,
+    id: 'sketch_2',
     sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '2000' }],
   }
 ]

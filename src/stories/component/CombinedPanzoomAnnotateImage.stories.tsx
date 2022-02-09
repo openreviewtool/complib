@@ -41,23 +41,6 @@ const hintsAnnotateMedia = (
   </>
 );
 
-const hintsAnnotateOembed = (
-  <>
-    <h4>Annotate oEmbed</h4>
-    oEmbed allows webapps to embed media from YouTube, Vimeo, Sound Cloud, etc.
-    You can annotate on these. WIP: per frame annotation.
-    <p>
-      <b>PanZoom</b>: panning and zooming the content
-    </p>
-    <p>
-      <b>Selection</b>: select the annotation
-    </p>
-    <p>
-      <b>Annotate</b>: annotate on the content
-    </p>
-  </>
-);
-
 export const AnnotatePanZoomImage = (): JSX.Element => {
   const videoUrlKnob = select('Media URL', artUrls, artUrls[0]);
   const { resolutionKnob } = getAnnotateKnobs();

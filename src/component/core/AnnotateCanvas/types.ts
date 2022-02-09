@@ -35,6 +35,7 @@ const baseAttrNames = ['fill', 'stroke', 'strokeWidth'];
 // list annotateElement: a sketch
 // list of sketch: media annotation
 export interface TimedSketch {
+  id: string;
   time: number;
   sketch: AnnotateElement[];
 }
@@ -85,8 +86,8 @@ export type ElementsAction =
       newElement: AnnotateElement;
     }
   | {
-      type: 'removeElement';
-      removeIds: string[];
+      type: 'removeElements';
+      ids: string[];
     }
   | {
       type: 'updateSketch';
