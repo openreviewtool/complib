@@ -10,6 +10,7 @@ import AnnotateCanvasComp from '../core/AnnotateCanvas/AnnotateCanvas';
 import BrushTools from '../core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../core/AnnotateCanvas/UI/EditTools';
 import { MediaAnnotateContext } from '../core/AnnotateCanvas/MediaAnnotateContext';
+import { PlayerContext } from '../core/MediaPlayer/PlayerContext';
 
 export const AnnotateCanvas = (props: {
   uiState: UserControllerInputs;
@@ -19,7 +20,6 @@ export const AnnotateCanvas = (props: {
   const { elements, onAddElement, onChangeElement, selection, onSelection } =
     useContext(MediaAnnotateContext);
   const [normPanZoomSpec, setNormPanZoomSpec] = useState(panZoom);
-  // const [selection, setSelection] = useState<string[]>([]);
 
   // normalize the annotate canvas to have 1000x1000 regardless of the content
   useEffect(
@@ -64,16 +64,23 @@ export const AnnotateTools = (props: {
 }) => {
   const { isKey, onRemoveKey, selection, onRemoveElements } =
     useContext(MediaAnnotateContext);
+  const { playing } = useContext(PlayerContext);
+
   return (
     <>
-      <BrushTools uiState={props.uiState} setUIState={props.setUiState} />
+      <BrushTools
+        uiState={props.uiState}
+        setUIState={props.setUiState}
+        hide={playing}
+      />
       <EditTools
         uiState={props.uiState}
         setUIState={props.setUiState}
         onRemoveKey={onRemoveKey}
         disableRemoveKey={!isKey}
-        onDeleteSelection={()=>onRemoveElements(selection)}
+        onDeleteSelection={() => onRemoveElements(selection)}
         disableDeleteSelection={selection.length === 0}
+        hide={playing}
       />
     </>
   );

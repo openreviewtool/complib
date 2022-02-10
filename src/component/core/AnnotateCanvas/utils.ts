@@ -235,9 +235,6 @@ export const bootstrapHoverHandler = (newFObj: fabric.Object) => {
   });
 };
 
-
-
-
 /**
  * find the sketch best matching the current time
  * @param mediaAnnotation
@@ -246,7 +243,7 @@ export const bootstrapHoverHandler = (newFObj: fabric.Object) => {
  * @param fps
  * @returns
  */
- export const findTimedSketch = (
+export const findTimedSketch = (
   mediaAnnotation: TimedSketch[],
   currentTime: number, // in millisec
   hold?: boolean,
@@ -301,8 +298,20 @@ export const findNextKeyTime = (
   }
 };
 
-export const findPrevKeyTime = (keyList: number[], currentTime: number, fps?: number) => {
-  currentTime = getWholeFrameTime(currentTime, fps) / 1000
+/**
+ *
+ * @param keyList
+ * @param currentTime
+ * @param fps
+ * @param buffer some grace period for playback while current time advancing.
+ * @returns
+ */
+export const findPrevKeyTime = (
+  keyList: number[],
+  currentTime: number,
+  buffer?: number,
+) => {
+  currentTime = currentTime - (buffer||0);
   const adjKeys = keyList.filter((t) => t < currentTime);
 
   if (adjKeys.length === 0) {
@@ -324,7 +333,7 @@ export const findPrevKeyTime = (keyList: number[], currentTime: number, fps?: nu
  * @param fps
  * @returns
  */
- export const getWholeFrameTime = (time: number, fps?: number) => {
+export const getWholeFrameTime = (time: number, fps?: number) => {
   fps = fps || 24;
   return Math.round((Math.round(time * fps) / fps) * 1000);
 };

@@ -85,7 +85,11 @@ export const PlayDeck = () => {
           : undefined
       }
       onPrevAnnotation={() => {
-        const prevKey = findPrevKeyTime(markerList, ctx.playerState.played);
+        const prevKey = findPrevKeyTime(
+          markerList,
+          ctx.playerState.played,
+          ctx.playing ? 0.2 : 0,
+        );
         if (prevKey !== null) ctx.setSeekTime(prevKey);
       }}
     />

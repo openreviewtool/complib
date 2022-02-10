@@ -10,6 +10,7 @@ export interface MediaInfo {
   thumbnail_url?: string;
   title?: string;
 
+  author_name?: string;
   author_url?: string;
 }
 

@@ -3,10 +3,25 @@
   bottom: 0;
   display: flex;
   left: 0;
+  overflow: hidden;
   position: absolute;
   pointer-events: none;
   top: 0;
   width: 42px;
+}
+
+.brush_tools__display {
+  position: absolute;
+  transition: left 0.3s;
+  width: 100%;
+}
+
+.brush_tools__display-show {
+  left: 0px;
+}
+
+.brush_tools__display-hide {
+  left: -42px;
 }
 
 .brush_tools_bar {
@@ -46,6 +61,20 @@
   position: absolute;
   top: 0;
   width: 100%;
+}
+
+.edit_tools__display {
+  position: absolute;
+  transition: top 0.3s;
+  height: 100%;
+}
+
+.edit_tools__display-show {
+  top: 0px;
+}
+
+.edit_tools__display-hide {
+  top: -42px;
 }
 
 .edit_tools_bar {
