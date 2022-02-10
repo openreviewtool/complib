@@ -20,6 +20,8 @@ interface MediaAnnotateContextInteface {
   onRemoveElements: (el: string[]) => void;
 
   isKey: boolean;
+  keyTime: number|null;
+  onAddKey: () => void;
   onRemoveKey: () => void;
 
   selection: string[];
@@ -36,6 +38,8 @@ export const MediaAnnotateContext =
     onRemoveElements: () => {},
 
     isKey: false,
+    keyTime: null,
+    onAddKey: () => {},
     onRemoveKey: () => {},
 
     selection: [],
@@ -57,6 +61,7 @@ export const MediaAnnotationContextProvider: React.FC<{
       currentTimedSketch: null,
       currentTime: -1,
       isKey: false,
+      keyTime: null,
       selection: [],
     },
   );
@@ -69,15 +74,25 @@ export const MediaAnnotationContextProvider: React.FC<{
   }, [mediaAnnotation]);
 
   useEffect(() => {
-    setAnnotateTimeList(
-      mediaAnnotationState.timedSketches.map((m) => m.time / 1000),
-    );
+    // push the changes up
     setMediaAnnotation(mediaAnnotationState.timedSketches);
+
+    // now refresh the annotations.
     mediaAnnotationDispatch({
       type: 'updateCurrentTime',
       time: playerState.played,
     });
   }, [mediaAnnotationState.timedSketches]);
+
+  useEffect(() => {
+    const markers = mediaAnnotationState.timedSketches
+      // convert millisec back to sec
+      .map((m) => m.time / 1000)
+      // prevent faulty markers
+      .filter((m) => m <= playerState.duration && m >= 0);
+
+    setAnnotateTimeList(markers);
+  }, [mediaAnnotationState.timedSketches, playerState.duration]);
 
   useEffect(() => {
     mediaAnnotationDispatch({
@@ -96,6 +111,10 @@ export const MediaAnnotationContextProvider: React.FC<{
       mediaAnnotationDispatch({ type: 'changeElement', elementUpdates }),
     [],
   );
+
+  const onAddKey = useCallback(() => {
+    mediaAnnotationDispatch({ type: 'addKey' });
+  }, []);
 
   const onRemoveKey = useCallback(() => {
     if (
@@ -132,6 +151,8 @@ export const MediaAnnotationContextProvider: React.FC<{
         onRemoveElements,
 
         isKey: mediaAnnotationState.isKey,
+        keyTime: mediaAnnotationState.keyTime,
+        onAddKey,
         onRemoveKey,
 
         selection: mediaAnnotationState.selection,

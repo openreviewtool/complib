@@ -7,7 +7,6 @@ export const formatTimeDisplay = (time: number, duration: number) => {
     const [min, sec] = mSec.substr(14, 5).split(':');
     return `${parseInt(min)}:${sec}`;
   } else {
-    const [sec, percentage] = mSec.substr(17, 4).split('.');
-    return `${parseInt(sec)}.${percentage}`;
+    return time.toFixed(1);
   }
 };

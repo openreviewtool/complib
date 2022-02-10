@@ -28,13 +28,14 @@ export interface EditToolsProps {
 
   onAddKey?: () => void;
   disableAddKey?: boolean;
-  
+
   onRemoveKey?: () => void;
   disableRemoveKey?: boolean;
 
-  onDeleteSelection?: ()=> void;
+  onDeleteSelection?: () => void;
   disableDeleteSelection?: boolean;
 
+  hide?: boolean;
 }
 
 const colorPickerStyles = {
@@ -78,186 +79,211 @@ const EditTools: React.FC<EditToolsProps> = ({
 
   return (
     <div className="edit_tools" ref={divRef}>
-      {showColorPicker && (
-        <div
-          onPointerDown={() => {
-            setShowColorPicker(false);
-          }}
-          onTouchStart={() => {
-            setShowColorPicker(false);
-          }}
-          style={{
-            pointerEvents: 'auto',
-            position: 'fixed',
-            top: '0px',
-            left: '0px',
-            right: '0px',
-            bottom: '0px',
-          }}
-        />
-      )}
-      <div className={'edit_tools_bar'}>
-        <IconButton
-          size={iconSize}
-          style={{ color: showAnnotation ? themeColor : 'red' }}
-          onPointerDown={() => {
-            setUIState({ ...uiState, showAnnotation: !uiState.showAnnotation });
-          }}
-        >
-          {showAnnotation ? <Visibility /> : <VisibilityOff />}
-        </IconButton>
-        {props.onAddKey && (
+      <div
+        className={`edit_tools__display edit_tools__display-${
+          props.hide ? 'hide' : 'show'
+        }`}
+      >
+        {showColorPicker && (
+          <div
+            onPointerDown={() => {
+              setShowColorPicker(false);
+            }}
+            onTouchStart={() => {
+              setShowColorPicker(false);
+            }}
+            style={{
+              pointerEvents: 'auto',
+              position: 'fixed',
+              top: '0px',
+              left: '0px',
+              right: '0px',
+              bottom: '0px',
+            }}
+          />
+        )}
+        <div className={'edit_tools_bar'}>
           <IconButton
             size={iconSize}
-            style={{
-              color: themeColor,
-              opacity: props.disableAddKey ? 0.2 : 1.0,
-            }}
-            disabled={props.disableAddKey}
-            onPointerDown={props.onAddKey}
-          >
-            <AddIcon />
-          </IconButton>
-        )}
-        {props.onRemoveKey && (
-          <IconButton
-            size={iconSize}
-            style={{
-              color: themeColor,
-              opacity: props.disableRemoveKey ? 0.2 : 1.0,
-            }}
-            disabled={props.disableRemoveKey}
-            onPointerDown={props.onRemoveKey}
-          >
-            <RemoveIcon />
-          </IconButton>
-        )}
-
-        {props.onDeleteSelection && (
-          <IconButton
-            size={iconSize}
-            style={{
-              color: themeColor,
-              opacity: props.disableDeleteSelection ? 0.2 : 1.0,
-            }}
-            disabled={props.disableDeleteSelection}
-            onPointerDown={props.onDeleteSelection}
-          >
-            <DeleteIcon />
-          </IconButton>
-        )}
-        <div className="icon_divider" />
-        <IconButton
-          color={mode === 'selection' ? 'primary' : undefined}
-          size={iconSize}
-          style={{ color: mode !== 'selection' ? themeColor : undefined }}
-          onPointerDown={() => {
-            setUIState({ ...uiState, mode: 'selection' });
-          }}
-        >
-          <HighlightAltOutlined />
-        </IconButton>
-        <IconButton
-          color={mode === 'draw' && shape === 'Path' ? 'primary' : undefined}
-          size={iconSize}
-          style={{
-            color: !(mode === 'draw' && shape === 'Path')
-              ? themeColor
-              : undefined,
-          }}
-          onPointerDown={() => {
-            setUIState({ ...uiState, mode: 'draw', shape: 'Path' });
-          }}
-        >
-          <Create />
-        </IconButton>
-        <IconButton
-          color={mode === 'draw' && shape === 'Ellipse' ? 'primary' : undefined}
-          style={{
-            color: !(mode === 'draw' && shape === 'Ellipse')
-              ? themeColor
-              : undefined,
-          }}
-          size={iconSize}
-          onPointerDown={() => {
-            setUIState({ ...uiState, mode: 'draw', shape: 'Ellipse' });
-          }}
-        >
-          <CircleOutlined />
-        </IconButton>
-        <IconButton
-          color={mode === 'draw' && shape === 'Rect' ? 'primary' : undefined}
-          style={{
-            color: !(mode === 'draw' && shape === 'Rect')
-              ? themeColor
-              : undefined,
-          }}
-          size={iconSize}
-          onPointerDown={() => {
-            setUIState({ ...uiState, mode: 'draw', shape: 'Rect' });
-          }}
-        >
-          <RectangleOutlined />
-        </IconButton>
-        <IconButton
-          color={mode === 'draw' && shape === 'Textbox' ? 'primary' : undefined}
-          style={{
-            color: !(mode === 'draw' && shape === 'Textbox')
-              ? themeColor
-              : undefined,
-          }}
-          size={iconSize}
-          onPointerDown={() => {
-            setUIState({ ...uiState, mode: 'draw', shape: 'Textbox' });
-          }}
-        >
-          <TextFields />
-        </IconButton>
-        <IconButton
-          style={{ color: uiState.color, opacity: 1.0 }}
-          size={iconSize}
-          onPointerDown={() => setShowColorPicker(true)}
-        >
-          <Circle />
-        </IconButton>
-        <IconButton
-          color={mode === 'panZoom' ? 'primary' : undefined}
-          style={{
-            color: !(mode === 'panZoom') ? themeColor : undefined,
-          }}
-          size={iconSize}
-          onPointerDown={() => {
-            setUIState({ ...uiState, mode: 'panZoom' });
-          }}
-        >
-          <PanToolOutlined fontSize={'medium'} />
-        </IconButton>
-        <div
-          style={{
-            display: showColorPicker ? 'block' : 'none',
-            position: 'absolute',
-            top: '55px',
-            right: '0px',
-          }}
-        >
-          <SketchPicker
-            color={tempColor}
-            styles={colorPickerStyles}
-            onChange={(v) => {
-              setTempColor(colorResultToString(v));
-            }}
-            onChangeComplete={(v) => {
+            style={{ color: showAnnotation ? themeColor : 'red' }}
+            onPointerDown={() => {
               setUIState({
                 ...uiState,
-                color: colorResultToString(v),
+                showAnnotation: !uiState.showAnnotation,
               });
             }}
-            presetColors={[]}
-          />
+            title='Show/Hide Annotation'
+          >
+            {showAnnotation ? <Visibility /> : <VisibilityOff />}
+          </IconButton>
+          {props.onAddKey && (
+            <IconButton
+              size={iconSize}
+              style={{
+                color: themeColor,
+                opacity: props.disableAddKey ? 0.2 : 1.0,
+              }}
+              disabled={props.disableAddKey}
+              onPointerDown={props.onAddKey}
+              title='Add Key'
+            >
+              <AddIcon />
+            </IconButton>
+          )}
+          {props.onRemoveKey && (
+            <IconButton
+              size={iconSize}
+              style={{
+                color: themeColor,
+                opacity: props.disableRemoveKey ? 0.2 : 1.0,
+              }}
+              disabled={props.disableRemoveKey}
+              onPointerDown={props.onRemoveKey}
+              title='Remove Key'
+            >
+              <RemoveIcon />
+            </IconButton>
+          )}
+
+          {props.onDeleteSelection && (
+            <IconButton
+              size={iconSize}
+              style={{
+                color: themeColor,
+                opacity: props.disableDeleteSelection ? 0.2 : 1.0,
+              }}
+              disabled={props.disableDeleteSelection}
+              onPointerDown={props.onDeleteSelection}
+              title='Delete Selection'
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
+          <div className="icon_divider" />
+          <IconButton
+            color={mode === 'selection' ? 'primary' : undefined}
+            size={iconSize}
+            style={{ color: mode !== 'selection' ? themeColor : undefined }}
+            onPointerDown={() => {
+              setUIState({ ...uiState, mode: 'selection' });
+            }}
+            title='Selection'
+          >
+            <HighlightAltOutlined />
+          </IconButton>
+          <IconButton
+            color={mode === 'draw' && shape === 'Path' ? 'primary' : undefined}
+            size={iconSize}
+            style={{
+              color: !(mode === 'draw' && shape === 'Path')
+                ? themeColor
+                : undefined,
+            }}
+            onPointerDown={() => {
+              setUIState({ ...uiState, mode: 'draw', shape: 'Path' });
+            }}
+            title='Pen'
+          >
+            <Create />
+          </IconButton>
+          <IconButton
+            color={
+              mode === 'draw' && shape === 'Ellipse' ? 'primary' : undefined
+            }
+            style={{
+              color: !(mode === 'draw' && shape === 'Ellipse')
+                ? themeColor
+                : undefined,
+            }}
+            size={iconSize}
+            onPointerDown={() => {
+              setUIState({ ...uiState, mode: 'draw', shape: 'Ellipse' });
+            }}
+            title='Ellipse'
+          >
+            <CircleOutlined />
+          </IconButton>
+          <IconButton
+            color={mode === 'draw' && shape === 'Rect' ? 'primary' : undefined}
+            style={{
+              color: !(mode === 'draw' && shape === 'Rect')
+                ? themeColor
+                : undefined,
+            }}
+            size={iconSize}
+            onPointerDown={() => {
+              setUIState({ ...uiState, mode: 'draw', shape: 'Rect' });
+            }}
+            title='Rectangle'
+          >
+            <RectangleOutlined />
+          </IconButton>
+          <IconButton
+            color={
+              mode === 'draw' && shape === 'Textbox' ? 'primary' : undefined
+            }
+            style={{
+              color: !(mode === 'draw' && shape === 'Textbox')
+                ? themeColor
+                : undefined,
+            }}
+            size={iconSize}
+            onPointerDown={() => {
+              setUIState({ ...uiState, mode: 'draw', shape: 'Textbox' });
+            }}
+            title='Text'
+          >
+            <TextFields />
+          </IconButton>
+          <IconButton
+            style={{ color: uiState.color, opacity: 1.0 }}
+            size={iconSize}
+            onPointerDown={() => setShowColorPicker(true)}
+            title='Color'
+          >
+            <Circle />
+          </IconButton>
+          <IconButton
+            color={mode === 'panZoom' ? 'primary' : undefined}
+            style={{
+              color: !(mode === 'panZoom') ? themeColor : undefined,
+            }}
+            size={iconSize}
+            onPointerDown={() => {
+              setUIState({ ...uiState, mode: 'panZoom' });
+            }}
+            title='Panzoom'
+          >
+            <PanToolOutlined fontSize={'medium'} />
+          </IconButton>
+          <div
+            style={{
+              display: showColorPicker ? 'block' : 'none',
+              position: 'absolute',
+              top: '55px',
+              right: '0px',
+            }}
+          >
+            <SketchPicker
+              color={tempColor}
+              styles={colorPickerStyles}
+              onChange={(v) => {
+                setTempColor(colorResultToString(v));
+              }}
+              onChangeComplete={(v) => {
+                setUIState({
+                  ...uiState,
+                  color: colorResultToString(v),
+                });
+              }}
+              presetColors={[]}
+            />
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
 
 export default EditTools;

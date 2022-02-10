@@ -35,3 +35,5 @@ export const FabricObjectDefaults = {
 };
 
 export const HAS_ROTATE_HANDLE = true
+
+export const ANNOTATE_KEY_HOLD_MSEC = 500

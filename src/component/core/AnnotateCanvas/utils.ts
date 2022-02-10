@@ -1,7 +1,11 @@
 import { fabric } from 'fabric';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { FabricObjectDefaults, HAS_ROTATE_HANDLE } from './defaults';
+import {
+  ANNOTATE_KEY_HOLD_MSEC,
+  FabricObjectDefaults,
+  HAS_ROTATE_HANDLE,
+} from './defaults';
 
 import {
   AnnotateElement,
@@ -235,9 +239,6 @@ export const bootstrapHoverHandler = (newFObj: fabric.Object) => {
   });
 };
 
-
-
-
 /**
  * find the sketch best matching the current time
  * @param mediaAnnotation
@@ -246,7 +247,7 @@ export const bootstrapHoverHandler = (newFObj: fabric.Object) => {
  * @param fps
  * @returns
  */
- export const findTimedSketch = (
+export const findTimedSketch = (
   mediaAnnotation: TimedSketch[],
   currentTime: number, // in millisec
   hold?: boolean,
@@ -258,23 +259,23 @@ export const bootstrapHoverHandler = (newFObj: fabric.Object) => {
   hold = hold === undefined ? false : hold;
   fps = fps || 24;
 
-  const frameDurationInMSec = 500; //(12 / fps) * 1000;
-
   // find the matching key for the time.
   let matchSketch: TimedSketch | null = null;
-  let matchKeyTime = null;
   let isKey = false;
+
   for (let i = 0; i < mediaAnnotation.length; i++) {
     const { time: keyTime } = mediaAnnotation[i];
-    if (currentTime >= keyTime && currentTime < keyTime + frameDurationInMSec) {
+    if (
+      currentTime >= keyTime &&
+      currentTime < keyTime + ANNOTATE_KEY_HOLD_MSEC
+    ) {
       matchSketch = mediaAnnotation[i];
-      matchKeyTime = keyTime;
       isKey = true;
-      break;
     }
+
     if (hold && currentTime >= keyTime) {
       matchSketch = mediaAnnotation[i];
-      matchKeyTime = keyTime;
+
       if (currentTime < keyTime) {
         break;
       }
@@ -301,8 +302,21 @@ export const findNextKeyTime = (
   }
 };
 
-export const findPrevKeyTime = (keyList: number[], currentTime: number, fps?: number) => {
-  currentTime = getWholeFrameTime(currentTime, fps) / 1000
+/**
+ *
+ * @param keyList
+ * @param currentTime
+ * @param fps
+ * @param buffer some grace period for playback while current time advancing.
+ * @returns
+ */
+export const findPrevKeyTime = (
+  keyList: number[],
+  currentTime: number,
+  buffer?: number,
+) => {
+  currentTime = getWholeFrameTime(currentTime) / 1000;
+  currentTime = currentTime - (buffer || 0);
   const adjKeys = keyList.filter((t) => t < currentTime);
 
   if (adjKeys.length === 0) {
@@ -324,7 +338,12 @@ export const findPrevKeyTime = (keyList: number[], currentTime: number, fps?: nu
  * @param fps
  * @returns
  */
- export const getWholeFrameTime = (time: number, fps?: number) => {
+export const getWholeFrameTime = (time: number, fps?: number) => {
   fps = fps || 24;
-  return Math.round((Math.round(time * fps) / fps) * 1000);
+  return Math.round((Math.floor(time * fps) / fps) * 1000);
 };
+
+
+export const getWholeMSecTime = (time: number) =>  {
+  return Math.floor(time * 1000)
+}

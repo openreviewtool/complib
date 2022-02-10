@@ -1,5 +1,6 @@
 import { MediaInfo } from '../../component/core/MediaPlayer/types';
 
+
 const vimeo1: MediaInfo = {
   provider_name: 'Vimeo',
   type: 'video',
@@ -15,6 +16,24 @@ const vimeo1: MediaInfo = {
   duration: 94.59,
 };
 
+
+const vimeo2: MediaInfo = {
+  provider_name: 'Vimeo',
+  type: 'video',
+  url: 'https://vimeo.com/218698089',
+
+  width: 640,
+  height: 360,
+
+  thumbnail_url: 'https://i.vimeocdn.com/video/440117690-5df6116518b0520b43cb9d9cdc2acf8e93e7d3ddf12f728c34ccd241400f168f-d_295x166',
+  title: "Personification by The Bazillions",
+
+  author_name: 'eg design',
+  author_url: 'https://vimeo.com/eeegee',
+
+  duration: 146.24,
+};
+
 const youtube1: MediaInfo = {
   provider_name: 'YouTube',
   type: 'video',
@@ -27,22 +46,23 @@ const youtube1: MediaInfo = {
   thumbnail_url: 'https://i.ytimg.com/vi/KMX_FuOLoCI/hqdefault.jpg',
   title: 'Steve Jobs Makes Fun of DOS in 1992',
 
+  author_name: 'MusRest',
   author_url: 'https://www.youtube.com/c/AriWeinstein',
 };
 
 const youtube2: MediaInfo = {
   provider_name: 'YouTube',
   type: 'video',
-  url: 'https://www.youtube.com/watch?v=-SGrRkUP0b0',
+  url: 'https://www.youtube.com/watch?v=o-YBDTqX_ZU',
 
   width: 200,
-  height: 113,
-  duration: 583.521,
+  height: 150,
+  duration: 212.041,
 
-  thumbnail_url: 'https://i.ytimg.com/vi/-SGrRkUP0b0/hqdefault.jpg',
-  title: 'NETS at RAPTORS | FULL GAME HIGHLIGHTS | April 27, 2021',
+  thumbnail_url: 'https://i.ytimg.com/vi/o-YBDTqX_ZU/hqdefault.jpg',
+  title: 'Rick Astley - Never Gonna Give You Up',
 
-  author_url: 'https://www.youtube.com/c/AriWeinstein',
+  author_url: 'https://www.youtube.com/c/MusRest',
 };
 
 const video1: MediaInfo = {
@@ -111,10 +131,11 @@ export const mediaSamples: MediaInfo[] = [
 ];
 
 export const mediaSamples2: MediaInfo[] = [
-  vimeo1,
   video2,
+  vimeo1,
+  youtube2,
   video3,
-  // youtube1,
+  soundCloud1,
 ];
 
 export const svgShapeUrls = [

@@ -11,6 +11,7 @@ export interface BrushToolsProps {
 
   iconSize?: 'large' | 'medium' | 'small' | undefined;
   themeColor?: string;
+  hide?: boolean;
 }
 
 const BrushTools = (props: BrushToolsProps) => {
@@ -19,34 +20,40 @@ const BrushTools = (props: BrushToolsProps) => {
 
   return (
     <div className="brush_tools" ref={divRef}>
-      <div className="brush_tools_bar">
-        {props.uiState.shape === 'Textbox' ? (
-          <Slider
-            value={props.uiState.fontSize}
-            orientation="vertical"
-            min={5}
-            max={100}
-            onChange={(_evt, value) => {
-              props.setUIState({
-                ...props.uiState,
-                fontSize: value as number,
-              });
-            }}
-          />
-        ) : (
-          <Slider
-            orientation="vertical"
-            value={props.uiState.strokeWidth}
-            onChange={(_evt, value) => {
-              props.setUIState({
-                ...props.uiState,
-                strokeWidth: value as number,
-              });
-            }}
-            min={1}
-            max={50}
-          />
-        )}
+      <div
+        className={`brush_tools__display brush_tools__display-${
+          props.hide ? 'hide' : 'show'
+        }`}
+      >
+        <div className="brush_tools_bar">
+          {props.uiState.shape === 'Textbox' ? (
+            <Slider
+              value={props.uiState.fontSize}
+              orientation="vertical"
+              min={5}
+              max={100}
+              onChange={(_evt, value) => {
+                props.setUIState({
+                  ...props.uiState,
+                  fontSize: value as number,
+                });
+              }}
+            />
+          ) : (
+            <Slider
+              orientation="vertical"
+              value={props.uiState.strokeWidth}
+              onChange={(_evt, value) => {
+                props.setUIState({
+                  ...props.uiState,
+                  strokeWidth: value as number,
+                });
+              }}
+              min={1}
+              max={50}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
