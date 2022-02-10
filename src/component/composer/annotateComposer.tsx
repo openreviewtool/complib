@@ -64,21 +64,26 @@ export const AnnotateTools = (props: {
   uiState: UserControllerInputs;
   setUiState: (u: UserControllerInputs) => void;
 }) => {
-  const { playerState } = useContext(PlayerContext)
+  const { playerState, playing } = useContext(PlayerContext);
   const { isKey, keyTime, onAddKey, onRemoveKey, selection, onRemoveElements } =
     useContext(MediaAnnotateContext);
   return (
     <>
-      <BrushTools uiState={props.uiState} setUIState={props.setUiState} />
+      <BrushTools
+        uiState={props.uiState}
+        setUIState={props.setUiState}
+        hide={playing}
+      />
       <EditTools
         uiState={props.uiState}
         setUIState={props.setUiState}
         onAddKey={onAddKey}
-        disableAddKey={keyTime===getWholeMSecTime(playerState.played)}
+        disableAddKey={keyTime === getWholeMSecTime(playerState.played)}
         onRemoveKey={onRemoveKey}
         disableRemoveKey={!isKey}
         onDeleteSelection={() => onRemoveElements(selection)}
         disableDeleteSelection={selection.length === 0}
+        hide={playing}
       />
     </>
   );
