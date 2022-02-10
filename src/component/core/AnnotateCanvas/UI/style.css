@@ -3,15 +3,17 @@
   bottom: 0;
   display: flex;
   left: 0;
+  overflow: hidden;
   position: absolute;
   pointer-events: none;
   top: 0;
-  width: 42px;
+  width: 48px;
 }
 
 .brush_tools__display {
   position: absolute;
   transition: left 0.3s;
+
   width: 100%;
 }
 
@@ -20,7 +22,8 @@
 }
 
 .brush_tools__display-hide {
-  left: -42px;
+  left: -48px;
+  transition-delay: 0.5s;
 }
 
 .brush_tools_bar {
@@ -56,6 +59,8 @@
   align-items: center;
   display: flex;
   justify-content: center;
+  height: 48px;
+  overflow: hidden;
   pointer-events: none;
   position: absolute;
   top: 0;
@@ -73,7 +78,8 @@
 }
 
 .edit_tools__display-hide {
-  top: -42px;
+  top: -48px;
+  transition-delay: 0.5s;
 }
 
 .edit_tools_bar {
