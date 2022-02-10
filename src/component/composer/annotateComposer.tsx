@@ -10,6 +10,8 @@ import AnnotateCanvasComp from '../core/AnnotateCanvas/AnnotateCanvas';
 import BrushTools from '../core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../core/AnnotateCanvas/UI/EditTools';
 import { MediaAnnotateContext } from '../core/AnnotateCanvas/MediaAnnotateContext';
+import { PlayerContext } from '../core/MediaPlayer/PlayerContext';
+import { getWholeMSecTime } from '../core/AnnotateCanvas/utils';
 
 export const AnnotateCanvas = (props: {
   uiState: UserControllerInputs;
@@ -62,7 +64,8 @@ export const AnnotateTools = (props: {
   uiState: UserControllerInputs;
   setUiState: (u: UserControllerInputs) => void;
 }) => {
-  const { isKey, onRemoveKey, selection, onRemoveElements } =
+  const { playerState } = useContext(PlayerContext)
+  const { isKey, keyTime, onAddKey, onRemoveKey, selection, onRemoveElements } =
     useContext(MediaAnnotateContext);
   return (
     <>
@@ -70,9 +73,11 @@ export const AnnotateTools = (props: {
       <EditTools
         uiState={props.uiState}
         setUIState={props.setUiState}
+        onAddKey={onAddKey}
+        disableAddKey={keyTime===getWholeMSecTime(playerState.played)}
         onRemoveKey={onRemoveKey}
         disableRemoveKey={!isKey}
-        onDeleteSelection={()=>onRemoveElements(selection)}
+        onDeleteSelection={() => onRemoveElements(selection)}
         disableDeleteSelection={selection.length === 0}
       />
     </>

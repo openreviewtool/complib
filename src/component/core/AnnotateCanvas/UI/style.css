@@ -9,6 +9,20 @@
   width: 42px;
 }
 
+.brush_tools__display {
+  position: absolute;
+  transition: left 0.3s;
+  width: 100%;
+}
+
+.brush_tools__display-show {
+  left: 0px;
+}
+
+.brush_tools__display-hide {
+  left: -42px;
+}
+
 .brush_tools_bar {
   align-items: center;
   backdrop-filter: blur(3px);
@@ -46,6 +60,20 @@
   position: absolute;
   top: 0;
   width: 100%;
+}
+
+.edit_tools__display {
+  position: absolute;
+  transition: top 0.3s;
+  height: 100%;
+}
+
+.edit_tools__display-show {
+  top: 0px;
+}
+
+.edit_tools__display-hide {
+  top: -42px;
 }
 
 .edit_tools_bar {

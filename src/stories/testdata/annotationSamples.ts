@@ -72,25 +72,25 @@ const mediaAnnotate: TimedSketch[] = [
   {
     time: 0,
     id: 'sketch_0',
-    sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '0' }],
+    sketch: [sampleCircleElement, { ...sampleTextboxElement, text: 'Annotate!' }],
   },
   {
-    time: 3500,
+    time: 1100,
     id: 'sketch_1',
-    sketch: [samplePathElement, { ...sampleTextboxElement, text: '3500' }],
+    sketch: [samplePathElement, { ...sampleTextboxElement, text: '1100' }],
   },
   {
-    time: 6000,
+    time: 3600,
     id: 'sketch_2',
-    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '6000' }],
-  }
+    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '3600' }],
+  },
 ];
 
-const mediaAnnotate2: TimedSketch[] = [
+const mediaAnnotate3: TimedSketch[] = [
   {
-    time: 1000,
+    time: 0,
     id: 'sketch_0',
-    sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '1000' }],
+    sketch: [sampleCircleElement, { ...sampleTextboxElement, text: 'Dance!' }],
   },
   {
     time: 4500,
@@ -101,14 +101,14 @@ const mediaAnnotate2: TimedSketch[] = [
     time: 9050,
     id: 'sketch_3',
     sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '9050' }],
-  }
+  },
 ];
 
-const mediaAnnotate3: TimedSketch[] = [
+const mediaAnnotate2: TimedSketch[] = [
   {
     time: 0,
     id: 'sketch_0',
-    sketch: [sampleCircleElement, { ...sampleTextboxElement, text: '0' }],
+    sketch: [sampleCircleElement, { ...sampleTextboxElement, text: 'Draw!' }],
   },
   {
     time: 1100,
@@ -119,11 +119,55 @@ const mediaAnnotate3: TimedSketch[] = [
     time: 2000,
     id: 'sketch_2',
     sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '2000' }],
-  }
-]
+  },
+];
+
+const mediaAnnotate4: TimedSketch[] = [
+  {
+    time: 0,
+    id: 'sketch_0',
+    sketch: [
+      sampleCircleElement,
+      { ...sampleTextboxElement, text: 'Scribble!' },
+    ],
+  },
+  {
+    time: 1100,
+    id: 'sketch_1',
+    sketch: [samplePathElement, { ...sampleTextboxElement, text: '1100' }],
+  },
+  {
+    time: 5000,
+    id: 'sketch_2',
+    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '5000' }],
+  },
+];
+
+const mediaAnnotate5: TimedSketch[] = [
+  {
+    time: 1000,
+    id: 'sketch_0',
+    sketch: [
+      sampleCircleElement,
+      { ...sampleTextboxElement, text: 'Listen!' },
+    ],
+  },
+  {
+    time: 2100,
+    id: 'sketch_1',
+    sketch: [samplePathElement, { ...sampleTextboxElement, text: '1100' }],
+  },
+  {
+    time: 5000,
+    id: 'sketch_2',
+    sketch: [sampleRectElement2, { ...sampleTextboxElement, text: '5000' }],
+  },
+];
 
 export const sampleMediaAnnotateList = [
   mediaAnnotate,
   mediaAnnotate2,
   mediaAnnotate3,
+  mediaAnnotate4,
+  mediaAnnotate5,
 ];
