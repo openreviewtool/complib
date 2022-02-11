@@ -1,4 +1,5 @@
 import typescript from 'rollup-plugin-typescript2';
+import scss from 'rollup-plugin-scss';
 import pkg from './package.json';
 
 export default [
@@ -10,6 +11,7 @@ export default [
     ],
     plugins: [
       typescript(),
+      scss(),
     ],
     external: Object.keys(pkg.peerDependencies || {})
   },
