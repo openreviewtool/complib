@@ -12,14 +12,30 @@ export const Player = (props: { controls?: boolean }) => {
   const ctx = React.useContext(PlayerContext);
   const { setContentSize } = React.useContext(PanZoomContext);
 
+  const { type: mediaType, provider_name } = ctx.mediaList[ctx.mediaIndex];
+
   useEffect(() => {
+    // this normalization is necessary so the text element include in the
+    // embed content does not flutuate.
+    // Without it, youtube 320x240 will have 2x font size compare to 640x480
     setContentSize(normalizeSize(ctx.mediaList[ctx.mediaIndex], 1000));
   }, [ctx.mediaIndex]);
 
   const onPlayHandle = useCallback(() => ctx.setPlaying(true), []);
   const onPauseHandle = useCallback(() => ctx.setPlaying(false), []);
 
-  return (
+  return mediaType === 'image' ? (
+    <img
+      style={{
+        height: '100%',
+        width: '100%',
+        objectFit: 'contain',
+        pointerEvents: 'none',
+        userSelect: 'none',
+      }}
+      src={ctx.mediaList[ctx.mediaIndex].url}
+    />
+  ) : (
     <RPlayer
       url={ctx.mediaList[ctx.mediaIndex].url}
       playing={ctx.playing}
@@ -38,19 +54,22 @@ const configZeroClamp = { clipDuration: 30, threshold: 1 };
 export const Timeline = () => {
   const ctx = React.useContext(PlayerContext);
   const mediaAnnCtx = React.useContext(MediaAnnotateContext);
+  const duration = ctx.mediaList[ctx.mediaIndex].duration;
 
   return (
     <div style={{ display: ctx.seekTimeReady ? undefined : 'none' }}>
-      <TimelineComp
-        currentTime={ctx.playerState.played}
-        currentCached={ctx.playerState.loaded}
-        duration={ctx.mediaList[ctx.mediaIndex].duration}
-        onTimelineSeek={ctx.setSeekTime}
-        timelineCaptured={ctx.seeking}
-        onTimelineCaptured={ctx.setSeeking}
-        zeroClamp={configZeroClamp}
-        markerList={mediaAnnCtx.annotateTimeList}
-      />
+      {!!duration && (
+        <TimelineComp
+          currentTime={ctx.playerState.played}
+          currentCached={ctx.playerState.loaded}
+          duration={duration}
+          onTimelineSeek={ctx.setSeekTime}
+          timelineCaptured={ctx.seeking}
+          onTimelineCaptured={ctx.setSeeking}
+          zeroClamp={configZeroClamp}
+          markerList={mediaAnnCtx.annotateTimeList}
+        />
+      )}
     </div>
   );
 };

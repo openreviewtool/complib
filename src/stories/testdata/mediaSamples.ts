@@ -103,11 +103,11 @@ const video3: MediaInfo = {
 const image1: MediaInfo = {
   provider_name: '',
   type: 'image',
-  url: 'https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg',
+  url: 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Claude_Monet_-_Nymph%C3%A9as%2C_effet_du_soir_W1504_-_Mus%C3%A9e_Marmottan-Monet.jpg',
 
-  width: 1280,
-  height: 960,
-  duration: 1.0,
+  width: 1404,
+  height: 1024,
+  duration: 0,
 };
 
 const soundCloud1: MediaInfo = {
@@ -134,7 +134,7 @@ export const mediaSamples2: MediaInfo[] = [
   video2,
   vimeo1,
   youtube2,
-  video3,
+  image1,
   soundCloud1,
 ];
 

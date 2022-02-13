@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "lib",
-    "module": "esnext",
-    "target": "esnext",
-    "lib": ["esnext", "dom"],
+    "module": "ES6",
+    "target": "ES6",
+    // "lib": ["esnext", "dom"],
+    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include"],
     "sourceMap": true,
     "allowJs": true,
     "moduleResolution": "node",

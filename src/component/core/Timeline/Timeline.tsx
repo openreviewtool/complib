@@ -1,6 +1,4 @@
 import React, { useRef, useState } from 'react';
-import classNames from 'classnames';
-
 import './style.css';
 import { formatTimeDisplay } from './util';
 
@@ -101,6 +99,8 @@ const Timeline: React.FC<TimelineProps> = ({
    * 2) click anywhere on the timeline.
    */
   const handleScrubMove = (e: any) => {
+    if (!timelineCaptured) return
+    
     const isPointerEvent = e.type && e.type.startsWith('pointer');
     const isPointerMoveEvent = e.type && e.type === 'pointermove';
     const isPointerDownEvent = e.type && e.type === 'pointerdown';
@@ -242,7 +242,8 @@ const Timeline: React.FC<TimelineProps> = ({
   );
 
   return (
-    <div className={classNames('timeline', props.className)}>
+    // <div className={classNames('timeline', props.className)}>
+    <div className={'timeline'}>
       <div
         ref={timelineRef}
         className="timeline__scrollzone"
