@@ -1,0 +1,70 @@
+.playdeck__playbutton_layout {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.playdeck__shadow {
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.4) 70%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  height: 60px;
+  position: absolute;
+  bottom: 0px;
+
+  left: 0;
+  right: 0;
+  transition: opacity 0.5s, bottom 0.5s;
+}
+
+.playdeck__shadow-show {
+  /* bottom: 0; */
+  opacity: 0.9;
+}
+
+.playdeck__shadow-hide {
+  /* bottom: -80px; */
+  opacity: 0;
+}
+
+.playdeck__play_button {
+  display: none;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+}
+
+.playdeck__play_button--show {
+  display: flex;
+  opacity: 1;
+}
+
+.playdeck__play_button--hide {
+  opacity: 0;
+  display: none;
+}
+
+.playdeck__play_button__button {
+  background-color: #333;
+  border-radius: 16px;
+  cursor: pointer;
+  padding: 8px 20px;
+  pointer-events: all;
+}
+
+.playdeck__play_button__button:hover {
+  background-color: #444;
+}
+
+
+.playdeck__toolbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}

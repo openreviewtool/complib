@@ -1,12 +1,17 @@
 import React from 'react';
 
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+
 import PauseIcon from '@mui/icons-material/Pause';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import LoopIcon from '@mui/icons-material/Loop';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 import { Badge, IconButton } from '@mui/material';
 
@@ -20,6 +25,12 @@ export interface PlayDeckProps {
 
   playing?: boolean;
   onPlay?: () => void;
+
+  muted?: boolean;
+  onMuted?: () => void;
+
+  fullScreen?: boolean;
+  onFullScreen?: (f: boolean) => void;
 
   onSkipPrev?: () => void; // user enter the timeline
   disablePrev?: boolean;
@@ -47,7 +58,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
   ...props
 }) => {
   return (
-    <div className={'playDeck'}>
+    <div className={'playToolbar'}>
       {props.onSkipPrev && (
         <IconButton
           size={iconSize}
@@ -110,7 +121,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
             style={{ color: themeColor }}
             title={'Prev annotation'}
           >
-            <ChevronLeftIcon fontSize={iconSize}/>
+            <ChevronLeftIcon fontSize={iconSize} />
           </IconButton>
           <IconButton
             size={iconSize}
@@ -118,10 +129,38 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
             style={{ color: themeColor }}
             title={'Next annotation'}
           >
-            <ChevronRightIcon fontSize={iconSize}/>
+            <ChevronRightIcon fontSize={iconSize} />
           </IconButton>
         </>
       )}
+
+      <div style={{ flexGrow: 1 }} />
+
+      {props.onMuted && (
+        <IconButton size={iconSize} onClick={props.onMuted} title="Toggle Mute">
+          {props.muted ? (
+            <VolumeOffIcon style={{ color: 'red' }} />
+          ) : (
+            <VolumeUpIcon style={{ color: themeColor }} />
+          )}
+        </IconButton>
+      )}
+
+      {props.onFullScreen && (
+        <IconButton
+          size={iconSize}
+          onClick={props.onFullScreen}
+          title="Toggle Fullscreen"
+        >
+          {props.fullScreen ? (
+            <FullscreenExitIcon style={{ color: themeColor }} />
+          ) : (
+            <FullscreenIcon style={{ color: themeColor }} />
+          )}
+        </IconButton>
+      )}
+
+      <div style={{ width: '10px' }} />
     </div>
   );
 };

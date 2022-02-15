@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 
 import { normalizeScale } from '../core/PanZoom/utils';
 import {
@@ -21,19 +21,18 @@ export const AnnotateCanvas = (props: {
   const { elements, onAddElement, onChangeElement, selection, onSelection } =
     useContext(MediaAnnotateContext);
   const [normPanZoomSpec, setNormPanZoomSpec] = useState(panZoom);
-  // const [selection, setSelection] = useState<string[]>([]);
 
-  // normalize the annotate canvas to have 1000x1000 regardless of the content
+  // normalize the annotate canvas to have x res regardless of the content
   useEffect(
     () =>
       setNormPanZoomSpec({
         ...panZoom,
-        scale: normalizeScale(contentSize, panZoom.scale, 1000),
+        scale: normalizeScale(contentSize, panZoom.scale, 1280),
       }),
     [panZoom],
   );
 
-  // // auto select newly created shape (except path).
+  // auto select newly created shape (except path).
   const onAddElementHelper = (elm: AnnotateElement) => {
     onAddElement(elm);
     if (elm.etype !== 'Path') {
@@ -67,6 +66,8 @@ export const AnnotateTools = (props: {
   const { playerState, playing } = useContext(PlayerContext);
   const { isKey, keyTime, onAddKey, onRemoveKey, selection, onRemoveElements } =
     useContext(MediaAnnotateContext);
+  const { panZoom, containerSize } = useContext(PanZoomContext);
+
   return (
     <>
       <BrushTools
@@ -83,6 +84,7 @@ export const AnnotateTools = (props: {
         disableRemoveKey={!isKey}
         onDeleteSelection={() => onRemoveElements(selection)}
         disableDeleteSelection={selection.length === 0}
+        onFitScreen={() => {console.log('....panZoom', {panZoom, containerSize})}}
         hide={playing}
       />
     </>

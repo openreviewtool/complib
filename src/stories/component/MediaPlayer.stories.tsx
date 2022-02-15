@@ -29,13 +29,15 @@ export const CustomControls = (): JSX.Element => {
   return (
     <div>
       <PlayerContextProvider
-        value={{ mediaList, mediaIndex, setMediaIndex }}
+        mediaList={mediaList}
+        mediaIndex={mediaIndex}
+        setMediaIndex={setMediaIndex}
       >
         <div>
           <playerComposer.Player />
           <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
             <playerComposer.Timeline />
-            <playerComposer.PlayDeck />
+            <playerComposer.PlayToolbar />
           </div>
         </div>
       </PlayerContextProvider>

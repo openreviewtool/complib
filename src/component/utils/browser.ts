@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * PinchZoomPan gesture on a web page manipuate the entire website,
@@ -72,4 +72,39 @@ export const isTablet = () => {
       userAgent,
     ) || isIOS()
   );
+};
+
+
+export const useFullScreen = () => {
+  const element = useRef<HTMLDivElement>(null);
+
+  const [fullScreen, setFullScreen] = useState(false);
+
+  const syncFullScreen = () => {
+    setFullScreen(!!document?.fullscreenElement);
+  };
+  useEffect(() => {
+    element.current?.addEventListener('fullscreenchange', syncFullScreen);
+
+    return () =>
+      element.current?.removeEventListener('fullscreenchange', syncFullScreen);
+  }, []);
+
+  const toggleFullScreen = () => {
+    if (!!document?.fullscreenElement) {
+      document.exitFullscreen();
+      syncFullScreen();
+    } else {
+      element.current
+        ?.requestFullscreen()
+        .then(syncFullScreen)
+        .catch((err) => {
+          alert(
+            `Error attempting to enable full-screen mode: ${err.message} (${err.name})`,
+          );
+        });
+    }
+  };
+
+  return { fullScreenElement: element, fullScreen, setFullScreen: toggleFullScreen };
 };

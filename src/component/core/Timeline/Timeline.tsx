@@ -84,8 +84,8 @@ const Timeline: React.FC<TimelineProps> = ({
   }, []);
 
   const handleScrubStart = (event: any) => {
-    handleScrubMove(event);
     if (onTimelineCaptured) onTimelineCaptured(true);
+    fireSeekEvent(event)
   };
 
   const handleScrubEnd = (event: any) => {
@@ -101,6 +101,19 @@ const Timeline: React.FC<TimelineProps> = ({
   const handleScrubMove = (e: any) => {
     if (!timelineCaptured) return
     
+    fireSeekEvent(e)
+  };
+
+  const handleScrubMoveFinish = (e: any) => {
+    const isPointerEvent = e.type && e.type.startsWith('pointer');
+
+    // have the canvas capture the mouse events until it's released
+    if (isPointerEvent) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+  };
+
+  const fireSeekEvent = (e: any) => {
     const isPointerEvent = e.type && e.type.startsWith('pointer');
     const isPointerMoveEvent = e.type && e.type === 'pointermove';
     const isPointerDownEvent = e.type && e.type === 'pointerdown';
@@ -167,16 +180,7 @@ const Timeline: React.FC<TimelineProps> = ({
         seekFrameIndex,
       );
     }
-  };
-
-  const handleScrubMoveFinish = (e: any) => {
-    const isPointerEvent = e.type && e.type.startsWith('pointer');
-
-    // have the canvas capture the mouse events until it's released
-    if (isPointerEvent) {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    }
-  };
+  }
 
   const playHead = (
     <>

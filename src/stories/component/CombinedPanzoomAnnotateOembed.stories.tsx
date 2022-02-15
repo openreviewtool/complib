@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import PanZoom from '../../component/core/PanZoom';
 
@@ -21,6 +21,7 @@ import { StoryHint } from './utils';
 import { PlayerContextProvider } from '../../component/core/MediaPlayer/PlayerContext';
 import { MediaAnnotationContextProvider } from '../../component/core/AnnotateCanvas/MediaAnnotateContext';
 import { button } from '@storybook/addon-knobs';
+import { useFullScreen } from '../../component/utils/browser';
 
 const story = {
   title: 'All Together Now',
@@ -42,9 +43,14 @@ const hintsAnnotateOembed = (
   </>
 );
 
+
+
 export const PanZoomAnnotateOembed = (): JSX.Element => {
   const nativeControls = false;
   const [mediaIndex, setMediaIndex] = useState(0);
+
+  const {fullScreenElement, fullScreen, setFullScreen} = useFullScreen();
+
   button('Log Annotation to Console', () => {
     console.log('Annotation state: ', annotationList[mediaIndex]);
   });
@@ -58,37 +64,43 @@ export const PanZoomAnnotateOembed = (): JSX.Element => {
 
   return (
     <StoryHint hint={<div>{hintsAnnotateOembed}</div>}>
-      <PlayerContextProvider
-        value={{ mediaList: mediaSamples2, mediaIndex, setMediaIndex }}
-      >
-        <MediaAnnotationContextProvider
-          mediaAnnotation={annotationList[mediaIndex]}
-          setMediaAnnotation={(s: TimedSketch[]) => {
-            const newAnnotationList = [...annotationList];
-            newAnnotationList[mediaIndex] = s;
-            setAnnotationList(newAnnotationList);
-          }}
+      <div ref={fullScreenElement}>
+        <PlayerContextProvider
+          mediaList={mediaSamples2}
+          mediaIndex={mediaIndex}
+          setMediaIndex={setMediaIndex}
+          fullScreen={fullScreen}
+          setFullScreen={setFullScreen}
         >
-          <div>
-            <PanZoom disabled={uiState.mode !== 'panZoom'}>
-              <PanZoomContent>
-                <playerComposer.Player controls={nativeControls} />
-              </PanZoomContent>
-              <PanZoomOverlay pointerEventPassthrough={nativeControls}>
-                <annotateComposer.AnnotateCanvas
-                  uiState={uiState}
-                  setUiState={setUiState}
-                />
-              </PanZoomOverlay>
-            </PanZoom>
-            {!nativeControls && <playerComposer.PlayDeckWithTimeline />}
-            <annotateComposer.AnnotateTools
-              uiState={uiState}
-              setUiState={setUiState}
-            />
-          </div>
-        </MediaAnnotationContextProvider>
-      </PlayerContextProvider>
+          <MediaAnnotationContextProvider
+            mediaAnnotation={annotationList[mediaIndex]}
+            setMediaAnnotation={(s: TimedSketch[]) => {
+              const newAnnotationList = [...annotationList];
+              newAnnotationList[mediaIndex] = s;
+              setAnnotationList(newAnnotationList);
+            }}
+          >
+            <div>
+              <PanZoom disabled={uiState.mode !== 'panZoom'}>
+                <PanZoomContent>
+                  <playerComposer.Player controls={nativeControls} />
+                </PanZoomContent>
+                <PanZoomOverlay pointerEventPassthrough={nativeControls}>
+                  <annotateComposer.AnnotateCanvas
+                    uiState={uiState}
+                    setUiState={setUiState}
+                  />
+                </PanZoomOverlay>
+              </PanZoom>
+              {!nativeControls && <playerComposer.PlayDeck />}
+              <annotateComposer.AnnotateTools
+                uiState={uiState}
+                setUiState={setUiState}
+              />
+            </div>
+          </MediaAnnotationContextProvider>
+        </PlayerContextProvider>
+      </div>
     </StoryHint>
   );
 };

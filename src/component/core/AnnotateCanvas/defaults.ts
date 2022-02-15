@@ -8,7 +8,7 @@ export const DEFAULT_UI_ATTRS: UserControllerInputs = {
   // color: 'DeepSkyBlue',
   // color: 'DodgerBlue',
   color: 'Coral',
-  strokeWidth: 3,
+  strokeWidth: 10,
   fontFamily: 'Times New Roman',
 };
 

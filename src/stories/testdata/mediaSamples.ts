@@ -12,8 +12,6 @@ const vimeo1: MediaInfo = {
   thumbnail_url: 'https://i.vimeocdn.com/video/1116774666_640.jpg',
   title: 'The Pitch Song',
   author_url: 'https://vimeo.com/giantant',
-
-  duration: 94.59,
 };
 
 
@@ -41,7 +39,6 @@ const youtube1: MediaInfo = {
 
   width: 200,
   height: 150,
-  duration: 56.121,
 
   thumbnail_url: 'https://i.ytimg.com/vi/KMX_FuOLoCI/hqdefault.jpg',
   title: 'Steve Jobs Makes Fun of DOS in 1992',
@@ -57,7 +54,6 @@ const youtube2: MediaInfo = {
 
   width: 200,
   height: 150,
-  duration: 212.041,
 
   thumbnail_url: 'https://i.ytimg.com/vi/o-YBDTqX_ZU/hqdefault.jpg',
   title: 'Rick Astley - Never Gonna Give You Up',
@@ -85,7 +81,7 @@ const video2: MediaInfo = {
 
   width: 1280,
   height: 720,
-  duration: 10,
+  duration: 0,
 };
 
 const video3: MediaInfo = {
@@ -131,8 +127,9 @@ export const mediaSamples: MediaInfo[] = [
 ];
 
 export const mediaSamples2: MediaInfo[] = [
+  // youtube1,
   video2,
-  vimeo1,
+  vimeo1, 
   youtube2,
   image1,
   soundCloud1,

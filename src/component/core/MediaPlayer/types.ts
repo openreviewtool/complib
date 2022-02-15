@@ -5,7 +5,7 @@ export interface MediaInfo {
 
   width: number;
   height: number;
-  duration: number;
+  duration?: number;
 
   thumbnail_url?: string;
   title?: string;

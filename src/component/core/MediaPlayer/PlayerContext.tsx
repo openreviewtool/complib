@@ -9,6 +9,12 @@ interface PlayerContextInteface {
   playing: boolean;
   setPlaying: (p: boolean) => void;
 
+  muted?: boolean;
+  setMuted?: (m: boolean) => void;
+
+  fullScreen?: boolean;
+  setFullScreen?: (f: boolean) => void;
+
   seekTime?: number;
   setSeekTime: (t: number | undefined) => void;
 
@@ -28,6 +34,10 @@ export const PlayerContext = React.createContext<PlayerContextInteface>({
   setMediaIndex: () => {},
   playing: false,
   setPlaying: () => {},
+  muted: false,
+  setMuted: () => {},
+  fullScreen: false,
+  setFullScreen: () => {},
   seeking: false,
   setSeeking: () => {},
   seekTime: undefined,
@@ -39,13 +49,15 @@ export const PlayerContext = React.createContext<PlayerContextInteface>({
 });
 
 export const PlayerContextProvider: React.FC<{
-  value: Partial<PlayerContextInteface>;
-}> = ({
-  value: { mediaList = [], mediaIndex = 0, setMediaIndex = () => {} },
-  ...props
-}) => {
+  mediaList: MediaInfo[];
+  mediaIndex: number;
+  setMediaIndex: (i: number) => void;
+  fullScreen?: boolean;
+  setFullScreen?: (f: boolean)=>void;
+}> = (props) => {
   const [seekTime, setSeekTime] = useState<number>(); // seek time
   const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
   const [playerState, setPlayerState] = useState<PlayerState>({
     played: 0,
     loaded: 0,
@@ -53,25 +65,23 @@ export const PlayerContextProvider: React.FC<{
   });
 
   useEffect(() => {
-    // clear the seek time, this is ensure that user can repeatly seek the 
+    // clear the seek time, this is ensure that user can repeatly seek the
     // same location multiple times.
-    const to = window.setTimeout(setSeekTime, 500, undefined)
-    return ()=> window.clearTimeout(to)
+    const to = window.setTimeout(setSeekTime, 500, undefined);
+    return () => window.clearTimeout(to);
   }, [seekTime]);
 
-  const seekTimeReady =
-    (typeof playerState.loaded === 'number' && playerState.loaded !== 0) ||
-    (typeof playerState.played === 'number' && playerState.played !== 0);
+  const seekTimeReady = !!playerState.loaded;
 
   return (
     <PlayerContext.Provider
       value={{
+        ...props,
         seekTimeReady,
-        mediaList,
-        mediaIndex,
-        setMediaIndex,
         playing,
         setPlaying,
+        muted,
+        setMuted,       
         seekTime,
         setSeekTime,
         playerState,

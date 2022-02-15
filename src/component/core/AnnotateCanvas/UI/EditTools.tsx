@@ -11,6 +11,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FitScreenIcon from '@mui/icons-material/FitScreen';
 import { UserControllerInputs } from '../types';
 import { SketchPicker, ColorResult } from 'react-color';
 
@@ -34,6 +35,8 @@ export interface EditToolsProps {
 
   onDeleteSelection?: () => void;
   disableDeleteSelection?: boolean;
+
+  onFitScreen?: () => void;
 
   hide?: boolean;
 }
@@ -112,7 +115,7 @@ const EditTools: React.FC<EditToolsProps> = ({
                 showAnnotation: !uiState.showAnnotation,
               });
             }}
-            title='Show/Hide Annotation'
+            title="Show/Hide Annotation"
           >
             {showAnnotation ? <Visibility /> : <VisibilityOff />}
           </IconButton>
@@ -125,7 +128,7 @@ const EditTools: React.FC<EditToolsProps> = ({
               }}
               disabled={props.disableAddKey}
               onPointerDown={props.onAddKey}
-              title='Add Key'
+              title="Add Key"
             >
               <AddIcon />
             </IconButton>
@@ -139,7 +142,7 @@ const EditTools: React.FC<EditToolsProps> = ({
               }}
               disabled={props.disableRemoveKey}
               onPointerDown={props.onRemoveKey}
-              title='Remove Key'
+              title="Remove Key"
             >
               <RemoveIcon />
             </IconButton>
@@ -154,7 +157,7 @@ const EditTools: React.FC<EditToolsProps> = ({
               }}
               disabled={props.disableDeleteSelection}
               onPointerDown={props.onDeleteSelection}
-              title='Delete Selection'
+              title="Delete Selection"
             >
               <DeleteIcon />
             </IconButton>
@@ -167,7 +170,7 @@ const EditTools: React.FC<EditToolsProps> = ({
             onPointerDown={() => {
               setUIState({ ...uiState, mode: 'selection' });
             }}
-            title='Selection'
+            title="Selection"
           >
             <HighlightAltOutlined />
           </IconButton>
@@ -182,7 +185,7 @@ const EditTools: React.FC<EditToolsProps> = ({
             onPointerDown={() => {
               setUIState({ ...uiState, mode: 'draw', shape: 'Path' });
             }}
-            title='Pen'
+            title="Pen"
           >
             <Create />
           </IconButton>
@@ -199,7 +202,7 @@ const EditTools: React.FC<EditToolsProps> = ({
             onPointerDown={() => {
               setUIState({ ...uiState, mode: 'draw', shape: 'Ellipse' });
             }}
-            title='Ellipse'
+            title="Ellipse"
           >
             <CircleOutlined />
           </IconButton>
@@ -214,7 +217,7 @@ const EditTools: React.FC<EditToolsProps> = ({
             onPointerDown={() => {
               setUIState({ ...uiState, mode: 'draw', shape: 'Rect' });
             }}
-            title='Rectangle'
+            title="Rectangle"
           >
             <RectangleOutlined />
           </IconButton>
@@ -231,7 +234,7 @@ const EditTools: React.FC<EditToolsProps> = ({
             onPointerDown={() => {
               setUIState({ ...uiState, mode: 'draw', shape: 'Textbox' });
             }}
-            title='Text'
+            title="Text"
           >
             <TextFields />
           </IconButton>
@@ -239,7 +242,7 @@ const EditTools: React.FC<EditToolsProps> = ({
             style={{ color: uiState.color, opacity: 1.0 }}
             size={iconSize}
             onPointerDown={() => setShowColorPicker(true)}
-            title='Color'
+            title="Color"
           >
             <Circle />
           </IconButton>
@@ -252,10 +255,19 @@ const EditTools: React.FC<EditToolsProps> = ({
             onPointerDown={() => {
               setUIState({ ...uiState, mode: 'panZoom' });
             }}
-            title='Panzoom'
+            title="Panzoom"
           >
             <PanToolOutlined fontSize={'medium'} />
           </IconButton>
+          {/* <IconButton
+            style={{ color: themeColor }}
+            size={iconSize}
+            onPointerDown={props.onFitScreen}
+            title="Fit Content"
+          >
+            <FitScreenIcon />
+          </IconButton> */}
+
           <div
             style={{
               display: showColorPicker ? 'block' : 'none',
@@ -284,6 +296,5 @@ const EditTools: React.FC<EditToolsProps> = ({
     </div>
   );
 };
-
 
 export default EditTools;
