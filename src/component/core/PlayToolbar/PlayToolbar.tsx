@@ -30,7 +30,7 @@ export interface PlayDeckProps {
   onMuted?: () => void;
 
   fullScreen?: boolean;
-  onFullScreen?: (f: boolean) => void;
+  onFullScreen?: () => void;
 
   onSkipPrev?: () => void; // user enter the timeline
   disablePrev?: boolean;

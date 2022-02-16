@@ -13,7 +13,7 @@ interface PlayerContextInteface {
   setMuted?: (m: boolean) => void;
 
   fullScreen?: boolean;
-  setFullScreen?: (f: boolean) => void;
+  setFullScreen?: () => void;
 
   seekTime?: number;
   setSeekTime: (t: number | undefined) => void;
@@ -53,7 +53,7 @@ export const PlayerContextProvider: React.FC<{
   mediaIndex: number;
   setMediaIndex: (i: number) => void;
   fullScreen?: boolean;
-  setFullScreen?: (f: boolean)=>void;
+  setFullScreen?: ()=>void;
 }> = (props) => {
   const [seekTime, setSeekTime] = useState<number>(); // seek time
   const [playing, setPlaying] = useState(false);
