@@ -1,17 +1,17 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { normalizeScale } from '../core/PanZoom/utils';
 import {
   AnnotateElement,
   UserControllerInputs,
 } from '../core/AnnotateCanvas/types';
-import { PanZoomContext } from '../core/PanZoom/PanZoom';
 import AnnotateCanvasComp from '../core/AnnotateCanvas/AnnotateCanvas';
 import BrushTools from '../core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../core/AnnotateCanvas/UI/EditTools';
 import { MediaAnnotateContext } from '../core/AnnotateCanvas/MediaAnnotateContext';
 import { PlayerContext } from '../core/MediaPlayer/PlayerContext';
 import { getWholeMSecTime } from '../core/AnnotateCanvas/utils';
+import { PanZoomContext } from '../core/PanZoom/PanZoomContext';
 
 export const AnnotateCanvas = (props: {
   uiState: UserControllerInputs;
@@ -66,7 +66,7 @@ export const AnnotateTools = (props: {
   const { playerState, playing } = useContext(PlayerContext);
   const { isKey, keyTime, onAddKey, onRemoveKey, selection, onRemoveElements } =
     useContext(MediaAnnotateContext);
-  const { panZoom, containerSize } = useContext(PanZoomContext);
+  const { panZoom, setPanZoom, contentFitSpecRef } = useContext(PanZoomContext);
 
   return (
     <>
@@ -84,7 +84,10 @@ export const AnnotateTools = (props: {
         disableRemoveKey={!isKey}
         onDeleteSelection={() => onRemoveElements(selection)}
         disableDeleteSelection={selection.length === 0}
-        onFitScreen={() => {console.log('....panZoom', {panZoom, containerSize})}}
+        onFitScreen={() => {
+          setPanZoom(contentFitSpecRef.current.fitSpec);
+        }}
+        disableFitScreen={panZoom === contentFitSpecRef.current.fitSpec}
         hide={playing}
       />
     </>

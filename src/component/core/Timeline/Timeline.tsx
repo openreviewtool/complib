@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import './style.css';
-import { formatTimeDisplay } from './util';
+import { formatTimeDisplay } from './utils';
 
 export interface TimelineProps {
   className?: string; // to override styling
@@ -40,7 +40,6 @@ const Timeline: React.FC<TimelineProps> = ({
   ...props
 }) => {
   const progressDisplayTimeoutRef = useRef<number | null>(null);
-  const timelineRef = useRef<HTMLInputElement | null>(null);
   const [seekPercentage, setSeekPercentage] = useState<number>(0);
 
   const [innerCaptured, setInnerCaptured] = useState<boolean>(false);
@@ -83,14 +82,14 @@ const Timeline: React.FC<TimelineProps> = ({
     };
   }, []);
 
-  const handleScrubStart = (event: any) => {
+  const handleScrubStart = (e: any) => {
     if (onTimelineCaptured) onTimelineCaptured(true);
-    fireSeekEvent(event)
-  };
-
-  const handleScrubEnd = (event: any) => {
-    handleScrubMoveFinish(event);
-    if (onTimelineCaptured) onTimelineCaptured(false);
+    fireSeekEvent(e);
+    // const isPointerDownEvent = e.type && e.type === 'pointerdown';
+    // // have the canvas capture the mouse events until it's released
+    // if (isPointerDownEvent) {
+    //   e.currentTarget.setPointerCapture(e.pointerId);
+    // }
   };
 
   /**
@@ -99,9 +98,14 @@ const Timeline: React.FC<TimelineProps> = ({
    * 2) click anywhere on the timeline.
    */
   const handleScrubMove = (e: any) => {
-    if (!timelineCaptured) return
-    
-    fireSeekEvent(e)
+    if (!timelineCaptured) return;
+
+    fireSeekEvent(e);
+  };
+
+  const handleScrubEnd = (event: any) => {
+    handleScrubMoveFinish(event);
+    if (onTimelineCaptured) onTimelineCaptured(false);
   };
 
   const handleScrubMoveFinish = (e: any) => {
@@ -116,7 +120,6 @@ const Timeline: React.FC<TimelineProps> = ({
   const fireSeekEvent = (e: any) => {
     const isPointerEvent = e.type && e.type.startsWith('pointer');
     const isPointerMoveEvent = e.type && e.type === 'pointermove';
-    const isPointerDownEvent = e.type && e.type === 'pointerdown';
 
     if (isPointerMoveEvent) {
       if (props.onPointerMove) {
@@ -131,13 +134,12 @@ const Timeline: React.FC<TimelineProps> = ({
 
     e.stopPropagation();
 
-    // have the canvas capture the mouse events until it's released
-    if (isPointerDownEvent) {
-      e.currentTarget.setPointerCapture(e.pointerId);
+    const bounds = e.target.getBoundingClientRect();
+    if (bounds.width === 0) {
+      console.warn('bounds for timeline is 0')
+      return;
     }
 
-    // const frameLength = absoluteRanges[absoluteRanges.length - 1][1];
-    const bounds = timelineRef.current!.getBoundingClientRect();
     const totalWidth = bounds.width;
 
     let offset =
@@ -180,7 +182,7 @@ const Timeline: React.FC<TimelineProps> = ({
         seekFrameIndex,
       );
     }
-  }
+  };
 
   const playHead = (
     <>
@@ -246,10 +248,8 @@ const Timeline: React.FC<TimelineProps> = ({
   );
 
   return (
-    // <div className={classNames('timeline', props.className)}>
     <div className={'timeline'}>
       <div
-        ref={timelineRef}
         className="timeline__scrollzone"
         onPointerMove={handleScrubMove}
         onTouchMove={handleScrubMove}

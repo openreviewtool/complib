@@ -1,16 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-
-import PanZoom from '../../component/core/PanZoom';
+import React, { useState } from 'react';
 
 import {
+  PanZoomContainer,
   PanZoomContent,
   PanZoomOverlay,
 } from '../../component/core/PanZoom/PanZoom';
 import { mediaSamples2 } from '../testdata/mediaSamples';
 import { sampleMediaAnnotateList } from '../testdata/annotationSamples';
-
-import * as playerComposer from '../../component/composer/playerComposer';
-import * as annotateComposer from '../../component/composer/annotateComposer';
 
 import { DEFAULT_UI_ATTRS } from '../../component/core/AnnotateCanvas/defaults';
 import {
@@ -22,6 +18,10 @@ import { PlayerContextProvider } from '../../component/core/MediaPlayer/PlayerCo
 import { MediaAnnotationContextProvider } from '../../component/core/AnnotateCanvas/MediaAnnotateContext';
 import { button } from '@storybook/addon-knobs';
 import { useFullScreen } from '../../component/utils/browser';
+
+import * as playerComposer from '../../component/composer/playerComposer';
+import * as annotateComposer from '../../component/composer/annotateComposer';
+import { PanZoomContextProvider } from '../../component/core/PanZoom/PanZoomContext';
 
 const story = {
   title: 'All Together Now',
@@ -43,13 +43,11 @@ const hintsAnnotateOembed = (
   </>
 );
 
-
-
 export const PanZoomAnnotateOembed = (): JSX.Element => {
   const nativeControls = false;
   const [mediaIndex, setMediaIndex] = useState(0);
 
-  const {fullScreenElement, fullScreen, setFullScreen} = useFullScreen();
+  const { fullScreenElement, fullScreen, setFullScreen } = useFullScreen();
 
   button('Log Annotation to Console', () => {
     console.log('Annotation state: ', annotationList[mediaIndex]);
@@ -80,8 +78,8 @@ export const PanZoomAnnotateOembed = (): JSX.Element => {
               setAnnotationList(newAnnotationList);
             }}
           >
-            <div>
-              <PanZoom disabled={uiState.mode !== 'panZoom'}>
+            <PanZoomContextProvider>
+              <PanZoomContainer disabled={uiState.mode !== 'panZoom'}>
                 <PanZoomContent>
                   <playerComposer.Player controls={nativeControls} />
                 </PanZoomContent>
@@ -91,13 +89,13 @@ export const PanZoomAnnotateOembed = (): JSX.Element => {
                     setUiState={setUiState}
                   />
                 </PanZoomOverlay>
-              </PanZoom>
-              {!nativeControls && <playerComposer.PlayDeck />}
+              </PanZoomContainer>
               <annotateComposer.AnnotateTools
                 uiState={uiState}
                 setUiState={setUiState}
               />
-            </div>
+            </PanZoomContextProvider>
+            {!nativeControls && <playerComposer.PlayDeck />}
           </MediaAnnotationContextProvider>
         </PlayerContextProvider>
       </div>

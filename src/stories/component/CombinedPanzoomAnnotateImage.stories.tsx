@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { select} from '@storybook/addon-knobs';
+import { select } from '@storybook/addon-knobs';
 import PanZoom from '../../component/core/PanZoom';
 import AnnotateCanvas from '../../component/core/AnnotateCanvas/AnnotateCanvas';
 import { sampleAnnotations } from '../testdata/annotationSamples';
@@ -59,52 +59,55 @@ export const AnnotatePanZoomImage = (): JSX.Element => {
         <PanZoomContent
           render={(setContentSize) => (
             <img
-              style={{ pointerEvents: 'none', userSelect: 'none' }}
+              style={{
+                pointerEvents: 'none',
+                userSelect: 'none',
+                objectFit: 'contain',
+              }}
               src={videoUrlKnob}
-              onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
+              onLoad={(e: React.SyntheticEvent<HTMLImageElement>) =>
                 setContentSize({
                   width: e.currentTarget.width,
                   height: e.currentTarget.height,
-                });
-              }}
+                })
+              }
             />
           )}
         />
         {uiState.showAnnotation && (
           <PanZoomOverlay
             pointerEventPassthrough={uiState.mode === 'panZoom'}
-            render={(panZoom, contentSize, containerSize) => {
-              return (
-                <AnnotateCanvas
-                  elements={elementsState}
-                  width={containerSize.width}
-                  height={containerSize.height}
-                  panZoom={{
-                    ...panZoom,
-                    scale: normalizeScale(
-                      contentSize,
-                      panZoom.scale,
-                      resolutionKnob,
-                    ),
-                  }}
-                  uiState={uiState}
-                  setUiState={setUiState}
-                  onChangeElement={(elementUpdates) =>
-                    elementsDispatcher({
-                      type: 'changeElement',
-                      elementUpdates,
-                    })
-                  }
-                  onAddElement={(newElement) => {
-                    elementsDispatcher({ type: 'addElement', newElement });
-                  }}
-                  disabled={uiState.mode === 'panZoom'}
-                />
-              );
-            }}
+            render={(panZoom, contentSize, containerSize) => (
+              <AnnotateCanvas
+                elements={elementsState}
+                width={containerSize.width}
+                height={containerSize.height}
+                panZoom={{
+                  ...panZoom,
+                  scale: normalizeScale(
+                    contentSize,
+                    panZoom.scale,
+                    resolutionKnob,
+                  ),
+                }}
+                uiState={uiState}
+                setUiState={setUiState}
+                onChangeElement={(elementUpdates) =>
+                  elementsDispatcher({
+                    type: 'changeElement',
+                    elementUpdates,
+                  })
+                }
+                onAddElement={(newElement) => {
+                  elementsDispatcher({ type: 'addElement', newElement });
+                }}
+                disabled={uiState.mode === 'panZoom'}
+              />
+            )}
           />
         )}
       </PanZoom>
+
       <BrushTools uiState={uiState} setUIState={setUiState} />
       <EditTools uiState={uiState} setUIState={setUiState} />
     </StoryHint>

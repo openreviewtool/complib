@@ -1,24 +1,15 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
-import {
-  useMonitorResizable,
-  usePointerPan,
-  useTouchPanZoom,
-  useWheelZoom,
-} from './hooks';
-import { PanZoomBounds, PanZoomSpec, RectSize } from './types';
+import React, { useContext, useLayoutEffect } from 'react';
+import { usePointerPan, useTouchPanZoom, useWheelZoom } from './hooks';
+import { PanZoomSpec, RectSize } from './types';
 import { getContentFitSpec } from './utils';
 
-import './style.css';
 import {
   usePreventDefaultBrowserTouch,
   usePreventDefaultBrowserWheel,
 } from '../../utils/browser';
+import { PanZoomContext, PanZoomContextProvider } from './PanZoomContext';
+
+import './style.css';
 
 interface PanZoomProps {
   disabled?: boolean;
@@ -26,24 +17,13 @@ interface PanZoomProps {
 
   // zoom factor relative to the container rather than the image resolution.
   zoomBounds?: { min: number; max: number };
-
-  onPanZoom?: (p: PanZoomSpec) => void;
 }
-
-export const PanZoomContext = React.createContext({
-  inProgress: false,
-  contentSize: { width: 10, height: 10 },
-  setContentSize: (_s: RectSize) => {},
-  containerSize: { width: 10, height: 10 },
-  panZoom: { x: 0, y: 0, scale: 1.0 },
-});
 
 export interface PanZoomOverlayProps {
   render?: (
     panZoom: PanZoomSpec,
     contentSize: RectSize,
     containerSize: RectSize,
-    inProgress: boolean,
   ) => JSX.Element;
   pointerEventPassthrough?: boolean;
   children?: JSX.Element;
@@ -58,15 +38,18 @@ export const PanZoomOverlay = (props: PanZoomOverlayProps) => {
       }}
     >
       {props.render
-        ? props.render(
-            ctx.panZoom,
-            ctx.contentSize,
-            ctx.containerSize,
-            ctx.inProgress,
-          )
+        ? props.render(ctx.panZoom, ctx.contentSize, ctx.containerSize)
         : props.children}
     </div>
   );
+};
+
+/**
+ * content that consume the context but not  affected by the panzoom.
+ * @param props
+ */
+export const PanZoomPassive = (props: { children: JSX.Element }) => {
+  return props.children;
 };
 
 export interface PanZoomContentProps {
@@ -92,27 +75,33 @@ export const PanZoomContent = (props: PanZoomContentProps) => {
   );
 };
 
-const PanZoom: React.FunctionComponent<PanZoomProps> = ({
+const PanZoomWithContext: React.FC<PanZoomProps> = (props) => {
+  return (
+    <PanZoomContextProvider>
+      <PanZoomContainer {...props}>
+        <div>{props.children}</div>
+      </PanZoomContainer>
+    </PanZoomContextProvider>
+  );
+};
+
+export const PanZoomContainer: React.FC<PanZoomProps> = ({
   disabled = false,
   zoomBounds = { min: 0.5, max: 5 },
 
   ...props
 }) => {
-  const [panZoomState, setPanZoomState] = useState({ x: 0, y: 0, scale: 1.0 });
-  const contentFitSpecRef = useRef<PanZoomBounds>({
-    fitSpec: { x: 0, y: 0, scale: 1.0 },
-    min: 1,
-    max: 1,
-  });
-
-  const topContainerRef = React.useRef<HTMLElement>(null);
+  const {
+    topContainerRef,
+    containerSize,
+    contentSize,
+    panZoom: panZoomState,
+    setPanZoom: setPanZoomState,
+    contentFitSpecRef,
+  } = useContext(PanZoomContext);
 
   usePreventDefaultBrowserTouch(topContainerRef);
   usePreventDefaultBrowserWheel(topContainerRef);
-
-  // if either the container or content resize, center fit the content;
-  const containerSize = useMonitorResizable(topContainerRef);
-  const [contentSize, setContentSize] = useState({ width: 10, height: 10 });
 
   useLayoutEffect(() => {
     const fitSpec = getContentFitSpec(contentSize, containerSize);
@@ -130,19 +119,12 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
     panZoomState,
     setPanZoomState,
     contentFitSpecRef,
-    // disabled,
   );
   const { inProgress: pointerPanCaptured, ...pointerHandler } = usePointerPan(
     panZoomState,
     setPanZoomState,
     disabled || touchCaptured,
   );
-
-  useEffect(() => {
-    if (props.onPanZoom) {
-      props.onPanZoom(panZoomState);
-    }
-  }, [panZoomState]);
 
   const transformWrapper = (
     <div
@@ -152,20 +134,10 @@ const PanZoom: React.FunctionComponent<PanZoomProps> = ({
       {...wheelHandler}
       {...pointerHandler}
     >
-      <PanZoomContext.Provider
-        value={{
-          panZoom: panZoomState,
-          inProgress: touchCaptured,
-          containerSize,
-          contentSize,
-          setContentSize,
-        }}
-      >
-        {props.children}
-      </PanZoomContext.Provider>
+      {props.children}
     </div>
   );
   return transformWrapper;
 };
 
-export default PanZoom;
+export default PanZoomWithContext;

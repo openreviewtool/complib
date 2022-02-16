@@ -42,11 +42,12 @@ const RPlayer: React.FC<RPlayerProps> = ({
           const played = reactPlayerRef.current.getCurrentTime();
           const loaded = reactPlayerRef.current.getSecondsLoaded();
           const duration = reactPlayerRef.current.getDuration();
-
           if (
             played !== lastBroadcastTimeRef.current?.played ||
-            loaded !== lastBroadcastTimeRef.current?.loaded
-            ) {
+            loaded !== lastBroadcastTimeRef.current?.loaded ||
+            duration !== lastBroadcastTimeRef.current?.duration
+          ) {
+            
             onProgressHiFi({loaded, played, duration});
           }
           lastBroadcastTimeRef.current = { played, loaded, duration };

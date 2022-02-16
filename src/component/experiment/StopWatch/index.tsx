@@ -6,9 +6,7 @@ interface StopWatchProps {
   displayTimeInputRef?: React.RefObject<HTMLInputElement>;
 }
 
-//const StopWatch = (props: StopWatchProps) => {
 const StopWatch: React.FC<StopWatchProps> = ({text,color,displayTimeInputRef}) => {
-  // const [interval, setInterval] = React.useState<number | null>(null)
   const [displayTime, setDisplayTime] = React.useState<string>('');
   const displayTimer = React.useRef<number | null>(null);
   const startTime = React.useRef<Date | null>(null);

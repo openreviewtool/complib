@@ -8,7 +8,7 @@ export const sampleRectElement: AnnotateElement = {
 
   fill: '',
   stroke: 'pink',
-  strokeWidth: 7,
+  strokeWidth: 37,
 
   width: 100,
   height: 100,
@@ -18,7 +18,7 @@ export const sampleRectElement2: AnnotateElement = {
   ...sampleRectElement,
   id: 'rect2_id',
   stroke: 'Indigo',
-  strokeWidth: 9,
+  strokeWidth: 19,
   transformMatrix: [1, 0, 0, 1, 180, 140],
   width: 150,
   height: 100,
@@ -30,7 +30,7 @@ export const samplePathElement: AnnotateElement = {
   transformMatrix: [1, 0, 0, 1, 290, 150],
 
   stroke: 'DodgerBlue',
-  strokeWidth: 7,
+  strokeWidth: 4,
   fill: '',
 
   path: 'M 0 0 L 200 100 L 170 200 z',
@@ -50,7 +50,7 @@ export const sampleCircleElement: AnnotateElement = {
 export const sampleTextboxElement: AnnotateElement = {
   id: 'textbox_id',
   etype: 'Textbox',
-  transformMatrix: [1, 0, 0, 1, 300, 200],
+  transformMatrix: [1, 0, 0, 1, 300, 400],
 
   text: 'hello, world!',
   fontSize: 50,

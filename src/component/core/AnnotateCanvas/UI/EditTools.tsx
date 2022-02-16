@@ -37,6 +37,7 @@ export interface EditToolsProps {
   disableDeleteSelection?: boolean;
 
   onFitScreen?: () => void;
+  disableFitScreen?: boolean;
 
   hide?: boolean;
 }
@@ -259,15 +260,20 @@ const EditTools: React.FC<EditToolsProps> = ({
           >
             <PanToolOutlined fontSize={'medium'} />
           </IconButton>
-          {/* <IconButton
-            style={{ color: themeColor }}
-            size={iconSize}
-            onPointerDown={props.onFitScreen}
-            title="Fit Content"
-          >
-            <FitScreenIcon />
-          </IconButton> */}
-
+          {props.onFitScreen && (
+            <IconButton
+              disabled={props.disableFitScreen}
+              style={{
+                color: themeColor,
+                opacity: props.disableFitScreen ? 0.2 : 1.0,
+              }}
+              size={iconSize}
+              onPointerDown={props.onFitScreen}
+              title="Fit Content"
+            >
+              <FitScreenIcon />
+            </IconButton>
+          )}
           <div
             style={{
               display: showColorPicker ? 'block' : 'none',

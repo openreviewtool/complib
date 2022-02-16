@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import PlayDeck, { LOOP_TYPE_LIST } from '../../component/core/PlayDeck/PlayDeck';
+import PlayToolbar from '../../component/core/PlayToolbar';
+import { LOOP_TYPE_LIST } from '../../component/core/PlayToolbar/PlayToolbar';
 import Timeline from '../../component/core/Timeline';
 
 export default {
@@ -69,7 +70,7 @@ export const WithPlayControls = (): JSX.Element => {
   };
 
   const playDeck = (
-    <PlayDeck
+    <PlayToolbar
       playing={playing}
       onPlay={() => {
         setPlaying((p) => !p);

@@ -2,9 +2,7 @@ import React from 'react';
 
 import { select, boolean } from '@storybook/addon-knobs';
 import PanZoom from '../../component/core/PanZoom';
-import {
-  PanZoomContent,
-} from '../../component/core/PanZoom/PanZoom';
+import { PanZoomContent } from '../../component/core/PanZoom/PanZoom';
 import { artUrls } from '../testdata/mediaSamples';
 import { StoryHint } from './utils';
 

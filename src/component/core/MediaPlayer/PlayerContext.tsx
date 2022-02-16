@@ -71,7 +71,7 @@ export const PlayerContextProvider: React.FC<{
     return () => window.clearTimeout(to);
   }, [seekTime]);
 
-  const seekTimeReady = !!playerState.loaded;
+  const seekTimeReady = !!playerState.loaded || (!!playerState.played && playerState.played!==0);
 
   return (
     <PlayerContext.Provider

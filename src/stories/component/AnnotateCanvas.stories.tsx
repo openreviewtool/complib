@@ -19,8 +19,8 @@ export const Default = (): JSX.Element => {
     <div>
       <AnnotateCanvas
         elements={sampleAnnotations}
-        width={480}
-        height={480}
+        width={640}
+        height={640}
         backgroundColor={'SlateGray'}
       />
     </div>
@@ -79,8 +79,8 @@ export const Edit = (): JSX.Element => {
       <AnnotateCanvas
         elements={elementsState}
         uiState={uiState}
-        width={480}
-        height={480}
+        width={640}
+        height={640}
         backgroundColor={'SlateGray'}
         onChangeElement={(elementUpdates) =>
           elementsDispatcher({ type: 'changeElement', elementUpdates })
@@ -107,8 +107,8 @@ export const WithBrushControls = (): JSX.Element => {
       {uiState.showAnnotation && (
         <AnnotateCanvas
           elements={elementsState}
-          width={480}
-          height={480}
+          width={640}
+          height={640}
           backgroundColor={'SlateGray'}
           uiState={uiState}
           setUiState={setUiState}

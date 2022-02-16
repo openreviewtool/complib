@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { MediaAnnotateContext } from '../core/AnnotateCanvas/MediaAnnotateContext';
 import { findNextKeyTime, findPrevKeyTime } from '../core/AnnotateCanvas/utils';
-import { PanZoomContext } from '../core/PanZoom/PanZoom';
 import { normalizeSize } from '../core/PanZoom/utils';
 import PlayToolbarComp from '../core/PlayToolbar';
 import TimelineComp from '../core/Timeline/Timeline';
-import { PlayerContext } from '../core/MediaPlayer/PlayerContext';
 import RPlayer from '../core/MediaPlayer/RPlayer';
+import { PlayerContext } from '../core/MediaPlayer/PlayerContext';
+import { PanZoomContext } from '../core/PanZoom/PanZoomContext';
 
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 

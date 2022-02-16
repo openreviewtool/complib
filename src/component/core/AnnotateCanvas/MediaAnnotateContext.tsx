@@ -9,7 +9,7 @@ import React, {
 import { AnnotateElement, TimedSketch } from './types';
 import timedSketchActionReducer from './timedSketchActionReducer';
 import { PlayerContext } from '../MediaPlayer/PlayerContext';
-import { formatTimeDisplay } from '../Timeline/util';
+import { formatTimeDisplay } from '../Timeline/utils';
 
 interface MediaAnnotateContextInteface {
   annotateTimeList: number[];
