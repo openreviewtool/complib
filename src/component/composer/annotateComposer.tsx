@@ -9,7 +9,7 @@ import AnnotateCanvasComp from '../core/AnnotateCanvas/AnnotateCanvas';
 import BrushTools from '../core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../core/AnnotateCanvas/UI/EditTools';
 import { MediaAnnotateContext } from '../core/AnnotateCanvas/MediaAnnotateContext';
-import { PlayerContext } from '../core/MediaPlayer/PlayerContext';
+import { PlaybackContext, PlayerContext } from '../core/MediaPlayer/PlayerContext';
 import { getWholeMSecTime } from '../core/AnnotateCanvas/utils';
 import { PanZoomContext } from '../core/PanZoom/PanZoomContext';
 
@@ -63,7 +63,8 @@ export const AnnotateTools = (props: {
   uiState: UserControllerInputs;
   setUiState: (u: UserControllerInputs) => void;
 }) => {
-  const { playerState, playing } = useContext(PlayerContext);
+  const { playing } = useContext(PlayerContext);
+  const { playerState } = useContext(PlaybackContext);
   const { isKey, keyTime, onAddKey, onRemoveKey, selection, onRemoveElements } =
     useContext(MediaAnnotateContext);
   const { panZoom, setPanZoom, contentFitSpecRef } = useContext(PanZoomContext);

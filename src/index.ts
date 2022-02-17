@@ -1,12 +1,9 @@
-
 import AnnotateCanvas from './component/core/AnnotateCanvas';
 import { MediaAnnotationContextProvider } from './component/core/AnnotateCanvas/MediaAnnotateContext';
 import { PlayerContextProvider } from './component/core/MediaPlayer/PlayerContext';
 import { PanZoomContextProvider } from './component/core/PanZoom/PanZoomContext';
-
-
-import PanZoom from './component/core/PanZoom';
-import {
+import PanZoom, {
+  PanZoomContainer,
   PanZoomContent,
   PanZoomOverlay,
 } from './component/core/PanZoom/PanZoom';
@@ -25,15 +22,13 @@ export {
   AnnotateElementType,
   AnnotateCanvas,
   PanZoom,
+  PanZoomContainer,
   PanZoomContent,
   PanZoomOverlay,
-  
   PlayerContextProvider,
   MediaAnnotationContextProvider,
   PanZoomContextProvider,
-  
   playerComposer,
   annotateComposer,
-
   browser,
 };

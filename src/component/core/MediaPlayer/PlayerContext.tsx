@@ -21,11 +21,13 @@ interface PlayerContextInteface {
   seeking?: boolean;
   setSeeking?: (s: boolean) => void;
 
+  seekTimeReady: boolean;
+}
+
+interface PlaybackContextInteface {
   // in seconds
   playerState: { played: number; loaded: number; duration: number };
   setPlayerState: (p: PlayerState) => void;
-
-  seekTimeReady: boolean;
 }
 
 export const PlayerContext = React.createContext<PlayerContextInteface>({
@@ -42,10 +44,13 @@ export const PlayerContext = React.createContext<PlayerContextInteface>({
   setSeeking: () => {},
   seekTime: undefined,
   setSeekTime: () => {},
-  playerState: { played: 0, loaded: 0, duration: 0 },
-  setPlayerState: () => {},
 
   seekTimeReady: false,
+});
+
+export const PlaybackContext = React.createContext<PlaybackContextInteface>({
+  playerState: { played: 0, loaded: 0, duration: 0 },
+  setPlayerState: () => {},
 });
 
 export const PlayerContextProvider: React.FC<{
@@ -53,7 +58,7 @@ export const PlayerContextProvider: React.FC<{
   mediaIndex: number;
   setMediaIndex: (i: number) => void;
   fullScreen?: boolean;
-  setFullScreen?: ()=>void;
+  setFullScreen?: () => void;
 }> = (props) => {
   const [seekTime, setSeekTime] = useState<number>(); // seek time
   const [playing, setPlaying] = useState(false);
@@ -71,7 +76,8 @@ export const PlayerContextProvider: React.FC<{
     return () => window.clearTimeout(to);
   }, [seekTime]);
 
-  const seekTimeReady = !!playerState.loaded || (!!playerState.played && playerState.played!==0);
+  const seekTimeReady =
+    !!playerState.loaded || (!!playerState.played && playerState.played !== 0);
 
   return (
     <PlayerContext.Provider
@@ -81,14 +87,19 @@ export const PlayerContextProvider: React.FC<{
         playing,
         setPlaying,
         muted,
-        setMuted,       
+        setMuted,
         seekTime,
         setSeekTime,
-        playerState,
-        setPlayerState,
       }}
     >
-      {props.children}
+      <PlaybackContext.Provider
+        value={{
+          playerState,
+          setPlayerState,
+        }}
+      >
+        {props.children}
+      </PlaybackContext.Provider>
     </PlayerContext.Provider>
   );
 };

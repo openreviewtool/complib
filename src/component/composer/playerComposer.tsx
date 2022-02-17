@@ -5,7 +5,10 @@ import { normalizeSize } from '../core/PanZoom/utils';
 import PlayToolbarComp from '../core/PlayToolbar';
 import TimelineComp from '../core/Timeline/Timeline';
 import RPlayer from '../core/MediaPlayer/RPlayer';
-import { PlayerContext } from '../core/MediaPlayer/PlayerContext';
+import {
+  PlaybackContext,
+  PlayerContext,
+} from '../core/MediaPlayer/PlayerContext';
 import { PanZoomContext } from '../core/PanZoom/PanZoomContext';
 
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -14,6 +17,7 @@ import './playerComposerStyle.css';
 
 export const Player = (props: { controls?: boolean }) => {
   const ctx = React.useContext(PlayerContext);
+  const playbackCtx = React.useContext(PlaybackContext);
   const { setContentSize } = React.useContext(PanZoomContext);
 
   const { type: mediaType } = ctx.mediaList[ctx.mediaIndex];
@@ -48,7 +52,7 @@ export const Player = (props: { controls?: boolean }) => {
         muted={ctx.muted}
         onPlay={onPlayHandle}
         onPause={onPauseHandle}
-        onProgressHiFi={ctx.setPlayerState}
+        onProgressHiFi={playbackCtx.setPlayerState}
         seekTime={ctx.seekTime}
         onEnded={onPauseHandle}
         controls={props.controls}
@@ -61,16 +65,19 @@ const configZeroClamp = { clipDuration: 30, threshold: 1 };
 
 export const Timeline = () => {
   const ctx = React.useContext(PlayerContext);
+  const playbackCtx = React.useContext(PlaybackContext);
   const mediaAnnCtx = React.useContext(MediaAnnotateContext);
   const duration =
-    ctx.mediaList[ctx.mediaIndex].duration || ctx.playerState.duration;
+    ctx.mediaList[ctx.mediaIndex].duration || playbackCtx.playerState.duration;
+  const isImage = ctx.mediaList[ctx.mediaIndex].type === 'image';
+  const showTimeline = !!duration && !isImage
 
   return (
     <div style={{ display: ctx.seekTimeReady ? undefined : 'none' }}>
-      {!!duration && (
+      { showTimeline && (
         <TimelineComp
-          currentTime={ctx.playerState.played}
-          currentCached={ctx.playerState.loaded}
+          currentTime={playbackCtx.playerState.played}
+          currentCached={playbackCtx.playerState.loaded}
           duration={duration}
           onTimelineSeek={ctx.setSeekTime}
           timelineCaptured={ctx.seeking}
@@ -95,11 +102,11 @@ const PlayDeckGradientBackground = () => {
   );
 };
 
-const PlayButton = () => {
+const HoverPlayButton = () => {
   const ctx = React.useContext(PlayerContext);
   const { type: mediaType } = ctx.mediaList[ctx.mediaIndex];
 
-  const showButton = !ctx.seekTimeReady && mediaType === 'video';
+  const showButton = !ctx.seekTimeReady && mediaType !== 'image';
 
   return (
     <div
@@ -119,43 +126,55 @@ const PlayButton = () => {
 
 export const PlayToolbar = () => {
   const ctx = React.useContext(PlayerContext);
+  const playbackCtx = React.useContext(PlaybackContext);
   const mediaAnnoCtx = React.useContext(MediaAnnotateContext);
   const markerList = mediaAnnoCtx.annotateTimeList || [];
+  const isImage = ctx.mediaList[ctx.mediaIndex].type === 'image';
 
   return (
     <PlayToolbarComp
       iconSize={'large'}
+      //
       playing={ctx.playing}
       onPlay={() => ctx.setPlaying(!ctx.playing)}
+      disablePlay={isImage}
+      //
       muted={ctx.muted}
       onMuted={() => {
         if (ctx.setMuted) ctx.setMuted(!ctx.muted);
       }}
+      disableMute={isImage}
+      //
       fullScreen={ctx.fullScreen}
       onFullScreen={ctx.setFullScreen}
+      //
       onSkipNext={() => {
         ctx.setMediaIndex((ctx.mediaIndex + 1) % ctx.mediaList.length);
       }}
+      disableNext={ctx.mediaList.length <= 1}
       onSkipPrev={() => {
         ctx.setMediaIndex(
           (ctx.mediaIndex - 1 + ctx.mediaList.length) % ctx.mediaList.length,
         );
       }}
-      onNextAnnotation={
-        ctx.seekTimeReady
-          ? () => {
-              const nextKey = findNextKeyTime(
-                markerList,
-                ctx.playerState.played,
-              );
-              if (nextKey !== null) ctx.setSeekTime(nextKey);
-            }
-          : undefined
-      }
+      disablePrev={ctx.mediaList.length <= 1}
+      //
+      onNextAnnotation={() => {
+        const nextKey = findNextKeyTime(
+          markerList,
+          playbackCtx.playerState.played,
+        );
+        if (nextKey !== null) ctx.setSeekTime(nextKey);
+      }}
+      disableNextAnnotation={!ctx.seekTimeReady || isImage}
       onPrevAnnotation={() => {
-        const prevKey = findPrevKeyTime(markerList, ctx.playerState.played);
+        const prevKey = findPrevKeyTime(
+          markerList,
+          playbackCtx.playerState.played,
+        );
         if (prevKey !== null) ctx.setSeekTime(prevKey);
       }}
+      disablePrevAnnotation={!ctx.seekTimeReady || isImage}
     />
   );
 };
@@ -165,7 +184,7 @@ export const PlayDeck = () => {
     <>
       <div className="playdeck__playbutton_layout">
         <PlayDeckGradientBackground />
-        <PlayButton />
+        <HoverPlayButton />
       </div>
       <div className="playdeck__toolbar">
         <Timeline />

@@ -13,14 +13,17 @@ function useCustomSelectCorners(
     fabricCanvasRef.current.on('selection:cleared', handle_selection);
   }, []);
 
-  const handle_selection = (event: fSelectionEvent) => {
-    if (event.target) {
-      const fObj = event.target as fObjExtend;
-      setSelectionControls(event.target, fObj.etype, selectionConfig);
+  // drag bound selection no longer create an event, hence can't query
+  // selection that way, so hence use function getActiveObject.
+  const handle_selection = () => {
+    const activeObj = fabricCanvasRef.current.getActiveObject() as fObjExtend
+
+    if (activeObj) {
+      setSelectionControls(activeObj, activeObj.etype, selectionConfig);
 
       // multiselections
-      if (fObj._objects) {
-        const selection = fObj._objects;
+      if (activeObj._objects) {
+        const selection = activeObj._objects;
         selection.forEach((s) =>
           setSelectionControls(s, s.etype, selectionConfig),
         );

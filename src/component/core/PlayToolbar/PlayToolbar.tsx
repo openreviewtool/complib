@@ -25,9 +25,11 @@ export interface PlayDeckProps {
 
   playing?: boolean;
   onPlay?: () => void;
+  disablePlay?: boolean;
 
   muted?: boolean;
   onMuted?: () => void;
+  disableMute?: boolean;
 
   fullScreen?: boolean;
   onFullScreen?: () => void;
@@ -45,12 +47,20 @@ export interface PlayDeckProps {
   iconSize?: 'large' | 'medium' | 'small' | undefined;
 
   onPrevAnnotation?: () => void;
+  disablePrevAnnotation?: boolean;
   onNextAnnotation?: () => void;
+  disableNextAnnotation?: boolean;
 }
 
 const PlayDeck: React.FC<PlayDeckProps> = ({
+  disablePlay = false,
+  disableMute = false,
+
   disablePrev = false,
   disableNext = false,
+
+  disableNextAnnotation = false,
+  disablePrevAnnotation = false,
 
   themeColor = 'white',
   iconSize = undefined,
@@ -64,7 +74,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
           size={iconSize}
           onClick={props.onSkipPrev}
           disabled={disablePrev}
-          style={{ color: themeColor }}
+          style={{ color: themeColor, opacity: disablePrev ? 0.2 : 1 }}
           title={'Skip prev'}
         >
           <SkipPreviousIcon fontSize={iconSize} />
@@ -73,7 +83,8 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
       <IconButton
         size={iconSize}
         onClick={props.onPlay}
-        style={{ color: themeColor }}
+        disabled={disablePlay}
+        style={{ color: themeColor, opacity: disablePlay ? 0.2 : 1 }}
         title={'Play'}
       >
         {props.playing ? (
@@ -87,7 +98,7 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
           size={iconSize}
           onClick={props.onSkipNext}
           disabled={disableNext}
-          style={{ color: themeColor }}
+          style={{ color: themeColor, opacity: disableNext ? 0.2 : 1 }}
           title={'Skip next'}
         >
           <SkipNextIcon fontSize={iconSize} />
@@ -118,7 +129,11 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
           <IconButton
             size={iconSize}
             onClick={props.onPrevAnnotation}
-            style={{ color: themeColor }}
+            style={{
+              color: themeColor,
+              opacity: disablePrevAnnotation ? 0.2 : 1,
+            }}
+            disabled={disablePrevAnnotation}
             title={'Prev annotation'}
           >
             <ChevronLeftIcon fontSize={iconSize} />
@@ -126,7 +141,11 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
           <IconButton
             size={iconSize}
             onClick={props.onNextAnnotation}
-            style={{ color: themeColor }}
+            style={{
+              color: themeColor,
+              opacity: disableNextAnnotation ? 0.2 : 1,
+            }}
+            disabled={disableNextAnnotation}
             title={'Next annotation'}
           >
             <ChevronRightIcon fontSize={iconSize} />
@@ -137,12 +156,17 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
       <div style={{ flexGrow: 1 }} />
 
       {props.onMuted && (
-        <IconButton size={iconSize} onClick={props.onMuted} title="Toggle Mute">
-          {props.muted ? (
-            <VolumeOffIcon style={{ color: 'red' }} />
-          ) : (
-            <VolumeUpIcon style={{ color: themeColor }} />
-          )}
+        <IconButton
+          disabled={disableMute}
+          size={iconSize}
+          onClick={props.onMuted}
+          title="Toggle Mute"
+          style={{
+            color: props.muted ? 'red' : themeColor,
+            opacity: disableMute ? 0.2 : 1,
+          }}
+        >
+          {props.muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
         </IconButton>
       )}
 

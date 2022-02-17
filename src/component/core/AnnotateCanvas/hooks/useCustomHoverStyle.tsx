@@ -4,6 +4,9 @@ import { IEvent } from 'fabric/fabric-impl';
 import { fSelectionEvent, UserSelectionConfig } from './../types';
 import { bootstrapHoverHandler, setHoverStyle } from './../utils';
 
+// sync the hover style
+// add the hover style to the selected
+// remove the hover from unselected
 function useCustomHoverStyle(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,
   selectionConfig?: UserSelectionConfig,

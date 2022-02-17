@@ -8,7 +8,7 @@ import React, {
 
 import { AnnotateElement, TimedSketch } from './types';
 import timedSketchActionReducer from './timedSketchActionReducer';
-import { PlayerContext } from '../MediaPlayer/PlayerContext';
+import { PlaybackContext, PlayerContext } from '../MediaPlayer/PlayerContext';
 import { formatTimeDisplay } from '../Timeline/utils';
 
 interface MediaAnnotateContextInteface {
@@ -20,7 +20,7 @@ interface MediaAnnotateContextInteface {
   onRemoveElements: (el: string[]) => void;
 
   isKey: boolean;
-  keyTime: number|null;
+  keyTime: number | null;
   onAddKey: () => void;
   onRemoveKey: () => void;
 
@@ -50,7 +50,7 @@ export const MediaAnnotationContextProvider: React.FC<{
   mediaAnnotation: TimedSketch[];
   setMediaAnnotation: (t: TimedSketch[]) => void;
 }> = ({ mediaAnnotation, setMediaAnnotation, children }) => {
-  const { playerState } = useContext(PlayerContext);
+  const { playerState } = useContext(PlaybackContext);
 
   const [annotateTimeList, setAnnotateTimeList] = useState<number[]>([]);
 
