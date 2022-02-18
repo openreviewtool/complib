@@ -34,7 +34,6 @@ export const makeElement = (
     etype: fObj.etype,
     id: fObj.id,
     transformMatrix: fObj.calcTransformMatrix(),
-    fabricObj: fObj,
     ...element,
   };
 };
@@ -203,8 +202,6 @@ export const setSelectionControls = (
   elementType?: string,
   config?: UserSelectionConfig,
 ): void => {
-
-  console.log('...set setSelectionControls', newElement, elementType, config)
   newElement.cornerStyle = 'circle';
   newElement.transparentCorners = false;
   newElement.cornerSize = 12;
@@ -216,10 +213,7 @@ export const setSelectionControls = (
     newElement.setControlVisible('mtr', false);
   }
 
-  
   if (elementType === 'Textbox') {
-    console.log('...update text element controls')
-  
     newElement.setControlVisible('tl', false);
     newElement.setControlVisible('mt', false);
     newElement.setControlVisible('tr', false);
@@ -321,7 +315,7 @@ export const findPrevKeyTime = (
   buffer?: number,
 ) => {
   currentTime = getWholeFrameTime(currentTime) / 1000;
-  currentTime = currentTime - (buffer || 0.2);
+  currentTime = currentTime - (buffer || 0);
   const adjKeys = keyList.filter((t) => t < currentTime);
 
   if (adjKeys.length === 0) {
@@ -348,7 +342,6 @@ export const getWholeFrameTime = (time: number, fps?: number) => {
   return Math.round((Math.floor(time * fps) / fps) * 1000);
 };
 
-
-export const getWholeMSecTime = (time: number) =>  {
-  return Math.floor(time * 1000)
-}
+export const getWholeMSecTime = (time: number) => {
+  return Math.floor(time * 1000);
+};

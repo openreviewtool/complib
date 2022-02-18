@@ -25,16 +25,19 @@ export interface NewShape {
 
 function useDrawShapeHandler(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,
+  fObjRegistryRef: React.MutableRefObject<{
+    [elmId: string]: fObjExtend;
+  }>,
   uiState: UserControllerInputs,
   onAddElement?: (element: AnnotateElement) => void,
   disabled?: boolean,
 ): void {
   const uiStateRef = React.useRef<UserControllerInputs>(uiState);
-  const onAddElementFuncRef = React.useRef(onAddElement)
+  const onAddElementFuncRef = React.useRef(onAddElement);
 
-  useEffect(()=>{
+  useEffect(() => {
     onAddElementFuncRef.current = onAddElement;
-  }, [onAddElement])
+  }, [onAddElement]);
 
   React.useEffect(() => {
     const fcanvas = fabricCanvasRef.current;
@@ -83,6 +86,7 @@ function useDrawShapeHandler(
     fObj.etype = 'Path';
     fObj.id = uuid4();
     onAddElementFuncRef.current?.(makeElement(fObj));
+    fObjRegistryRef.current[fObj.id] = fObj
   };
 
   React.useEffect(() => {
@@ -181,11 +185,7 @@ function useDrawShapeHandler(
       fcanvas?.remove(newFObjExt);
     } else {
       onAddElementFuncRef.current?.(makeElement(newFObjExt));
-
-      // fcanvas.setActiveObject(newFObjExt);
-      // newFObjExt.set({dirty: true})
-      // fcanvas.renderAll();
-      // fcanvas.discardActiveObject().renderAll();
+      fObjRegistryRef.current[newFObjExt.id] = newFObjExt
     }
 
     currentShapeDrawnRef.current = null;

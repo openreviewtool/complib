@@ -24,28 +24,32 @@ type TimedSketchAction =
     };
 
 type TimedSketchActionReducerState = {
-  timedSketches: TimedSketch[];
-  currentTimedSketch: TimedSketch | null;
-  currentTime: number;
-  keyTime: number | null;
-  isKey: boolean;
-  selection: string[];
+  timedSketches: TimedSketch[]; // all the sketches across the media
+  selection: string[]; // the selected element ids
+  currentTimedSketch: TimedSketch | null; // the current sketch at the time
+  currentTime: number; // the player time, note* this may not be the keytime
+  keyTime: number | null; // convience, same as currentTimedSketch.time
+  isKey: boolean; // convience, same as currentTime===crrentTimedSketch.time
+
+  // *Note* currentTime (player time) may not be currentTimedSketch.time (key)
+  // since the current sketch may be held for x seconds.
 };
 
 function addNewKey(
   timedSketches: TimedSketch[],
   currentTime: number,
   elements: AnnotateElement[] = [],
-): TimedSketch[] {
+): { newSketch: TimedSketch; updated: TimedSketch[] } {
   const updated = [...timedSketches];
   const key = getWholeMSecTime(currentTime);
-  updated.push({
+  const newSketch = {
     id: `sketch_${uuidv4()}`,
     time: key,
     sketch: elements,
-  });
+  };
+  updated.push(newSketch);
   updated.sort((a, b) => a.time - b.time);
-  return updated;
+  return { newSketch, updated };
 }
 
 export default function timedSketchActionReducer(
@@ -69,13 +73,14 @@ export default function timedSketchActionReducer(
         currentSketch.push(action.newElement);
         return state;
       } else {
+        const newKey = addNewKey(timedSketches, currentTime, [
+          action.newElement,
+        ])
         return {
           ...state,
-          timedSketches: addNewKey(timedSketches, currentTime, [
-            action.newElement,
-          ]),
+          timedSketches: newKey.updated,
           isKey: true,
-          keyTime: getWholeMSecTime(currentTime),
+          keyTime: newKey.newSketch.time,
         };
       }
 
@@ -127,11 +132,12 @@ export default function timedSketchActionReducer(
       };
 
     case 'addKey':
+      const addNewKeyResult = addNewKey(timedSketches, currentTime);
       return {
         ...state,
-        timedSketches: addNewKey(timedSketches, currentTime),
+        timedSketches: addNewKeyResult.updated,
         isKey: true,
-        keyTime: getWholeMSecTime(currentTime),
+        keyTime: addNewKeyResult.newSketch.time,
       };
 
     case 'removeKey':

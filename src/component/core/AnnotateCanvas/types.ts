@@ -22,12 +22,10 @@ export const AnnotateElementList = [...FabricElementList, 'SVG'];
 export interface AnnotateElement
   extends Record<
     string,
-    string | number | number[] | fabric.Object | undefined
+    string | number | number[] | undefined | (string | number)[][]
   > {
   id: string;
   etype: AnnotateElementType;
-
-  fabricObj?: fabric.Object;
 }
 const baseAttrNames = ['fill', 'stroke', 'strokeWidth'];
 
@@ -36,12 +34,8 @@ const baseAttrNames = ['fill', 'stroke', 'strokeWidth'];
 // list of sketch: media annotation
 export interface TimedSketch {
   id: string;
-  time: number;
+  time: number; // this is the time in the sequence, ex: video time/frame
   sketch: AnnotateElement[];
-}
-
-export interface AnnotateSession {
-  data: TimedSketch[][]
 }
 
 export interface UserControllerInputs {

@@ -70,11 +70,11 @@ export const Timeline = () => {
   const duration =
     ctx.mediaList[ctx.mediaIndex].duration || playbackCtx.playerState.duration;
   const isImage = ctx.mediaList[ctx.mediaIndex].type === 'image';
-  const showTimeline = !!duration && !isImage
+  const showTimeline = !!duration && !isImage;
 
   return (
     <div style={{ display: ctx.seekTimeReady ? undefined : 'none' }}>
-      { showTimeline && (
+      {showTimeline && (
         <TimelineComp
           currentTime={playbackCtx.playerState.played}
           currentCached={playbackCtx.playerState.loaded}
@@ -151,13 +151,15 @@ export const PlayToolbar = () => {
       onSkipNext={() => {
         ctx.setMediaIndex((ctx.mediaIndex + 1) % ctx.mediaList.length);
       }}
-      disableNext={ctx.mediaList.length <= 1}
+      disableNext={
+        ctx.mediaList.length <= 1 || ctx.mediaIndex === ctx.mediaList.length - 1
+      }
       onSkipPrev={() => {
         ctx.setMediaIndex(
           (ctx.mediaIndex - 1 + ctx.mediaList.length) % ctx.mediaList.length,
         );
       }}
-      disablePrev={ctx.mediaList.length <= 1}
+      disablePrev={ctx.mediaList.length <= 1 || ctx.mediaIndex === 0}
       //
       onNextAnnotation={() => {
         const nextKey = findNextKeyTime(
@@ -171,6 +173,7 @@ export const PlayToolbar = () => {
         const prevKey = findPrevKeyTime(
           markerList,
           playbackCtx.playerState.played,
+          ctx.playing ? 0.2 : 0,
         );
         if (prevKey !== null) ctx.setSeekTime(prevKey);
       }}

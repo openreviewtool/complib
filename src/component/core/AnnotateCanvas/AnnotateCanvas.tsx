@@ -3,6 +3,7 @@ import { fabric } from 'fabric';
 
 import {
   AnnotateElement,
+  fObjExtend,
   UserControllerInputs,
   UserSelectionConfig,
 } from './types';
@@ -76,20 +77,34 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = React.memo(
     ...props
   }) => {
     const fcRef = React.useRef<fabric.Canvas>(EmptyCanvas);
+    const fObjRegistryRef = React.useRef<{ [elmId: string]: fObjExtend }>({});
 
     const [innerSelection, setInnerSelection] = useState<string[]>([]);
     if (!selection) selection = innerSelection;
     if (!onSelection) onSelection = setInnerSelection;
 
-    useRedrawElements(fcRef, backgroundColor, elements, clearOnElementModify);
+    useRedrawElements(
+      fcRef,
+      fObjRegistryRef,
+      backgroundColor,
+      elements,
+      clearOnElementModify,
+    );
     useSyncSelection(fcRef, uiState, setUiState, selection, onSelection);
     useCustomSelectCorners(fcRef, selectionConfig);
     useCustomHoverStyle(fcRef, selectionConfig);
-    useDrawShapeHandler(fcRef, uiState, props.onAddElement, disabled);
+    useDrawShapeHandler(
+      fcRef,
+      fObjRegistryRef,
+      uiState,
+      props.onAddElement,
+      disabled,
+    );
     useModifyHandler(fcRef, props.onChangeElement);
     usePanZoom(fcRef, props.panZoom);
     useApplyAttrsToSelection(
       fcRef,
+      fObjRegistryRef,
       uiState,
       selection,
       elements,

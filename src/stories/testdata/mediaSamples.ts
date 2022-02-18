@@ -65,17 +65,15 @@ const youtube1hour: MediaInfo = {
   provider_name: 'YouTube',
   type: 'video',
   url: 'https://www.youtube.com/watch?v=zcaskjhhXWQ',
-  // url: 'https://www.youtube.com/watch?v=2uMc3rNnTo4',
-
 
   width: 200,
   height: 113,
 
   thumbnail_url: 'https://i.ytimg.com/vi/o-YBDTqX_ZU/hqdefault.jpg',
-  title: '60 Minute Timer',
+  title: 'Studio Ghibli Jazz Beats - Relaxing Jazz Hiphop & lofi Music For Study, Work',
 
-  author_name: 'Adam Eschborn',
-  author_url: 'https://www.youtube.com/c/AdamEschborn',
+  author_name: 'Cafe Music BGM channel',
+  author_url: 'https://www.youtube.com/c/cafemusicbgmchannel',
 
   // duration: 3615.161,
 };

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { AnnotateElement, UserControllerInputs } from '../types';
+import { AnnotateElement, fObjExtend, UserControllerInputs } from '../types';
 
 /**
  * Depending on the type of element, the ui controls state affects the element attribute differently.
@@ -11,6 +11,9 @@ import { AnnotateElement, UserControllerInputs } from '../types';
  */
 export default function useApplyAttrsToSelection(
   canvasRef: React.MutableRefObject<fabric.Canvas>,
+  fObjRegistryRef: React.MutableRefObject<{
+    [elmId: string]: fObjExtend;
+  }>,
   uiState: UserControllerInputs,
   selectedIds: string[],
   elements: AnnotateElement[],
@@ -28,11 +31,9 @@ export default function useApplyAttrsToSelection(
           adjKey = etype === 'Textbox' ? 'fill' : 'stroke';
         }
 
-        if (
-          element.fabricObj &&
-          element.fabricObj.get(adjKey as keyof fabric.Object) !== value
-        ) {
-          element.fabricObj.set(adjKey as keyof fabric.Object, value);
+        const fObj = fObjRegistryRef.current[element.id];
+        if (fObj.get(adjKey as keyof fabric.Object) !== value) {
+          fObj.set(adjKey as keyof fabric.Object, value);
 
           if (onChangeElement) {
             onChangeElement([{ id: element.id, [adjKey]: value }]);
