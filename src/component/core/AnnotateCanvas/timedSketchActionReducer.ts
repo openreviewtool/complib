@@ -1,5 +1,5 @@
 import { ElementsAction, AnnotateElement, TimedSketch } from './types';
-import { findTimedSketch, getWholeFrameTime, getWholeMSecTime } from './utils';
+import { findTimedSketch, getWholeMSecTime } from './utils';
 import { v4 as uuidv4 } from 'uuid';
 
 type TimedSketchAction =

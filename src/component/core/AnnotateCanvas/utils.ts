@@ -314,7 +314,7 @@ export const findPrevKeyTime = (
   currentTime: number,
   buffer?: number,
 ) => {
-  currentTime = getWholeFrameTime(currentTime) / 1000;
+  currentTime = getWholeMSecTime(currentTime) / 1000;
   currentTime = currentTime - (buffer || 0);
   const adjKeys = keyList.filter((t) => t < currentTime);
 
@@ -327,19 +327,6 @@ export const findPrevKeyTime = (
   } else {
     return adjKeys[adjKeys.length - 1];
   }
-};
-
-/**
- * return "whole" key times.
- * otherwise say two people annotating accross two different sessions may key at
- * fraction of frames
- * @param time
- * @param fps
- * @returns
- */
-export const getWholeFrameTime = (time: number, fps?: number) => {
-  fps = fps || 24;
-  return Math.round((Math.floor(time * fps) / fps) * 1000);
 };
 
 export const getWholeMSecTime = (time: number) => {

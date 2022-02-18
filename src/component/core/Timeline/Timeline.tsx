@@ -83,13 +83,14 @@ const Timeline: React.FC<TimelineProps> = ({
   }, []);
 
   const handleScrubStart = (e: any) => {
+    const isPointerDownEvent = e.type && e.type === 'pointerdown';
+    // have the canvas capture the mouse events until it's released
+    if (isPointerDownEvent) {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+
     if (onTimelineCaptured) onTimelineCaptured(true);
     fireSeekEvent(e);
-    // const isPointerDownEvent = e.type && e.type === 'pointerdown';
-    // // have the canvas capture the mouse events until it's released
-    // if (isPointerDownEvent) {
-    //   e.currentTarget.setPointerCapture(e.pointerId);
-    // }
   };
 
   /**
@@ -103,18 +104,15 @@ const Timeline: React.FC<TimelineProps> = ({
     fireSeekEvent(e);
   };
 
-  const handleScrubEnd = (event: any) => {
-    handleScrubMoveFinish(event);
-    if (onTimelineCaptured) onTimelineCaptured(false);
-  };
-
-  const handleScrubMoveFinish = (e: any) => {
+  const handleScrubEnd = (e: any) => {
     const isPointerEvent = e.type && e.type.startsWith('pointer');
 
     // have the canvas capture the mouse events until it's released
     if (isPointerEvent) {
       e.currentTarget.releasePointerCapture(e.pointerId);
     }
+
+    if (onTimelineCaptured) onTimelineCaptured(false);
   };
 
   const fireSeekEvent = (e: any) => {
@@ -136,7 +134,7 @@ const Timeline: React.FC<TimelineProps> = ({
 
     const bounds = e.target.getBoundingClientRect();
     if (bounds.width === 0) {
-      console.warn('bounds for timeline is 0')
+      console.warn('bounds for timeline is 0');
       return;
     }
 
