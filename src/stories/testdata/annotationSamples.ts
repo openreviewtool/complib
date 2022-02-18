@@ -122,6 +122,34 @@ export const samplePathElement2: AnnotateElement = {
   ],
 };
 
+export const samplePathElement3: AnnotateElement = {
+  id: 'path_id3',
+  etype: 'Path',
+  transformMatrix: [1, 0, 0, 1, 290, 150],
+
+  stroke: 'DodgerBlue',
+  strokeWidth: 40,
+  fill: '',
+
+  path: [].concat
+    .apply(
+      [],
+      [
+        ['M', 684.8225588271229, 131.7986117006109],
+        [
+          'Q',
+          617.1981542846981,
+          131.7986117006109,
+          603.3285328400982,
+          131.7986117006109,
+        ],
+        ['L', 553.0411551034234, 329.3923396413053],
+      ],
+    )
+    .map((e: number | string) => (typeof e === 'number' ? e.toFixed(2) : e))
+    .join(' '),
+};
+
 export const sampleCircleElement: AnnotateElement = {
   id: 'circle_id',
   etype: 'Circle',
@@ -161,6 +189,7 @@ const mediaAnnotate: TimedSketch[] = [
     sketch: [
       sampleCircleElement,
       sampleRectElement,
+      samplePathElement3,
       { ...sampleTextboxElement, text: 'Annotate!' },
     ],
   },

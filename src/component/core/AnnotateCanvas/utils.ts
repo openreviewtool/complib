@@ -22,14 +22,19 @@ import {
  * @param props
  * @returns
  */
-export const makeElement = (
-  // etype: AnnotateElementType,
-  fObj: fObjExtend,
-): AnnotateElement => {
+export const makeElement = (fObj: fObjExtend): AnnotateElement => {
   const element = fabricObjAttrsLookup[fObj.etype].reduce((p, c) => {
     p[c] = (fObj as any)[c];
     return p;
   }, {} as Partial<AnnotateElement>);
+
+  if (fObj.etype === 'Path') {
+    const path = element.path as (string | number)[][];
+    element.path = [].concat
+      .apply([], path)
+      .map((e: number | string) => (typeof e === 'number' ? e.toFixed(2) : e))
+      .join(' ');
+  }
   return {
     etype: fObj.etype,
     id: fObj.id,
