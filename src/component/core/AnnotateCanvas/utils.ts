@@ -32,7 +32,7 @@ export const makeElement = (fObj: fObjExtend): AnnotateElement => {
     const path = element.path as (string | number)[][];
     element.path = [].concat
       .apply([], path)
-      .map((e: number | string) => (typeof e === 'number' ? e.toFixed(2) : e))
+      .map((e: number | string) => (typeof e === 'number' ? e.toFixed(1) : e))
       .join(' ');
   }
   return {
