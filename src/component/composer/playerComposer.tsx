@@ -61,14 +61,12 @@ export const Player = (props: { controls?: boolean }) => {
   );
 };
 
-const configZeroClamp = { clipDuration: 30, threshold: 1 };
-
 export const Timeline = () => {
   const ctx = React.useContext(PlayerContext);
-  const playbackCtx = React.useContext(PlaybackContext);
+  const { playerState } = React.useContext(PlaybackContext);
   const mediaAnnCtx = React.useContext(MediaAnnotateContext);
   const duration =
-    ctx.mediaList[ctx.mediaIndex].duration || playbackCtx.playerState.duration;
+    ctx.mediaList[ctx.mediaIndex].duration || playerState.duration;
   const isImage = ctx.mediaList[ctx.mediaIndex].type === 'image';
   const showTimeline = !!duration && !isImage;
 
@@ -76,13 +74,12 @@ export const Timeline = () => {
     <div style={{ display: ctx.seekTimeReady ? undefined : 'none' }}>
       {showTimeline && (
         <TimelineComp
-          currentTime={playbackCtx.playerState.played}
-          currentCached={playbackCtx.playerState.loaded}
+          currentTime={playerState.played}
+          currentCached={playerState.loaded}
           duration={duration}
           onTimelineSeek={ctx.setSeekTime}
           timelineCaptured={ctx.seeking}
           onTimelineCaptured={ctx.setSeeking}
-          zeroClamp={configZeroClamp}
           markerList={mediaAnnCtx.annotateTimeList}
         />
       )}

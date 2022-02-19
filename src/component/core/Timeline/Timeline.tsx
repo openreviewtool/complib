@@ -19,12 +19,6 @@ export interface TimelineProps {
   onPointerMove?: (e: any) => void; // user enter the timeline
 
   themeColor?: string;
-
-  // anything smaller than threshold (sec) for a clip bigger than duration
-  // will be zeroed.  This is help with some players that seem to have issue
-  // seeking locations smaller than 1 sec.
-  zeroClamp?: { clipDuration: number; threshold: number };
-
   markerList?: number[];
 }
 
@@ -35,7 +29,6 @@ const Timeline: React.FC<TimelineProps> = ({
   frameRange,
   useFrameDisplay = false,
   themeColor = 'red',
-  zeroClamp,
 
   ...props
 }) => {
@@ -148,14 +141,6 @@ const Timeline: React.FC<TimelineProps> = ({
     setSeekPercentage(_seekPercentage);
     let seekTime = _seekPercentage * props.duration;
     let seekFrameIndex = -1;
-
-    if (
-      zeroClamp &&
-      props.duration > zeroClamp.clipDuration &&
-      seekTime < zeroClamp.threshold
-    ) {
-      seekTime = 0;
-    }
 
     if (props.onTimelineSeek) {
       if (progressDisplayTimeoutRef.current) {

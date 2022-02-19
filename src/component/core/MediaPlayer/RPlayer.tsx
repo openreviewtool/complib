@@ -25,7 +25,7 @@ const RPlayer: React.FC<RPlayerProps> = ({
       if (reactPlayerRef.current.getInternalPlayer().nodeName === 'VIDEO') {
         reactPlayerRef.current.getInternalPlayer().currentTime = seekTime;
       } else {
-        reactPlayerRef.current.seekTo(seekTime);
+        reactPlayerRef.current.seekTo(seekTime, 'seconds');
       }
     }
   }, [seekTime]);
