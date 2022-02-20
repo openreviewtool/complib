@@ -11,6 +11,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CopyIcon from '@mui/icons-material/ContentCopy';
+import PasteIcon from '@mui/icons-material/ContentPaste';
 import FitScreenIcon from '@mui/icons-material/FitScreen';
 import { UserControllerInputs } from '../types';
 import { SketchPicker, ColorResult } from 'react-color';
@@ -38,6 +40,12 @@ export interface EditToolsProps {
 
   onFitScreen?: () => void;
   disableFitScreen?: boolean;
+
+  onCopy?: () => void;
+  disableCopy?: boolean;
+
+  onPaste?: () => void;
+  disablePaste?: boolean;
 
   hide?: boolean;
 }
@@ -158,9 +166,38 @@ const EditTools: React.FC<EditToolsProps> = ({
               }}
               disabled={props.disableDeleteSelection}
               onPointerDown={props.onDeleteSelection}
-              title="Delete Selection"
+              title="Delete Selected"
             >
               <DeleteIcon />
+            </IconButton>
+          )}
+          <div className="icon_divider" />
+          {props.onCopy && (
+            <IconButton
+              size={iconSize}
+              style={{
+                color: themeColor,
+                opacity: props.disableCopy ? 0.2 : 1.0,
+              }}
+              disabled={props.disableCopy}
+              onPointerDown={props.onCopy}
+              title="Copy Selected"
+            >
+              <CopyIcon />
+            </IconButton>
+          )}
+          {props.onPaste && (
+            <IconButton
+              size={iconSize}
+              style={{
+                color: themeColor,
+                opacity: props.disablePaste ? 0.2 : 1.0,
+              }}
+              disabled={props.disablePaste}
+              onPointerDown={props.onPaste}
+              title="Paste"
+            >
+              <PasteIcon />
             </IconButton>
           )}
           <div className="icon_divider" />

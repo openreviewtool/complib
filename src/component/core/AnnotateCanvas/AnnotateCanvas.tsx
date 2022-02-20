@@ -86,11 +86,12 @@ const AnnotateCanvas: React.FC<AnnotateCanvasProps> = React.memo(
     useRedrawElements(
       fcRef,
       fObjRegistryRef,
+      selection,
       backgroundColor,
       elements,
       clearOnElementModify,
     );
-    useSyncSelection(fcRef, uiState, setUiState, selection, onSelection);
+    useSyncSelection(fcRef, uiState, setUiState, onSelection);
     useCustomSelectCorners(fcRef, selectionConfig);
     useCustomHoverStyle(fcRef, selectionConfig);
     useDrawShapeHandler(

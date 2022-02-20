@@ -1,13 +1,11 @@
 import React from 'react';
 import { fabric } from 'fabric';
 import { fObjExtend, UserControllerInputs } from './../types';
-import { difference } from '../../../utils/setOperation';
 
 function useSyncSelection(
   fabricCanvasRef: React.MutableRefObject<fabric.Canvas>,
   uiState: UserControllerInputs,
   setUIState?: (u: UserControllerInputs) => void,
-  selection?: string[],
   onSelection?: (selected: string[]) => void,
 ): void {
   React.useEffect(() => {
@@ -21,26 +19,6 @@ function useSyncSelection(
       handle_selection_change(event.selected, event.deselected);
     });
   }, []);
-
-  React.useEffect(() => {
-    const currentSelection = (
-      fabricCanvasRef.current.getActiveObjects() as fObjExtend[]
-    ).map((x) => x.id);
-
-    const newSelection = difference(
-      new Set(selection),
-      new Set(currentSelection),
-    );
-
-    fabricCanvasRef.current.getObjects().map((obj) => {
-      if (newSelection.has((obj as fObjExtend).id)) {
-        fabricCanvasRef.current.setActiveObject(obj);
-      }
-    });
-    if (newSelection.size !== 0) {
-      fabricCanvasRef.current.renderAll();
-    }
-  }, [selection]);
 
   const handle_selection_change = (
     added?: fabric.Object[],

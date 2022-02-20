@@ -5,6 +5,7 @@ import {
   makeFabricObj,
   getElementPropsFromUiState,
   makeElement,
+  makeElementId,
 } from './../utils';
 import { AnnotateElement, fObjExtend, UserControllerInputs } from './../types';
 import { fabric } from 'fabric';
@@ -84,7 +85,7 @@ function useDrawShapeHandler(
       fObj.set(k, FabricObjectDefaults[k]);
     }
     fObj.etype = 'Path';
-    fObj.id = uuid4();
+    fObj.id = makeElementId('Path');
     onAddElementFuncRef.current?.(makeElement(fObj));
     fObjRegistryRef.current[fObj.id] = fObj
   };
@@ -118,7 +119,7 @@ function useDrawShapeHandler(
     // this is a preview element.
     makeFabricObj({
       ...newElementDefaults,
-      id: uuid4(),
+      id: makeElementId(newElementDefaults.etype!),
       transformMatrix: [1, 0, 0, 1, originX, originY],
     }).then((shape) => {
       fcanvas.add(shape);

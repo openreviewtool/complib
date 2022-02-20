@@ -337,3 +337,7 @@ export const findPrevKeyTime = (
 export const getWholeMSecTime = (time: number) => {
   return Math.floor(time * 1000);
 };
+
+export const makeElementId = (etype: string) => {
+  return `${etype}_${uuidv4()}`;
+};

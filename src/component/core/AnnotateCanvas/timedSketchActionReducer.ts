@@ -1,9 +1,34 @@
 import { ElementsAction, AnnotateElement, TimedSketch } from './types';
-import { findTimedSketch, getWholeMSecTime } from './utils';
+import { findTimedSketch, getWholeMSecTime, makeElementId } from './utils';
 import { v4 as uuidv4 } from 'uuid';
 
 type TimedSketchAction =
-  | ElementsAction
+  | {
+      type: 'changeElement';
+      elementUpdates: Partial<AnnotateElement>[];
+    }
+  | {
+      type: 'addElement';
+      newElement: AnnotateElement;
+    }
+  | {
+      type: 'removeElements';
+      ids: string[];
+    }
+  | {
+      type: 'selectElements';
+      selection: string[];
+    }
+  | {
+      type: 'copySelected';
+    }
+  | {
+      type: 'paste';
+    }
+  | {
+      type: 'updateSketch';
+      sketch: AnnotateElement[];
+    }
   | {
       type: 'addKey';
     }
@@ -17,10 +42,6 @@ type TimedSketchAction =
   | {
       type: 'updateCurrentTime';
       time: number;
-    }
-  | {
-      type: 'selectElements';
-      selection: string[];
     };
 
 type TimedSketchActionReducerState = {
@@ -59,6 +80,32 @@ export default function timedSketchActionReducer(
   const currentSketch = state.currentTimedSketch?.sketch || [];
   const { timedSketches, currentTimedSketch, currentTime } = state;
 
+  const addElements = (
+    newElements: AnnotateElement[],
+    autoSelect = true,
+  ): TimedSketchActionReducerState => {
+    const newElementIds = newElements.map((e) => e.id);
+    if (state.isKey) {
+      currentTimedSketch!.sketch = [
+        ...currentTimedSketch!.sketch,
+        ...newElements,
+      ];
+      return {
+        ...state,
+        selection: autoSelect ? newElementIds : [],
+      };
+    } else {
+      const newKey = addNewKey(timedSketches, currentTime, newElements);
+      return {
+        ...state,
+        timedSketches: newKey.updated,
+        isKey: true,
+        keyTime: newKey.newSketch.time,
+        selection: autoSelect ? newElementIds : [],
+      };
+    }
+  };
+
   switch (action.type) {
     case 'reload':
       return { ...state, timedSketches: action.timedSketches };
@@ -69,20 +116,11 @@ export default function timedSketchActionReducer(
           `Unexpected add element with no new id: ${action.newElement}`,
         );
       }
-      if (state.isKey) {
-        currentSketch.push(action.newElement);
-        return state;
-      } else {
-        const newKey = addNewKey(timedSketches, currentTime, [
-          action.newElement,
-        ])
-        return {
-          ...state,
-          timedSketches: newKey.updated,
-          isKey: true,
-          keyTime: newKey.newSketch.time,
-        };
-      }
+
+      return addElements(
+        [action.newElement],
+        action.newElement.etype !== 'Path',
+      );
 
     case 'removeElements':
       currentTimedSketch!.sketch = currentSketch.filter(
@@ -96,6 +134,24 @@ export default function timedSketchActionReducer(
         ...state,
         selection: action.selection,
       };
+
+    case 'copySelected':
+      const elms = currentSketch.filter((e) => state.selection.includes(e.id));
+      window.localStorage.setItem('clipboard_elements', JSON.stringify(elms));
+
+      return state;
+
+    case 'paste':
+      const elmsStr = window.localStorage.getItem('clipboard_elements');
+      if (elmsStr) {
+        const elms = JSON.parse(elmsStr) as AnnotateElement[];
+        elms.forEach((e) => {
+          e.id = makeElementId(e.etype);
+        });
+        return addElements(elms);
+      }
+
+      return state;
 
     case 'changeElement':
       const elementIndexById = currentSketch.reduce(

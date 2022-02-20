@@ -26,6 +26,9 @@ interface MediaAnnotateContextInteface {
 
   selection: string[];
   onSelection: (s: string[]) => void;
+
+  onCopySelected?: () => void;
+  onPaste?: () => void;
 }
 
 export const MediaAnnotateContext =
@@ -140,12 +143,26 @@ export const MediaAnnotationContextProvider: React.FC<{
     [],
   );
 
+  const onCopySelected = useCallback(
+    () =>
+      mediaAnnotationDispatch({ type: 'copySelected' }),
+    [],
+  );
+
+  const onPaste = useCallback(
+    () =>
+      mediaAnnotationDispatch({ type: 'paste' }),
+    [],
+  );
+
+  const elements = mediaAnnotationState.currentTimedSketch?.sketch || []
+
   return (
     <MediaAnnotateContext.Provider
       value={{
         annotateTimeList,
 
-        elements: mediaAnnotationState.currentTimedSketch?.sketch || [],
+        elements,
         onAddElement,
         onChangeElement,
         onRemoveElements,
@@ -157,6 +174,9 @@ export const MediaAnnotationContextProvider: React.FC<{
 
         selection: mediaAnnotationState.selection,
         onSelection,
+
+        onCopySelected,
+        onPaste,
       }}
     >
       {children}

@@ -9,7 +9,10 @@ import AnnotateCanvasComp from '../core/AnnotateCanvas/AnnotateCanvas';
 import BrushTools from '../core/AnnotateCanvas/UI/BrushTools';
 import EditTools from '../core/AnnotateCanvas/UI/EditTools';
 import { MediaAnnotateContext } from '../core/AnnotateCanvas/MediaAnnotateContext';
-import { PlaybackContext, PlayerContext } from '../core/MediaPlayer/PlayerContext';
+import {
+  PlaybackContext,
+  PlayerContext,
+} from '../core/MediaPlayer/PlayerContext';
 import { getWholeMSecTime } from '../core/AnnotateCanvas/utils';
 import { PanZoomContext } from '../core/PanZoom/PanZoomContext';
 
@@ -32,15 +35,6 @@ export const AnnotateCanvas = (props: {
     [panZoom],
   );
 
-  // auto select newly created shape (except path).
-  const onAddElementHelper = (elm: AnnotateElement) => {
-    onAddElement(elm);
-    if (elm.etype !== 'Path') {
-      props.setUiState({ ...props.uiState, mode: 'selection' });
-      window.setTimeout(onSelection, 100, [elm.id]);
-    }
-  };
-
   return props.uiState.showAnnotation ? (
     <AnnotateCanvasComp
       elements={elements}
@@ -52,7 +46,7 @@ export const AnnotateCanvas = (props: {
       uiState={props.uiState}
       setUiState={props.setUiState}
       disabled={props.uiState.mode === 'panZoom'}
-      onAddElement={onAddElementHelper}
+      onAddElement={onAddElement}
       onChangeElement={onChangeElement}
       clearOnElementModify={true}
     />
@@ -65,8 +59,16 @@ export const AnnotateTools = (props: {
 }) => {
   const { playing } = useContext(PlayerContext);
   const { playerState } = useContext(PlaybackContext);
-  const { isKey, keyTime, onAddKey, onRemoveKey, selection, onRemoveElements } =
-    useContext(MediaAnnotateContext);
+  const {
+    isKey,
+    keyTime,
+    onAddKey,
+    onRemoveKey,
+    selection,
+    onRemoveElements,
+    onCopySelected,
+    onPaste,
+  } = useContext(MediaAnnotateContext);
   const { panZoom, setPanZoom, contentFitSpecRef } = useContext(PanZoomContext);
 
   return (
@@ -79,12 +81,22 @@ export const AnnotateTools = (props: {
       <EditTools
         uiState={props.uiState}
         setUIState={props.setUiState}
+        //
         onAddKey={onAddKey}
         disableAddKey={keyTime === getWholeMSecTime(playerState.played)}
+        //
         onRemoveKey={onRemoveKey}
         disableRemoveKey={!isKey}
+        //
         onDeleteSelection={() => onRemoveElements(selection)}
         disableDeleteSelection={selection.length === 0}
+        //
+        onCopy={onCopySelected}
+        disableCopy={selection.length === 0}
+        //
+        onPaste={onPaste}
+        // disablePaste={}
+        //
         onFitScreen={() => {
           setPanZoom(contentFitSpecRef.current.fitSpec);
         }}
