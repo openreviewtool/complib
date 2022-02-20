@@ -29,7 +29,11 @@ function useRedrawElements(
         selectedFObjs.push(fObjs[i]);
       }
     });
-    if (selectedFObjs.length !== 0) {
+    if (selectedFObjs.length===1) {
+      // deal with the issue when you create a textbox, putting in the group
+      // will enable showing all the resize corders.
+      fCanvas.setActiveObject(selectedFObjs[0]);
+    } else if (selectedFObjs.length !== 0) {
       const selection = new fabric.ActiveSelection(selectedFObjs, {
         canvas: fCanvas,
       });
