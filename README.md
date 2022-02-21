@@ -19,5 +19,5 @@ npm install @openreviewtool/complib
 * Libraries: [Fabricjs](http://fabricjs.com/), [React-Player](https://www.npmjs.com/package/react-player)
 
 ## Dev Release
-* create branch, (optional) update package version, create pull request, use square/merge 
+* create branch, (optional) update package version, create pull request, use squash/merge 
 * (optional) auto release: name the squash and merge comment to be "Release #.#.# - some comment" where "#.#.#" match above.  
