@@ -65,8 +65,10 @@ export const PanZoomContent = (props: PanZoomContentProps) => {
     <div
       style={{
         transformOrigin: 'left top',
-        transform: `translate(${ctx.panZoom.x}px, ${ctx.panZoom.y}px) scale(${ctx.panZoom.scale})`,
         position: 'relative',
+        userSelect: 'none',
+        transition: 'transform 0.05s',
+        transform: `translate(${ctx.panZoom.x}px, ${ctx.panZoom.y}px) scale(${ctx.panZoom.scale})`,
         ...ctx.contentSize,
       }}
     >
