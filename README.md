@@ -21,13 +21,13 @@ or
 yarn add @openreviewtool/complib
 ```
 
-The following library are required:
+The following libraries are required:
 
 ```
 react-player fabric uuid
 ```
 
-The following library are required for the UI
+The following libraries are required for the UI
 
 ```
 mui react-color
