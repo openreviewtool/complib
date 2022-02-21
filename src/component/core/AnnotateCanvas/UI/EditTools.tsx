@@ -171,7 +171,7 @@ const EditTools: React.FC<EditToolsProps> = ({
               <DeleteIcon />
             </IconButton>
           )}
-          <div className="icon_divider" />
+          {props.onCopy && <div className="icon_divider" />}
           {props.onCopy && (
             <IconButton
               size={iconSize}
