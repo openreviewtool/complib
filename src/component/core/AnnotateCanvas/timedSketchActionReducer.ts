@@ -83,13 +83,18 @@ export default function timedSketchActionReducer(
   const addElements = (
     newElements: AnnotateElement[],
     autoSelect = true,
+    forceRedraw = false,
   ): TimedSketchActionReducerState => {
     const newElementIds = newElements.map((e) => e.id);
     if (state.isKey) {
-      currentTimedSketch!.sketch = [
-        ...currentTimedSketch!.sketch,
-        ...newElements,
-      ];
+      if (forceRedraw) {
+        currentTimedSketch!.sketch = [
+          ...currentTimedSketch!.sketch,
+          ...newElements,
+        ];
+      } else {
+        currentTimedSketch!.sketch.push(...newElements);
+      }
       return {
         ...state,
         selection: autoSelect ? newElementIds : [],
@@ -120,6 +125,7 @@ export default function timedSketchActionReducer(
       return addElements(
         [action.newElement],
         action.newElement.etype !== 'Path',
+        false,
       );
 
     case 'removeElements':
@@ -148,7 +154,7 @@ export default function timedSketchActionReducer(
         elms.forEach((e) => {
           e.id = makeElementId(e.etype);
         });
-        return addElements(elms);
+        return addElements(elms, true, true);
       }
 
       return state;

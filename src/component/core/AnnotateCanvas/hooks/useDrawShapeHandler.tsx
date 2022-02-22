@@ -87,7 +87,7 @@ function useDrawShapeHandler(
     fObj.etype = 'Path';
     fObj.id = makeElementId('Path');
     onAddElementFuncRef.current?.(makeElement(fObj));
-    fObjRegistryRef.current[fObj.id] = fObj
+    fObjRegistryRef.current[fObj.id] = fObj;
   };
 
   React.useEffect(() => {
@@ -128,6 +128,12 @@ function useDrawShapeHandler(
         originY,
         newFObjExt: shape,
       };
+      if (shape && shape.etype === 'Textbox') {
+        fcanvas.setActiveObject(shape);
+        shape.enterEditing!();
+        shape.selectAll!();
+        shape.selectionBackgroundColor = '#0006';
+      }
     });
   }, []);
 
@@ -186,7 +192,7 @@ function useDrawShapeHandler(
       fcanvas?.remove(newFObjExt);
     } else {
       onAddElementFuncRef.current?.(makeElement(newFObjExt));
-      fObjRegistryRef.current[newFObjExt.id] = newFObjExt
+      fObjRegistryRef.current[newFObjExt.id] = newFObjExt;
     }
 
     currentShapeDrawnRef.current = null;

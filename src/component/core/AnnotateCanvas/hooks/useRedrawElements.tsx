@@ -14,30 +14,36 @@ function useRedrawElements(
   redrawOnModify: boolean,
 ): void {
   const redrawCanvas = async (fCanvas: fabric.Canvas) => {
-    fCanvas.clear();
     fObjRegistryRef.current = {};
-    fCanvas.backgroundColor = backgroundColor;
 
     // add the elements
     const fObjs = await Promise.all(elements.map((ele) => makeFabricObj(ele)));
-    const selectedFObjs: fabric.Object[] = [];
+
     elements.forEach((e, i) => {
       fObjRegistryRef.current[e.id] = fObjs[i]; // add to registry
-      fCanvas.add(fObjs[i]); // add to canvas
+    });
+
+    fCanvas.clear();
+    fCanvas.backgroundColor = backgroundColor;
+    fabricCanvasRef.current.add(...(fObjs as fabric.Object[]));
+
+    const selectedFObjs: fabric.Object[] = [];
+    elements.forEach((e, i) => {
       // build selection list
       if (selection.includes(e.id)) {
         selectedFObjs.push(fObjs[i]);
       }
     });
-    if (selectedFObjs.length===1) {
+
+    if (selectedFObjs.length === 1) {
       // deal with the issue when you create a textbox, putting in the group
       // will enable showing all the resize corders.
       fCanvas.setActiveObject(selectedFObjs[0]);
     } else if (selectedFObjs.length !== 0) {
-      const selection = new fabric.ActiveSelection(selectedFObjs, {
+      const s = new fabric.ActiveSelection(selectedFObjs, {
         canvas: fCanvas,
       });
-      fCanvas.setActiveObject(selection);
+      fCanvas.setActiveObject(s);
     }
   };
 

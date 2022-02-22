@@ -101,6 +101,9 @@ export interface fObjExtend extends fabric.Object {
   text?: string;
   fontSize?: number;
   fontFamily?: string;
+
+  enterEditing?: () => void;
+  selectAll?: () => void;
 }
 
 export interface fSelectionEvent extends fabric.IEvent {

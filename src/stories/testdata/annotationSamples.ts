@@ -9,7 +9,7 @@ export const sampleRectElement: AnnotateElement = {
 
   fill: '',
   stroke: 'pink',
-  strokeWidth: 37,
+  strokeWidth: 17,
 
   width: 100,
   height: 100,
@@ -125,7 +125,7 @@ export const samplePathElement2: AnnotateElement = {
 export const samplePathElement3: AnnotateElement = {
   id: 'path_id3',
   etype: 'Path',
-  transformMatrix: [1, 0, 0, 1, 290, 150],
+  transformMatrix: [1, 0, 0, 1, 190, 250],
 
   stroke: 'DodgerBlue',
   strokeWidth: 40,
