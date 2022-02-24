@@ -74,7 +74,6 @@ export const isTablet = () => {
   );
 };
 
-
 export const useFullScreen = () => {
   const element = useRef<HTMLDivElement>(null);
 
@@ -106,5 +105,9 @@ export const useFullScreen = () => {
     }
   };
 
-  return { fullScreenElement: element, fullScreen, setFullScreen: toggleFullScreen };
+  return {
+    fullScreenElement: element,
+    fullScreen,
+    setFullScreen: toggleFullScreen,
+  };
 };

@@ -166,7 +166,11 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
             opacity: disableMute ? 0.2 : 1,
           }}
         >
-          {props.muted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+          {props.muted ? (
+            <VolumeOffIcon fontSize={iconSize} />
+          ) : (
+            <VolumeUpIcon fontSize={iconSize} />
+          )}
         </IconButton>
       )}
 
@@ -177,9 +181,12 @@ const PlayDeck: React.FC<PlayDeckProps> = ({
           title="Toggle Fullscreen"
         >
           {props.fullScreen ? (
-            <FullscreenExitIcon style={{ color: themeColor }} />
+            <FullscreenExitIcon
+              fontSize={iconSize}
+              style={{ color: themeColor }}
+            />
           ) : (
-            <FullscreenIcon style={{ color: themeColor }} />
+            <FullscreenIcon fontSize={iconSize} style={{ color: themeColor }} />
           )}
         </IconButton>
       )}
