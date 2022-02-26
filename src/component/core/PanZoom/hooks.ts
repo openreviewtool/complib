@@ -194,8 +194,8 @@ export const usePointerPan = (
   return {
     onPointerDown: (evt: React.PointerEvent) => {
       // if (disabled || evt.button === 2 ) return;
-      if ( (disabled && evt.button===0) || evt.button === 2 ) return;
-      
+      if ((disabled && evt.button === 0) || evt.button === 2) return;
+
       const coords = getAbsoluteCoords(
         evt,
         evt.currentTarget.getBoundingClientRect(),
@@ -208,7 +208,7 @@ export const usePointerPan = (
       setInProgress(false);
     },
     onPointerMove: (evt: React.PointerEvent) => {
-      if ((disabled && evt.button===0) || evt.button === 2 ) return;
+      if ((disabled && evt.button === 0) || evt.button === 2) return;
 
       const coords = getAbsoluteCoords(
         evt,

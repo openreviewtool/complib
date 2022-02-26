@@ -20,6 +20,7 @@ export default function useApplyAttrsToSelection(
   onChangeElement?: (element: Partial<AnnotateElement>[]) => void,
 ): void {
   const updateSelectedElement = (key: string, value: number | string) => {
+    const changeBatch: Partial<AnnotateElement>[] = [];
     elements.forEach((element) => {
       if (selectedIds.indexOf(element.id) !== -1) {
         const etype = element.etype;
@@ -35,10 +36,15 @@ export default function useApplyAttrsToSelection(
         if (fObj.get(adjKey as keyof fabric.Object) !== value) {
           fObj.set(adjKey as keyof fabric.Object, value);
 
-          if (onChangeElement) {
-            onChangeElement([{ id: element.id, [adjKey]: value }]);
-          }
+          changeBatch.push({
+            id: element.id,
+            transformMatrix: fObj.calcTransformMatrix(),
+            [adjKey]: value,
+          });
         }
+      }
+      if (onChangeElement && changeBatch.length !== 0) {
+        onChangeElement(changeBatch);
       }
     });
     canvasRef.current.renderAll();
