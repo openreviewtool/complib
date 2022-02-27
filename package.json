@@ -59,7 +59,7 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "install-build": "yarn && rollup -c",
+    "install-build": "install && rollup -c",
     "build-watch": "rollup -c -w",
     "eslint": "eslint",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
