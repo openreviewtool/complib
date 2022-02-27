@@ -58,20 +58,20 @@ export const usePreventDefaultBrowserPointer = (
   }, [disabled]);
 };
 
-function isIOS() {
+const isIOS = (): boolean => {
   return (
-    navigator.maxTouchPoints &&
+    !!navigator.maxTouchPoints &&
     navigator.maxTouchPoints > 2 &&
     /Mac/.test(navigator.userAgent)
   );
-}
+};
 const userAgent = navigator.userAgent.toLowerCase();
-export const isTablet = () => {
-  return (
+export const isTablet = (): boolean => {
+  const queryAgent =
     /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(
       userAgent,
-    ) || isIOS()
-  );
+    );
+  return queryAgent || isIOS();
 };
 
 export const useFullScreen = () => {

@@ -4,6 +4,7 @@ import { PanZoomSpec, RectSize } from './types';
 import { getContentFitSpec } from './utils';
 
 import {
+  isTablet,
   usePreventDefaultBrowserTouch,
   usePreventDefaultBrowserWheel,
 } from '../../utils/browser';
@@ -127,14 +128,15 @@ export const PanZoomContainer: React.FC<PanZoomProps> = ({
     setPanZoomState,
     disabled || touchCaptured,
   );
+  const flgTablet = isTablet();
 
   const transformWrapper = (
     <div
       ref={topContainerRef as React.Ref<HTMLDivElement>}
       className="panzoom_top_container"
-      {...touchHandlers}
-      {...wheelHandler}
-      {...pointerHandler}
+      {...(flgTablet ? touchHandlers : {})}
+      {...(flgTablet ? {} : wheelHandler)}
+      {...(flgTablet ? {} : pointerHandler)}
     >
       {props.children}
     </div>
