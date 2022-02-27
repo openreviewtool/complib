@@ -1,6 +1,6 @@
 {
   "name": "@openreviewtool/complib",
-  "version": "0.2.43",
+  "version": "0.2.44",
   "repository": "git@github.com:openreviewtool/complib.git",
   "homepage": "https://openreviewtool.github.io/complib",
   "bugs": "https://github.com/openreviewtool/complib/issues",
@@ -59,6 +59,7 @@
   },
   "scripts": {
     "build": "rollup -c",
+    "install-build": "yarn && rollup -c",
     "build-watch": "rollup -c -w",
     "eslint": "eslint",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
