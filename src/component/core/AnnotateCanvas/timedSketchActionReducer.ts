@@ -106,7 +106,7 @@ export default function timedSketchActionReducer(
         timedSketches: newKey.updated,
         isKey: true,
         keyTime: newKey.newSketch.time,
-        selection: autoSelect ? newElementIds : [],
+        // selection: autoSelect ? newElementIds : [],
       };
     }
   };

@@ -139,6 +139,7 @@ function useDrawShapeHandler(
 
   const draw_shape_handle_pointer_move = useCallback((opt: fabric.IEvent) => {
     const isDrawinShape =
+      uiStateRef.current?.shape !== 'Textbox' &&
       uiStateRef.current?.mode === 'draw' &&
       SHAPES.indexOf(uiStateRef.current?.shape) !== -1;
 
@@ -149,12 +150,7 @@ function useDrawShapeHandler(
     const { originX, originY } = currentShapeDrawnRef.current;
     const fabObj = currentShapeDrawnRef.current.newFObjExt;
 
-    if (fabObj.etype === 'Textbox') {
-      fabObj.set({
-        left: pointer.x,
-        top: pointer.y,
-      });
-    } else if (SHAPES.indexOf(fabObj.etype) !== -1) {
+    if (SHAPES.indexOf(fabObj.etype) !== -1) {
       fabObj.set({
         left: Math.min(originX, pointer.x),
         top: Math.min(originY, pointer.y),
@@ -176,7 +172,7 @@ function useDrawShapeHandler(
 
   const draw_shape_handle_pointer_up = useCallback((_opt: fabric.IEvent) => {
     const isDrawinShape =
-      uiStateRef.current?.mode === 'draw' &&
+      // uiStateRef.current?.mode === 'draw' &&
       SHAPES.indexOf(uiStateRef.current?.shape) !== -1;
 
     const fcanvas = fabricCanvasRef.current;

@@ -36,15 +36,24 @@ export const getAbsoluteCoords = (
   };
 };
 
-export const getDistance = (points: Coords[]) => {
-  return Math.sqrt(
-    Math.pow(points[0].x - points[1].x, 2) +
-      Math.pow(points[0].y - points[1].y, 2),
-  );
+export const getDistance = (points: Coords[]): number => {
+  if (points.length >= 2) {
+    return Math.sqrt(
+      Math.pow(points[0].x - points[1].x, 2) +
+        Math.pow(points[0].y - points[1].y, 2),
+    );
+  }
+  return 0;
 };
 
-export const getMidPoint = (points: Coords[]) => {
-  return [(points[0].x + points[1].x) / 2, (points[0].y + points[1].y) / 2];
+export const getMidPoint = (points: Coords[]): Coords => {
+  if (points.length === 2) {
+    return {
+      x: (points[0].x + points[1].x) / 2,
+      y: (points[0].y + points[1].y) / 2,
+    };
+  }
+  return points[0];
 };
 
 /**
@@ -77,11 +86,11 @@ export const getTouchMoveSpec = (
   const distanceNow = getDistance(touchesNow);
   const scale = distanceNow / distancePrev;
 
-  const startShift = [startMid[0] - oriPanZoom.x, startMid[1] - oriPanZoom.y];
+  const startShift = [startMid.x - oriPanZoom.x, startMid.y - oriPanZoom.y];
 
   const nowShift = [startShift[0] * scale, startShift[1] * scale];
-  const deltaX = nowMid[0] - startMid[0] + startShift[0] - nowShift[0];
-  const deltaY = nowMid[1] - startMid[1] + startShift[1] - nowShift[1];
+  const deltaX = nowMid.x - startMid.x + startShift[0] - nowShift[0];
+  const deltaY = nowMid.y - startMid.y + startShift[1] - nowShift[1];
 
   return {
     x: deltaX + oriPanZoom.x,

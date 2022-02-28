@@ -72,7 +72,8 @@ export const useTouchPanZoom = (
   const [inProgress, setInProgress] = useState(false);
 
   const handleTouchMove = (evt: React.TouchEvent) => {
-    if (evt.touches.length !== 2 || !touchState.current) return;
+    if (!touchState.current) return;
+
     setInProgress(true);
 
     const oriPanZoom = touchState.current.oriPanZoom;
@@ -82,32 +83,35 @@ export const useTouchPanZoom = (
     const startMid = getMidPoint([touchesStart[0], touchesStart[1]]);
     const nowMid = getMidPoint(touchesNow);
 
-    const distancePrev = getDistance([touchesStart[0], touchesStart[1]]);
-    const distanceNow = getDistance(touchesNow);
-    let scale = (distanceNow / distancePrev) * oriPanZoom.scale;
+    let scale = panZoomState.scale;
+    if (evt.touches.length === 2) {
+      const distancePrev = getDistance([touchesStart[0], touchesStart[1]]);
+      const distanceNow = getDistance(touchesNow);
+      scale = (distanceNow / distancePrev) * oriPanZoom.scale;
 
-    //  bound it.
-    scale = Math.min(
-      contentFitSpec.current.max * contentFitSpec.current.fitSpec.scale,
-      Math.max(
-        contentFitSpec.current.min * contentFitSpec.current.fitSpec.scale,
-        scale,
-      ),
-    );
+      //  bound it.
+      scale = Math.min(
+        contentFitSpec.current.max * contentFitSpec.current.fitSpec.scale,
+        Math.max(
+          contentFitSpec.current.min * contentFitSpec.current.fitSpec.scale,
+          scale,
+        ),
+      );
+    }
 
     const x = getNewPosition(
       oriPanZoom.x,
-      startMid[0],
+      startMid.x,
       oriPanZoom.scale,
-      nowMid[0],
+      nowMid.x,
       scale,
     );
 
     const y = getNewPosition(
       oriPanZoom.y,
-      startMid[1],
+      startMid.y,
       oriPanZoom.scale,
-      nowMid[1],
+      nowMid.y,
       scale,
     );
 
@@ -193,7 +197,6 @@ export const usePointerPan = (
 
   return {
     onPointerDown: (evt: React.PointerEvent) => {
-      // if (disabled || evt.button === 2 ) return;
       if ((disabled && evt.button === 0) || evt.button === 2) return;
 
       const coords = getAbsoluteCoords(
