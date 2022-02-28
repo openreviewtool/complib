@@ -1,6 +1,6 @@
 {
   "name": "@openreviewtool/complib",
-  "version": "0.2.44",
+  "version": "0.2.45",
   "repository": "git@github.com:openreviewtool/complib.git",
   "homepage": "https://openreviewtool.github.io/complib",
   "bugs": "https://github.com/openreviewtool/complib/issues",
