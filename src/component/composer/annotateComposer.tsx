@@ -35,22 +35,24 @@ export const AnnotateCanvas = (props: {
     [panZoom],
   );
 
-  return props.uiState.showAnnotation ? (
-    <AnnotateCanvasComp
-      elements={elements}
-      selection={selection}
-      onSelection={onSelection}
-      width={containerSize.width}
-      height={containerSize.height}
-      panZoom={normPanZoomSpec}
-      uiState={props.uiState}
-      setUiState={props.setUiState}
-      disabled={props.uiState.mode === 'panZoom'}
-      onAddElement={onAddElement}
-      onChangeElement={onChangeElement}
-      clearOnElementModify={true}
-    />
-  ) : null;
+  return (
+    <div style={{ display: props.uiState.showAnnotation ? undefined : 'none' }}>
+      <AnnotateCanvasComp
+        elements={elements}
+        selection={selection}
+        onSelection={onSelection}
+        width={containerSize.width}
+        height={containerSize.height}
+        panZoom={normPanZoomSpec}
+        uiState={props.uiState}
+        setUiState={props.setUiState}
+        disabled={props.uiState.mode === 'panZoom'}
+        onAddElement={onAddElement}
+        onChangeElement={onChangeElement}
+        clearOnElementModify={true}
+      />
+    </div>
+  );
 };
 
 export const AnnotateTools = (props: {

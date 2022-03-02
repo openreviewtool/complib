@@ -33,7 +33,7 @@ export default function useApplyAttrsToSelection(
         }
 
         const fObj = fObjRegistryRef.current[element.id];
-        if (fObj.get(adjKey as keyof fabric.Object) !== value) {
+        if (fObj && fObj.get(adjKey as keyof fabric.Object) !== value) {
           fObj.set(adjKey as keyof fabric.Object, value);
 
           changeBatch.push({
