@@ -5,7 +5,8 @@ This ui library intend to be use to build a review system, featuring:
 - Annotation Canvas
 - PanZoom
 - Video Player
-- Oembed content.
+- Timeline
+- ...more to come
 
 See the library in action in our [Storybook demo](https://openreviewtool.github.io/complib)!
 
