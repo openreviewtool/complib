@@ -150,15 +150,17 @@ export const useWheelZoom = (
       evt,
       evt.currentTarget.getBoundingClientRect(),
     );
-    const scaleDelta = evt.deltaY * -0.01;
-    let scale = panZoomState.scale + scaleDelta;
+
+    const deltaY = evt.deltaY;
+    const scaleDelta = deltaY * -0.002;
+    const scaleTarget = panZoomState.scale + scaleDelta;
 
     //  bound it.
-    scale = Math.min(
+    const scale = Math.min(
       contentFitSpec.current.max * contentFitSpec.current.fitSpec.scale,
       Math.max(
         contentFitSpec.current.min * contentFitSpec.current.fitSpec.scale,
-        scale,
+        scaleTarget,
       ),
     );
 
@@ -177,7 +179,7 @@ export const useWheelZoom = (
       scale,
     );
 
-    if (evt.deltaX === 0 && !Number.isInteger(evt.deltaY)) {
+    if (evt.deltaX === 0) {
       setPanZoomState({ x, y, scale });
     }
   };
